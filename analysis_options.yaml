@@ -1,0 +1,21 @@
+include: package:flutter_lints/flutter.yaml
+
+analyzer:
+  exclude:
+    - "**/*.g.dart"
+    - build/**
+    - android/**
+    - web/**
+    - windows/**
+    - macos/**
+  errors:
+    invalid_annotation_target: ignore
+
+linter:
+  rules:
+    prefer_const_constructors: true
+    prefer_final_locals: true
+    avoid_print: true
+    unawaited_futures: false
+    unnecessary_underscores: false
+    use_null_aware_elements: false

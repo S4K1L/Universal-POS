@@ -1,0 +1,8497 @@
+{
+ "context_supershop": {
+  "tenant": {
+   "id": "01a11082-b1f0-7971-bd29-354e7d9a060a",
+   "name": "Fresh Bazar Superstore",
+   "owner_name": "Tanvir Ahmed",
+   "phone": "01722000001",
+   "address": "",
+   "city": "Banani, Dhaka"
+  },
+  "business_type": {
+   "key": "supershop",
+   "label": "Supershop",
+   "family": "counter_retail",
+   "version": 1,
+   "theme": {
+    "icon": "shopping_basket",
+    "accent": "#0E9F6E"
+   }
+  },
+  "capabilities": [
+   "barcode_scanning",
+   "customer_credit",
+   "expiry_tracking",
+   "fractional_qty",
+   "item_tax",
+   "lot_tracking",
+   "loyalty",
+   "multi_uom",
+   "scale_barcode",
+   "shifts"
+  ],
+  "capability_catalogue": {
+   "barcode_scanning": {
+    "label": "Barcode scanning",
+    "group": "Selling"
+   },
+   "fractional_qty": {
+    "label": "Sell by weight / length",
+    "group": "Selling"
+   },
+   "multi_uom": {
+    "label": "Multiple units",
+    "group": "Selling"
+   },
+   "scale_barcode": {
+    "label": "Scale barcodes",
+    "group": "Selling"
+   },
+   "item_tax": {
+    "label": "Item-level VAT",
+    "group": "Selling"
+   },
+   "customer_credit": {
+    "label": "Customer credit (baki / due)",
+    "group": "Selling"
+   },
+   "loyalty": {
+    "label": "Loyalty points",
+    "group": "Selling"
+   },
+   "shifts": {
+    "label": "Register shifts",
+    "group": "Selling"
+   },
+   "lot_tracking": {
+    "label": "Batch / lot tracking",
+    "group": "Inventory"
+   },
+   "expiry_tracking": {
+    "label": "Expiry dates",
+    "group": "Inventory"
+   }
+  },
+  "features": [
+   "pos",
+   "inventory",
+   "purchases",
+   "customers",
+   "reports",
+   "reports_advanced",
+   "offline_sync",
+   "multi_branch",
+   "staff",
+   "expenses",
+   "export",
+   "orders"
+  ],
+  "limits": {
+   "staff": 10,
+   "devices": 6,
+   "branches": 3,
+   "products": 10000,
+   "sales_per_month": -1
+  },
+  "usage": {
+   "products": 34,
+   "staff": 4,
+   "branches": 2,
+   "devices": 3,
+   "sales_per_month": 142
+  },
+  "modules": [
+   {
+    "id": "dashboard",
+    "label": "Dashboard",
+    "available": true,
+    "locked_reason": null
+   },
+   {
+    "id": "pos",
+    "label": "Sell",
+    "available": true,
+    "locked_reason": null
+   },
+   {
+    "id": "orders",
+    "label": "Orders",
+    "available": false,
+    "locked_reason": "capability"
+   },
+   {
+    "id": "sales",
+    "label": "Sales",
+    "available": true,
+    "locked_reason": null
+   },
+   {
+    "id": "products",
+    "label": "Products",
+    "available": true,
+    "locked_reason": null
+   },
+   {
+    "id": "stock",
+    "label": "Stock",
+    "available": true,
+    "locked_reason": null
+   },
+   {
+    "id": "purchases",
+    "label": "Purchases",
+    "available": true,
+    "locked_reason": null
+   },
+   {
+    "id": "customers",
+    "label": "Customers",
+    "available": true,
+    "locked_reason": null
+   },
+   {
+    "id": "expenses",
+    "label": "Expenses",
+    "available": true,
+    "locked_reason": null
+   },
+   {
+    "id": "shifts",
+    "label": "Shifts",
+    "available": true,
+    "locked_reason": null
+   },
+   {
+    "id": "reports",
+    "label": "Reports",
+    "available": true,
+    "locked_reason": null
+   },
+   {
+    "id": "settings",
+    "label": "Settings",
+    "available": true,
+    "locked_reason": null
+   },
+   {
+    "id": "billing",
+    "label": "Subscription",
+    "available": true,
+    "locked_reason": null
+   }
+  ],
+  "terminology": {
+   "due": "Credit",
+   "product": "Item",
+   "customer": "Member",
+   "supplier": "Supplier"
+  },
+  "attributes": [
+   {
+    "key": "brand",
+    "type": "select_or_create",
+    "unit": null,
+    "flags": {
+     "filterable": true,
+     "searchable": true,
+     "show_in_pos": true,
+     "show_on_label": false,
+     "show_on_receipt": false
+    },
+    "group": "Details",
+    "label": "Brand",
+    "source": "template",
+    "options": [],
+    "label_bn": "ব্র্যান্ড",
+    "required": false
+   },
+   {
+    "key": "origin",
+    "type": "text",
+    "unit": null,
+    "flags": {
+     "filterable": false,
+     "searchable": false,
+     "show_in_pos": false,
+     "show_on_label": false,
+     "show_on_receipt": false
+    },
+    "group": "Sourcing",
+    "label": "Country of origin",
+    "source": "template",
+    "options": [],
+    "label_bn": "উৎপত্তিস্থল",
+    "required": false
+   },
+   {
+    "key": "shelf_life_days",
+    "type": "int",
+    "unit": "days",
+    "flags": {
+     "filterable": false,
+     "searchable": false,
+     "show_in_pos": false,
+     "show_on_label": false,
+     "show_on_receipt": false
+    },
+    "group": "Storage",
+    "label": "Shelf life",
+    "source": "template",
+    "options": [],
+    "label_bn": "মেয়াদ (দিন)",
+    "required": false
+   },
+   {
+    "key": "aisle",
+    "type": "text",
+    "unit": null,
+    "flags": {
+     "filterable": true,
+     "searchable": false,
+     "show_in_pos": false,
+     "show_on_label": false,
+     "show_on_receipt": false
+    },
+    "group": "Storage",
+    "label": "Aisle / section",
+    "source": "template",
+    "options": [],
+    "label_bn": "সেকশন",
+    "required": false
+   }
+  ],
+  "variant_axes": [],
+  "units": [
+   {
+    "code": "pc",
+    "label": "Piece",
+    "label_bn": "পিস",
+    "allow_fraction": false
+   },
+   {
+    "code": "kg",
+    "label": "Kilogram",
+    "label_bn": "কেজি",
+    "allow_fraction": true
+   },
+   {
+    "code": "g",
+    "label": "Gram",
+    "label_bn": "গ্রাম",
+    "allow_fraction": true
+   },
+   {
+    "code": "litre",
+    "label": "Litre",
+    "label_bn": "লিটার",
+    "allow_fraction": true
+   },
+   {
+    "code": "dozen",
+    "label": "Dozen",
+    "label_bn": "ডজন",
+    "allow_fraction": false
+   },
+   {
+    "code": "pack",
+    "label": "Packet",
+    "label_bn": "প্যাকেট",
+    "allow_fraction": false
+   },
+   {
+    "code": "carton",
+    "label": "Carton",
+    "label_bn": "কার্টন",
+    "allow_fraction": false
+   }
+  ],
+  "settings": {
+   "currency": "BDT",
+   "currency_symbol": "৳",
+   "language": "en",
+   "timezone": "Asia/Dhaka",
+   "tax": {
+    "mode": "inclusive",
+    "cash_rounding": "nearest_1"
+   },
+   "stock": {
+    "costing": "weighted_average",
+    "allocation": "fefo",
+    "allow_negative": false,
+    "reorder_default": 10,
+    "expiry_alert_days": [
+     90,
+     30
+    ]
+   },
+   "pos": {
+    "layout": "counter",
+    "quick_keys": true,
+    "hold_resume": true,
+    "require_customer": false
+   },
+   "loyalty": {
+    "enabled": true,
+    "points_per_100": 1
+   },
+   "receipt": {
+    "phone": "01722000001",
+    "footer": "Thank you for shopping with us! ধন্যবাদ",
+    "header": "Fresh Bazar Superstore",
+    "address": "",
+    "show_tax": true,
+    "vat_reg_no": ""
+   },
+   "payment_methods": [
+    {
+     "code": "cash",
+     "kind": "cash",
+     "label": "Cash",
+     "enabled": true,
+     "label_bn": "নগদ"
+    },
+    {
+     "code": "bkash",
+     "kind": "mobile",
+     "label": "bKash",
+     "enabled": true,
+     "label_bn": "বিকাশ"
+    },
+    {
+     "code": "nagad",
+     "kind": "mobile",
+     "label": "Nagad",
+     "enabled": true,
+     "label_bn": "নগদ (Nagad)"
+    },
+    {
+     "code": "rocket",
+     "kind": "mobile",
+     "label": "Rocket",
+     "enabled": false,
+     "label_bn": "রকেট"
+    },
+    {
+     "code": "upay",
+     "kind": "mobile",
+     "label": "Upay",
+     "enabled": false,
+     "label_bn": "উপায়"
+    },
+    {
+     "code": "card",
+     "kind": "card",
+     "label": "Card",
+     "enabled": true,
+     "label_bn": "কার্ড"
+    },
+    {
+     "code": "bank",
+     "kind": "bank",
+     "label": "Bank transfer",
+     "enabled": false,
+     "label_bn": "ব্যাংক"
+    }
+   ],
+   "scale": {
+    "mode": "weight",
+    "prefix": "20"
+   },
+   "documents": {
+    "invoice": "a4_tax",
+    "receipt": "thermal_80"
+   },
+   "dashboard": [
+    "today_sales",
+    "sales_trend",
+    "shift_status",
+    "expiring_soon",
+    "low_stock",
+    "payment_mix",
+    "top_products"
+   ],
+   "reports": [
+    "sales_summary",
+    "department_margin",
+    "tax_summary",
+    "shift_z",
+    "expiry_loss",
+    "stock_valuation"
+   ],
+   "deposit_percent_min": 0
+  },
+  "subscription": {
+   "plan": {
+    "key": "business",
+    "name": "Business",
+    "monthly_price": "1999.00",
+    "yearly_price": "19990.00"
+   },
+   "state": "active",
+   "status": "active",
+   "billing_cycle": "monthly",
+   "period_end": "2026-10-30T09:19:23.469719+00:00",
+   "valid_until": "2026-11-02T09:19:23.469719+00:00",
+   "days_left": 23,
+   "lapsed": false,
+   "notice": null
+  },
+  "user": {
+   "id": "01a11082-b295-759c-aa7b-fce412f12098",
+   "name": "Tanvir Ahmed",
+   "phone": "01722000001",
+   "email": "",
+   "role": "owner",
+   "role_label": "Owner",
+   "active": true,
+   "tenant_id": "01a11082-b1f0-7971-bd29-354e7d9a060a",
+   "permissions": [
+    "adjust_stock",
+    "apply_discount",
+    "collect_dues",
+    "export_data",
+    "manage_branches",
+    "manage_customers",
+    "manage_devices",
+    "manage_expenses",
+    "manage_orders",
+    "manage_products",
+    "manage_purchases",
+    "manage_settings",
+    "manage_shifts",
+    "manage_staff",
+    "manage_subscription",
+    "override_price",
+    "refund",
+    "sell",
+    "view_cost",
+    "view_inventory",
+    "view_margin",
+    "view_reports",
+    "view_sales",
+    "void_sale"
+   ],
+   "branch_ids": null,
+   "permission_overrides": null
+  },
+  "branches": [
+   {
+    "id": "01a11082-b295-7f78-b49c-7596bb82a4fa",
+    "name": "Banani",
+    "code": "MAIN",
+    "is_main": true,
+    "address": ""
+   },
+   {
+    "id": "01a11082-b53c-7fe6-bf5b-ec19907aaadd",
+    "name": "Uttara",
+    "code": "UTTA",
+    "is_main": false,
+    "address": "Uttara Sector 7"
+   }
+  ],
+  "server_time": "2026-10-06T10:17:40.680219+00:00"
+ },
+ "dashboard_supershop": {
+  "date": "2026-10-06",
+  "today": {
+   "from": "2026-10-05T18:00:00+00:00",
+   "to": "2026-10-06T18:00:00+00:00",
+   "invoices": 7,
+   "gross_sales": "2394.00",
+   "discounts": "0.00",
+   "tax": "89.35",
+   "paid": "2394.00",
+   "due_created": "0.00",
+   "items_sold": "15.500",
+   "returns_count": 0,
+   "returns_total": "0.00",
+   "voids": 0,
+   "net_sales": "2394.00",
+   "avg_bill": "342.00",
+   "by_method": [
+    {
+     "method": "cash",
+     "amount": "2189.00",
+     "count": 4
+    },
+    {
+     "method": "card",
+     "amount": "110.00",
+     "count": 1
+    },
+    {
+     "method": "bkash",
+     "amount": "95.00",
+     "count": 2
+    }
+   ],
+   "gross_profit": "228.65",
+   "cost_of_goods": "2075.50"
+  },
+  "yesterday": {
+   "from": "2026-10-04T18:00:00+00:00",
+   "to": "2026-10-05T18:00:00+00:00",
+   "invoices": 19,
+   "gross_sales": "2917.00",
+   "discounts": "0.00",
+   "tax": "184.58",
+   "paid": "2917.00",
+   "due_created": "0.00",
+   "items_sold": "40.000",
+   "returns_count": 0,
+   "returns_total": "0.00",
+   "voids": 0,
+   "net_sales": "2917.00",
+   "avg_bill": "153.53",
+   "by_method": [
+    {
+     "method": "cash",
+     "amount": "1696.00",
+     "count": 9
+    },
+    {
+     "method": "bkash",
+     "amount": "612.00",
+     "count": 6
+    },
+    {
+     "method": "card",
+     "amount": "495.00",
+     "count": 3
+    },
+    {
+     "method": "nagad",
+     "amount": "114.00",
+     "count": 1
+    }
+   ]
+  },
+  "trend": [
+   {
+    "date": "2026-09-23",
+    "invoices": 38,
+    "total": "45319.00"
+   },
+   {
+    "date": "2026-09-24",
+    "invoices": 29,
+    "total": "30629.00"
+   },
+   {
+    "date": "2026-09-25",
+    "invoices": 43,
+    "total": "34574.00"
+   },
+   {
+    "date": "2026-09-26",
+    "invoices": 39,
+    "total": "30998.00"
+   },
+   {
+    "date": "2026-09-27",
+    "invoices": 23,
+    "total": "14338.00"
+   },
+   {
+    "date": "2026-09-28",
+    "invoices": 29,
+    "total": "22404.00"
+   },
+   {
+    "date": "2026-09-29",
+    "invoices": 40,
+    "total": "19410.00"
+   },
+   {
+    "date": "2026-09-30",
+    "invoices": 25,
+    "total": "13077.00"
+   },
+   {
+    "date": "2026-10-01",
+    "invoices": 20,
+    "total": "15245.00"
+   },
+   {
+    "date": "2026-10-02",
+    "invoices": 29,
+    "total": "15499.00"
+   },
+   {
+    "date": "2026-10-03",
+    "invoices": 45,
+    "total": "14205.00"
+   },
+   {
+    "date": "2026-10-04",
+    "invoices": 22,
+    "total": "11854.00"
+   },
+   {
+    "date": "2026-10-05",
+    "invoices": 19,
+    "total": "2917.00"
+   },
+   {
+    "date": "2026-10-06",
+    "invoices": 7,
+    "total": "2394.00"
+   }
+  ],
+  "hourly": [
+   {
+    "hour": 0,
+    "invoices": 0,
+    "total": "0.00"
+   },
+   {
+    "hour": 1,
+    "invoices": 0,
+    "total": "0.00"
+   },
+   {
+    "hour": 2,
+    "invoices": 0,
+    "total": "0.00"
+   },
+   {
+    "hour": 3,
+    "invoices": 0,
+    "total": "0.00"
+   },
+   {
+    "hour": 4,
+    "invoices": 0,
+    "total": "0.00"
+   },
+   {
+    "hour": 5,
+    "invoices": 0,
+    "total": "0.00"
+   },
+   {
+    "hour": 6,
+    "invoices": 0,
+    "total": "0.00"
+   },
+   {
+    "hour": 7,
+    "invoices": 0,
+    "total": "0.00"
+   },
+   {
+    "hour": 8,
+    "invoices": 0,
+    "total": "0.00"
+   },
+   {
+    "hour": 9,
+    "invoices": 1,
+    "total": "940.00"
+   },
+   {
+    "hour": 10,
+    "invoices": 1,
+    "total": "455.00"
+   },
+   {
+    "hour": 11,
+    "invoices": 2,
+    "total": "551.00"
+   },
+   {
+    "hour": 12,
+    "invoices": 1,
+    "total": "38.00"
+   },
+   {
+    "hour": 13,
+    "invoices": 2,
+    "total": "410.00"
+   },
+   {
+    "hour": 14,
+    "invoices": 0,
+    "total": "0.00"
+   },
+   {
+    "hour": 15,
+    "invoices": 0,
+    "total": "0.00"
+   },
+   {
+    "hour": 16,
+    "invoices": 0,
+    "total": "0.00"
+   },
+   {
+    "hour": 17,
+    "invoices": 0,
+    "total": "0.00"
+   },
+   {
+    "hour": 18,
+    "invoices": 0,
+    "total": "0.00"
+   },
+   {
+    "hour": 19,
+    "invoices": 0,
+    "total": "0.00"
+   },
+   {
+    "hour": 20,
+    "invoices": 0,
+    "total": "0.00"
+   },
+   {
+    "hour": 21,
+    "invoices": 0,
+    "total": "0.00"
+   },
+   {
+    "hour": 22,
+    "invoices": 0,
+    "total": "0.00"
+   },
+   {
+    "hour": 23,
+    "invoices": 0,
+    "total": "0.00"
+   }
+  ],
+  "top_products": [
+   {
+    "product_id": "01a11082-b345-72b7-acd6-42e4095525b6",
+    "name": "Baby Diaper (M, 44)",
+    "revenue": "15000.00",
+    "qty": "12.000"
+   },
+   {
+    "product_id": "01a11082-b2e7-725d-a652-b62e4b3e9810",
+    "name": "Soybean Oil 2 L",
+    "revenue": "10585.00",
+    "qty": "29.000"
+   },
+   {
+    "product_id": "01a11082-b33b-706e-9199-529447730e08",
+    "name": "Shampoo 340 ml",
+    "revenue": "6080.00",
+    "qty": "19.000"
+   },
+   {
+    "product_id": "01a11082-b2e2-7915-98b5-213396c14fd7",
+    "name": "Miniket Rice 5 kg",
+    "revenue": "6020.00",
+    "qty": "14.000"
+   },
+   {
+    "product_id": "01a11082-b2ed-753e-88d1-668eb4b42f4c",
+    "name": "Sugar 1 kg",
+    "revenue": "4030.00",
+    "qty": "31.000"
+   },
+   {
+    "product_id": "01a11082-b2a2-7096-b4b9-fbb16eccfb1f",
+    "name": "Tomato",
+    "revenue": "3690.00",
+    "qty": "41.000"
+   }
+  ],
+  "low_stock": [
+   {
+    "variant_id": "01a11082-b2f3-7110-b824-361c2041e05b",
+    "name": "Atta 2 kg",
+    "label": "",
+    "sku": "ATTA-00017",
+    "on_hand": "0.000",
+    "reorder_level": "10.000",
+    "unit": "pc"
+   },
+   {
+    "variant_id": "01a11082-b345-7866-867f-beb0173e4300",
+    "name": "Baby Diaper (M, 44)",
+    "label": "",
+    "sku": "BABY-00033",
+    "on_hand": "0.000",
+    "reorder_level": "3.000",
+    "unit": "pc"
+   },
+   {
+    "variant_id": "01a11082-b2af-703f-a447-23763687d0db",
+    "name": "Broiler Chicken",
+    "label": "",
+    "sku": "BROI-00006",
+    "on_hand": "0.000",
+    "reorder_level": "8.000",
+    "unit": "kg"
+   },
+   {
+    "variant_id": "01a11082-b2cc-75c8-8e24-192d2dce0398",
+    "name": "Butter 200 g",
+    "label": "",
+    "sku": "BUTT-00010",
+    "on_hand": "0.000",
+    "reorder_level": "6.000",
+    "unit": "pc"
+   },
+   {
+    "variant_id": "01a11082-b2a7-7c9e-b9a1-565214e3f892",
+    "name": "Carrot",
+    "label": "",
+    "sku": "CARR-00004",
+    "on_hand": "0.000",
+    "reorder_level": "8.000",
+    "unit": "kg"
+   },
+   {
+    "variant_id": "01a11082-b31d-7d0e-84e1-dd19bd679c3f",
+    "name": "Chocolate Bar",
+    "label": "",
+    "sku": "CHOC-00025",
+    "on_hand": "0.000",
+    "reorder_level": "15.000",
+    "unit": "pc"
+   },
+   {
+    "variant_id": "01a11082-b2dd-752a-8592-5eec6cf1e9e5",
+    "name": "Chocolate Cake Slice",
+    "label": "",
+    "sku": "CHOC-00013",
+    "on_hand": "0.000",
+    "reorder_level": "4.000",
+    "unit": "pc"
+   },
+   {
+    "variant_id": "01a11082-b332-7eb4-a322-a3449607a125",
+    "name": "Detergent Powder 1 kg",
+    "label": "",
+    "sku": "DETE-00029",
+    "on_hand": "0.000",
+    "reorder_level": "8.000",
+    "unit": "pc"
+   }
+  ],
+  "expiring": [],
+  "dues": {
+   "total": "13587.70",
+   "count": 4,
+   "top": [
+    {
+     "customer_id": "01a11082-b53e-7d13-acc1-c0d4880bb7ae",
+     "name": "Imran Hossain",
+     "phone": "01822200002",
+     "balance": "5717.40",
+     "oldest_days": 13
+    },
+    {
+     "customer_id": "01a11082-b53e-7d33-a4ed-63214fb311a3",
+     "name": "Shirin Sultana",
+     "phone": "01822200003",
+     "balance": "5227.20",
+     "oldest_days": 12
+    },
+    {
+     "customer_id": "01a11082-b53e-7f9a-8019-292bbf27e992",
+     "name": "Farhana Islam",
+     "phone": "01822200001",
+     "balance": "1943.10",
+     "oldest_days": 13
+    },
+    {
+     "customer_id": "01a11082-b53e-7530-bfe6-5ac58b7ec809",
+     "name": "Rubel Khan",
+     "phone": "01822200004",
+     "balance": "700.00",
+     "oldest_days": 6
+    }
+   ]
+  }
+ },
+ "products_supershop": {
+  "items": [
+   {
+    "id": "01a11082-b2f2-75fa-812d-fcc9ce5796d3",
+    "name": "Atta 2 kg",
+    "name_local": "আটা ২ কেজি",
+    "description": "",
+    "category_id": "01a11082-b295-700a-914c-8304fe155505",
+    "type": "stockable",
+    "base_unit": "pc",
+    "alt_units": [],
+    "allow_fraction": false,
+    "tracking": "none",
+    "track_expiry": false,
+    "tax_class_id": null,
+    "attributes": {
+     "brand": "Teer"
+    },
+    "image_url": "",
+    "reorder_level": "10.000",
+    "warranty_months": 0,
+    "active": true,
+    "variants": [
+     {
+      "id": "01a11082-b2f3-7110-b824-361c2041e05b",
+      "sku": "ATTA-00017",
+      "label": "",
+      "option_values": {},
+      "price": "120.00",
+      "mrp": "0.00",
+      "cost": "104.00",
+      "plu": null,
+      "active": true,
+      "barcodes": [
+       {
+        "id": "01a11082-b2f4-7302-a2ba-54e1ae082427",
+        "code": "8900000050079",
+        "unit": null,
+        "qty_per_scan": "1.000"
+       }
+      ]
+     }
+    ],
+    "updated_at": "2026-10-06T09:19:23.119562+00:00"
+   },
+   {
+    "id": "01a11082-b345-72b7-acd6-42e4095525b6",
+    "name": "Baby Diaper (M, 44)",
+    "name_local": "বেবি ডায়াপার",
+    "description": "",
+    "category_id": "01a11082-b295-7757-85c3-1432f299b815",
+    "type": "stockable",
+    "base_unit": "pc",
+    "alt_units": [],
+    "allow_fraction": false,
+    "tracking": "none",
+    "track_expiry": false,
+    "tax_class_id": "01a11082-b295-767e-8cc9-f0abcd4439fa",
+    "attributes": {},
+    "image_url": "",
+    "reorder_level": "3.000",
+    "warranty_months": 0,
+    "active": true,
+    "variants": [
+     {
+      "id": "01a11082-b345-7866-867f-beb0173e4300",
+      "sku": "BABY-00033",
+      "label": "",
+      "option_values": {},
+      "price": "1250.00",
+      "mrp": "0.00",
+      "cost": "1080.00",
+      "plu": null,
+      "active": true,
+      "barcodes": [
+       {
+        "id": "01a11082-b346-714f-aae8-6771b20dca1f",
+        "code": "8900000050239",
+        "unit": null,
+        "qty_per_scan": "1.000"
+       }
+      ]
+     }
+    ],
+    "updated_at": "2026-10-06T09:19:23.119562+00:00"
+   },
+   {
+    "id": "01a11082-b2ae-709f-b62a-d336612f9662",
+    "name": "Broiler Chicken",
+    "name_local": "ব্রয়লার মুরগি",
+    "description": "",
+    "category_id": "01a11082-b295-7fd2-99af-dcb5c7e5add7",
+    "type": "stockable",
+    "base_unit": "kg",
+    "alt_units": [],
+    "allow_fraction": true,
+    "tracking": "none",
+    "track_expiry": false,
+    "tax_class_id": null,
+    "attributes": {
+     "aisle": "Meat"
+    },
+    "image_url": "",
+    "reorder_level": "8.000",
+    "warranty_months": 0,
+    "active": true,
+    "variants": [
+     {
+      "id": "01a11082-b2af-703f-a447-23763687d0db",
+      "sku": "BROI-00006",
+      "label": "",
+      "option_values": {},
+      "price": "235.00",
+      "mrp": "0.00",
+      "cost": "205.00",
+      "plu": "10010",
+      "active": true,
+      "barcodes": []
+     }
+    ],
+    "updated_at": "2026-10-06T09:19:23.119562+00:00"
+   },
+   {
+    "id": "01a11082-b2cb-7096-8de1-c00cb3879256",
+    "name": "Butter 200 g",
+    "name_local": "মাখন",
+    "description": "",
+    "category_id": "01a11082-b295-7dcf-8d88-b60bd2fd03c8",
+    "type": "stockable",
+    "base_unit": "pc",
+    "alt_units": [],
+    "allow_fraction": false,
+    "tracking": "lot",
+    "track_expiry": true,
+    "tax_class_id": "01a11082-b295-767e-8cc9-f0abcd4439fa",
+    "attributes": {
+     "brand": "Danish"
+    },
+    "image_url": "",
+    "reorder_level": "6.000",
+    "warranty_months": 0,
+    "active": true,
+    "variants": [
+     {
+      "id": "01a11082-b2cc-75c8-8e24-192d2dce0398",
+      "sku": "BUTT-00010",
+      "label": "",
+      "option_values": {},
+      "price": "310.00",
+      "mrp": "0.00",
+      "cost": "270.00",
+      "plu": null,
+      "active": true,
+      "barcodes": [
+       {
+        "id": "01a11082-b2cd-79a6-abbd-f96d5b4fe5b3",
+        "code": "8900000050024",
+        "unit": null,
+        "qty_per_scan": "1.000"
+       }
+      ]
+     }
+    ],
+    "updated_at": "2026-10-06T09:19:23.119562+00:00"
+   },
+   {
+    "id": "01a11082-b2a6-769f-98a6-99efddbdd76f",
+    "name": "Carrot",
+    "name_local": "গাজর",
+    "description": "",
+    "category_id": "01a11082-b295-7809-a4df-253b96d002f8",
+    "type": "stockable",
+    "base_unit": "kg",
+    "alt_units": [],
+    "allow_fraction": true,
+    "tracking": "none",
+    "track_expiry": false,
+    "tax_class_id": null,
+    "attributes": {
+     "aisle": "Produce"
+    },
+    "image_url": "",
+    "reorder_level": "8.000",
+    "warranty_months": 0,
+    "active": true,
+    "variants": [
+     {
+      "id": "01a11082-b2a7-7c9e-b9a1-565214e3f892",
+      "sku": "CARR-00004",
+      "label": "",
+      "option_values": {},
+      "price": "80.00",
+      "mrp": "0.00",
+      "cost": "62.00",
+      "plu": "10004",
+      "active": true,
+      "barcodes": []
+     }
+    ],
+    "updated_at": "2026-10-06T09:19:23.119562+00:00"
+   },
+   {
+    "id": "01a11082-b31d-7130-98a4-80cbccf6bea6",
+    "name": "Chocolate Bar",
+    "name_local": "চকোলেট",
+    "description": "",
+    "category_id": "01a11082-b295-77d6-a9fd-d6b09e069b98",
+    "type": "stockable",
+    "base_unit": "pc",
+    "alt_units": [],
+    "allow_fraction": false,
+    "tracking": "lot",
+    "track_expiry": true,
+    "tax_class_id": "01a11082-b295-767e-8cc9-f0abcd4439fa",
+    "attributes": {},
+    "image_url": "",
+    "reorder_level": "15.000",
+    "warranty_months": 0,
+    "active": true,
+    "variants": [
+     {
+      "id": "01a11082-b31d-7d0e-84e1-dd19bd679c3f",
+      "sku": "CHOC-00025",
+      "label": "",
+      "option_values": {},
+      "price": "60.00",
+      "mrp": "0.00",
+      "cost": "46.00",
+      "plu": null,
+      "active": true,
+      "barcodes": [
+       {
+        "id": "01a11082-b31f-72de-986d-26d3c8798bc9",
+        "code": "8900000050154",
+        "unit": null,
+        "qty_per_scan": "1.000"
+       }
+      ]
+     }
+    ],
+    "updated_at": "2026-10-06T09:19:23.119562+00:00"
+   },
+   {
+    "id": "01a11082-b2dc-706f-b6a1-0a59ceced2de",
+    "name": "Chocolate Cake Slice",
+    "name_local": "কেক",
+    "description": "",
+    "category_id": "01a11082-b295-7a0f-8629-43ab37ce508d",
+    "type": "stockable",
+    "base_unit": "pc",
+    "alt_units": [],
+    "allow_fraction": false,
+    "tracking": "lot",
+    "track_expiry": true,
+    "tax_class_id": null,
+    "attributes": {},
+    "image_url": "",
+    "reorder_level": "4.000",
+    "warranty_months": 0,
+    "active": true,
+    "variants": [
+     {
+      "id": "01a11082-b2dd-752a-8592-5eec6cf1e9e5",
+      "sku": "CHOC-00013",
+      "label": "",
+      "option_values": {},
+      "price": "120.00",
+      "mrp": "0.00",
+      "cost": "85.00",
+      "plu": null,
+      "active": true,
+      "barcodes": []
+     }
+    ],
+    "updated_at": "2026-10-06T09:19:23.119562+00:00"
+   },
+   {
+    "id": "01a11082-b307-78ef-a74d-6ef68ce07cb9",
+    "name": "Cola 500 ml",
+    "name_local": "কোলা",
+    "description": "",
+    "category_id": "01a11082-b295-7c52-9e66-26afcbf958dc",
+    "type": "stockable",
+    "base_unit": "pc",
+    "alt_units": [
+     {
+      "unit": "carton",
+      "factor": "24.000"
+     }
+    ],
+    "allow_fraction": false,
+    "tracking": "lot",
+    "track_expiry": true,
+    "tax_class_id": "01a11082-b295-767e-8cc9-f0abcd4439fa",
+    "attributes": {},
+    "image_url": "",
+    "reorder_level": "24.000",
+    "warranty_months": 0,
+    "active": true,
+    "variants": [
+     {
+      "id": "01a11082-b308-7588-97c7-cc07a28a2865",
+      "sku": "COLA-00021",
+      "label": "",
+      "option_values": {},
+      "price": "45.00",
+      "mrp": "0.00",
+      "cost": "36.00",
+      "plu": null,
+      "active": true,
+      "barcodes": [
+       {
+        "id": "01a11082-b309-7827-ba5a-9d0c8b5d9c0b",
+        "code": "8900000050116",
+        "unit": null,
+        "qty_per_scan": "1.000"
+       }
+      ]
+     }
+    ],
+    "updated_at": "2026-10-06T09:19:23.119562+00:00"
+   },
+   {
+    "id": "01a11082-b331-7841-9b82-92ffbe757ebd",
+    "name": "Detergent Powder 1 kg",
+    "name_local": "ডিটারজেন্ট ১ কেজি",
+    "description": "",
+    "category_id": "01a11082-b295-7ac7-a7b9-64a31c40f945",
+    "type": "stockable",
+    "base_unit": "pc",
+    "alt_units": [],
+    "allow_fraction": false,
+    "tracking": "none",
+    "track_expiry": false,
+    "tax_class_id": "01a11082-b295-767e-8cc9-f0abcd4439fa",
+    "attributes": {},
+    "image_url": "",
+    "reorder_level": "8.000",
+    "warranty_months": 0,
+    "active": true,
+    "variants": [
+     {
+      "id": "01a11082-b332-7eb4-a322-a3449607a125",
+      "sku": "DETE-00029",
+      "label": "",
+      "option_values": {},
+      "price": "160.00",
+      "mrp": "0.00",
+      "cost": "132.00",
+      "plu": null,
+      "active": true,
+      "barcodes": [
+       {
+        "id": "01a11082-b333-7dc7-8d01-8871cc339cce",
+        "code": "8900000050192",
+        "unit": null,
+        "qty_per_scan": "1.000"
+       }
+      ]
+     }
+    ],
+    "updated_at": "2026-10-06T09:19:23.119562+00:00"
+   },
+   {
+    "id": "01a11082-b32c-7e1e-bc9b-a03cb5c8a814",
+    "name": "Dishwash Liquid 500 ml",
+    "name_local": "ডিশ ওয়াশ",
+    "description": "",
+    "category_id": "01a11082-b295-7ac7-a7b9-64a31c40f945",
+    "type": "stockable",
+    "base_unit": "pc",
+    "alt_units": [],
+    "allow_fraction": false,
+    "tracking": "none",
+    "track_expiry": false,
+    "tax_class_id": "01a11082-b295-767e-8cc9-f0abcd4439fa",
+    "attributes": {},
+    "image_url": "",
+    "reorder_level": "6.000",
+    "warranty_months": 0,
+    "active": true,
+    "variants": [
+     {
+      "id": "01a11082-b32d-72ae-8ced-89381c4fa648",
+      "sku": "DISH-00028",
+      "label": "",
+      "option_values": {},
+      "price": "135.00",
+      "mrp": "0.00",
+      "cost": "108.00",
+      "plu": null,
+      "active": true,
+      "barcodes": [
+       {
+        "id": "01a11082-b32e-76e1-9c47-ab780332c995",
+        "code": "8900000050185",
+        "unit": null,
+        "qty_per_scan": "1.000"
+       }
+      ]
+     }
+    ],
+    "updated_at": "2026-10-06T09:19:23.119562+00:00"
+   },
+   {
+    "id": "01a11082-b2d1-74f4-9868-fb8471466c6e",
+    "name": "Farm Eggs (12)",
+    "name_local": "ডিম (১ ডজন)",
+    "description": "",
+    "category_id": "01a11082-b295-7dcf-8d88-b60bd2fd03c8",
+    "type": "stockable",
+    "base_unit": "pc",
+    "alt_units": [],
+    "allow_fraction": false,
+    "tracking": "lot",
+    "track_expiry": true,
+    "tax_class_id": null,
+    "attributes": {},
+    "image_url": "",
+    "reorder_level": "10.000",
+    "warranty_months": 0,
+    "active": true,
+    "variants": [
+     {
+      "id": "01a11082-b2d2-74d3-8b28-68316b453365",
+      "sku": "FARM-00011",
+      "label": "",
+      "option_values": {},
+      "price": "150.00",
+      "mrp": "0.00",
+      "cost": "132.00",
+      "plu": null,
+      "active": true,
+      "barcodes": []
+     }
+    ],
+    "updated_at": "2026-10-06T09:19:23.119562+00:00"
+   },
+   {
+    "id": "01a11082-b2b7-7bd9-95d8-7d171f0867ff",
+    "name": "Fresh Milk 1 L",
+    "name_local": "তরল দুধ",
+    "description": "",
+    "category_id": "01a11082-b295-7dcf-8d88-b60bd2fd03c8",
+    "type": "stockable",
+    "base_unit": "pc",
+    "alt_units": [],
+    "allow_fraction": false,
+    "tracking": "lot",
+    "track_expiry": true,
+    "tax_class_id": null,
+    "attributes": {
+     "brand": "Aarong Dairy",
+     "shelf_life_days": 7
+    },
+    "image_url": "",
+    "reorder_level": "12.000",
+    "warranty_months": 0,
+    "active": true,
+    "variants": [
+     {
+      "id": "01a11082-b2b8-74db-b21a-9593c292d8f1",
+      "sku": "FRES-00008",
+      "label": "",
+      "option_values": {},
+      "price": "105.00",
+      "mrp": "0.00",
+      "cost": "92.00",
+      "plu": null,
+      "active": true,
+      "barcodes": [
+       {
+        "id": "01a11082-b2ba-7f8a-b667-6a805290c1eb",
+        "code": "8900000050000",
+        "unit": null,
+        "qty_per_scan": "1.000"
+       }
+      ]
+     }
+    ],
+    "updated_at": "2026-10-06T09:19:23.119562+00:00"
+   }
+  ],
+  "total": 34,
+  "limit": 12,
+  "offset": 0
+ },
+ "sales_supershop": {
+  "items": [
+   {
+    "id": "01a11082-bc5b-7e8c-9925-09053823d3e5",
+    "invoice_no": "INV-D01-000407",
+    "status": "completed",
+    "branch_id": "01a11082-b295-7f78-b49c-7596bb82a4fa",
+    "device_id": "01a11082-b53d-7d79-a4b6-936132d3fe9b",
+    "sold_at": "2026-10-06T07:55:00Z",
+    "customer_id": "01a11082-b53e-7f9a-8019-292bbf27e992",
+    "customer_name": "Farhana Islam",
+    "cashier_name": "Mitu Rahman",
+    "salesperson_name": "",
+    "subtotal": "352.50",
+    "discount": "0.00",
+    "tax_total": "41.74",
+    "rounding": "0.50",
+    "total": "353.00",
+    "paid": "353.00",
+    "due": "0.00",
+    "tax_mode": "inclusive",
+    "points_earned": 3,
+    "note": "",
+    "flags": [],
+    "lines": [
+     {
+      "id": "01a11082-bc5b-74c9-9b97-11579d63fa9a",
+      "variant_id": "01a11082-b33b-753b-90b3-5b476e07e4dd",
+      "product_id": "01a11082-b33b-706e-9199-529447730e08",
+      "product_name": "Shampoo 340 ml",
+      "variant_label": "",
+      "sku": "SHAM-00031",
+      "unit": "pc",
+      "unit_factor": "1.000",
+      "qty": "1.000",
+      "base_qty": "1.000",
+      "unit_price": "320.00",
+      "discount": "0.00",
+      "tax_rate": "15.00",
+      "tax_amount": "41.74",
+      "line_total": "320.00",
+      "charged_total": "320.00",
+      "returned_qty": "0.000",
+      "warranty_months": 0,
+      "note": ""
+     },
+     {
+      "id": "01a11082-bc5b-7c31-829b-b299100e3555",
+      "variant_id": "01a11082-b29a-7f27-8069-ff79c3a6a163",
+      "product_id": "01a11082-b299-78f2-8f28-fc86913b2e5d",
+      "product_name": "Onion",
+      "variant_label": "",
+      "sku": "ONIO-00001",
+      "unit": "kg",
+      "unit_factor": "1.000",
+      "qty": "0.500",
+      "base_qty": "0.500",
+      "unit_price": "65.00",
+      "discount": "0.00",
+      "tax_rate": "0.00",
+      "tax_amount": "0.00",
+      "line_total": "32.50",
+      "charged_total": "32.50",
+      "returned_qty": "0.000",
+      "warranty_months": 0,
+      "note": ""
+     }
+    ],
+    "payments": [
+     {
+      "id": "01a11082-bc5b-70a1-b5f9-ac2b46b870c7",
+      "method": "cash",
+      "amount": "353.00",
+      "reference": "",
+      "kind": "sale",
+      "received_by_name": "Mitu Rahman",
+      "paid_at": "2026-10-06T07:55:00Z"
+     }
+    ]
+   },
+   {
+    "id": "01a11082-bc4d-7224-b11e-71c451ccc7c7",
+    "invoice_no": "INV-D01-000403",
+    "status": "completed",
+    "branch_id": "01a11082-b295-7f78-b49c-7596bb82a4fa",
+    "device_id": "01a11082-b53d-7d79-a4b6-936132d3fe9b",
+    "sold_at": "2026-10-06T07:41:00Z",
+    "customer_id": null,
+    "customer_name": "Walk-in",
+    "cashier_name": "Sohel Rana",
+    "salesperson_name": "",
+    "subtotal": "57.00",
+    "discount": "0.00",
+    "tax_total": "0.00",
+    "rounding": "0.00",
+    "total": "57.00",
+    "paid": "57.00",
+    "due": "0.00",
+    "tax_mode": "inclusive",
+    "points_earned": 0,
+    "note": "",
+    "flags": [],
+    "lines": [
+     {
+      "id": "01a11082-bc4d-7079-8d95-7310738a83c2",
+      "variant_id": "01a11082-b29f-76ce-9cf4-957e40dcb784",
+      "product_id": "01a11082-b29e-70a8-8a91-81d46625d84a",
+      "product_name": "Potato",
+      "variant_label": "",
+      "sku": "POTA-00002",
+      "unit": "kg",
+      "unit_factor": "1.000",
+      "qty": "1.500",
+      "base_qty": "1.500",
+      "unit_price": "38.00",
+      "discount": "0.00",
+      "tax_rate": "0.00",
+      "tax_amount": "0.00",
+      "line_total": "57.00",
+      "charged_total": "57.00",
+      "returned_qty": "0.000",
+      "warranty_months": 0,
+      "note": ""
+     }
+    ],
+    "payments": [
+     {
+      "id": "01a11082-bc4d-7582-aea8-bd34277ae1d6",
+      "method": "bkash",
+      "amount": "57.00",
+      "reference": "",
+      "kind": "sale",
+      "received_by_name": "Sohel Rana",
+      "paid_at": "2026-10-06T07:41:00Z"
+     }
+    ]
+   },
+   {
+    "id": "01a11082-bc59-7051-a1ed-5255e55291d5",
+    "invoice_no": "INV-D01-000406",
+    "status": "completed",
+    "branch_id": "01a11082-b295-7f78-b49c-7596bb82a4fa",
+    "device_id": "01a11082-b53d-7d79-a4b6-936132d3fe9b",
+    "sold_at": "2026-10-06T06:39:00Z",
+    "customer_id": "01a11082-b53e-7f9a-8019-292bbf27e992",
+    "customer_name": "Farhana Islam",
+    "cashier_name": "Sohel Rana",
+    "salesperson_name": "",
+    "subtotal": "38.00",
+    "discount": "0.00",
+    "tax_total": "0.00",
+    "rounding": "0.00",
+    "total": "38.00",
+    "paid": "38.00",
+    "due": "0.00",
+    "tax_mode": "inclusive",
+    "points_earned": 0,
+    "note": "",
+    "flags": [],
+    "lines": [
+     {
+      "id": "01a11082-bc58-7a79-814f-5ab22143c044",
+      "variant_id": "01a11082-b29f-76ce-9cf4-957e40dcb784",
+      "product_id": "01a11082-b29e-70a8-8a91-81d46625d84a",
+      "product_name": "Potato",
+      "variant_label": "",
+      "sku": "POTA-00002",
+      "unit": "kg",
+      "unit_factor": "1.000",
+      "qty": "1.000",
+      "base_qty": "1.000",
+      "unit_price": "38.00",
+      "discount": "0.00",
+      "tax_rate": "0.00",
+      "tax_amount": "0.00",
+      "line_total": "38.00",
+      "charged_total": "38.00",
+      "returned_qty": "0.000",
+      "warranty_months": 0,
+      "note": ""
+     }
+    ],
+    "payments": [
+     {
+      "id": "01a11082-bc58-7d37-aa05-3dd4a2d05638",
+      "method": "bkash",
+      "amount": "38.00",
+      "reference": "",
+      "kind": "sale",
+      "received_by_name": "Sohel Rana",
+      "paid_at": "2026-10-06T06:39:00Z"
+     }
+    ]
+   },
+   {
+    "id": "01a11082-bc54-72ff-a196-dceb91c1d579",
+    "invoice_no": "INV-D01-000405",
+    "status": "completed",
+    "branch_id": "01a11082-b295-7f78-b49c-7596bb82a4fa",
+    "device_id": "01a11082-b53d-7d79-a4b6-936132d3fe9b",
+    "sold_at": "2026-10-06T05:38:00Z",
+    "customer_id": "01a11082-b53e-7f9a-8019-292bbf27e992",
+    "customer_name": "Farhana Islam",
+    "cashier_name": "Mitu Rahman",
+    "salesperson_name": "",
+    "subtotal": "110.00",
+    "discount": "0.00",
+    "tax_total": "5.87",
+    "rounding": "0.00",
+    "total": "110.00",
+    "paid": "110.00",
+    "due": "0.00",
+    "tax_mode": "inclusive",
+    "points_earned": 1,
+    "note": "",
+    "flags": [],
+    "lines": [
+     {
+      "id": "01a11082-bc54-73dc-8d90-dcc953902bd3",
+      "variant_id": "01a11082-b308-7588-97c7-cc07a28a2865",
+      "product_id": "01a11082-b307-78ef-a74d-6ef68ce07cb9",
+      "product_name": "Cola 500 ml",
+      "variant_label": "",
+      "sku": "COLA-00021",
+      "unit": "pc",
+      "unit_factor": "1.000",
+      "qty": "1.000",
+      "base_qty": "1.000",
+      "unit_price": "45.00",
+      "discount": "0.00",
+      "tax_rate": "15.00",
+      "tax_amount": "5.87",
+      "line_total": "45.00",
+      "charged_total": "45.00",
+      "returned_qty": "0.000",
+      "warranty_months": 0,
+      "note": ""
+     },
+     {
+      "id": "01a11082-bc54-7d0c-bafa-e4f1de22620b",
+      "variant_id": "01a11082-b29a-7f27-8069-ff79c3a6a163",
+      "product_id": "01a11082-b299-78f2-8f28-fc86913b2e5d",
+      "product_name": "Onion",
+      "variant_label": "",
+      "sku": "ONIO-00001",
+      "unit": "kg",
+      "unit_factor": "1.000",
+      "qty": "1.000",
+      "base_qty": "1.000",
+      "unit_price": "65.00",
+      "discount": "0.00",
+      "tax_rate": "0.00",
+      "tax_amount": "0.00",
+      "line_total": "65.00",
+      "charged_total": "65.00",
+      "returned_qty": "0.000",
+      "warranty_months": 0,
+      "note": ""
+     }
+    ],
+    "payments": [
+     {
+      "id": "01a11082-bc54-7f0c-8cc4-88cef7b7ef7c",
+      "method": "card",
+      "amount": "110.00",
+      "reference": "",
+      "kind": "sale",
+      "received_by_name": "Mitu Rahman",
+      "paid_at": "2026-10-06T05:38:00Z"
+     }
+    ]
+   },
+   {
+    "id": "01a11082-bc49-72ac-9250-a1f1b6c63611",
+    "invoice_no": "INV-D01-000402",
+    "status": "completed",
+    "branch_id": "01a11082-b53c-7fe6-bf5b-ec19907aaadd",
+    "device_id": null,
+    "sold_at": "2026-10-06T05:36:00Z",
+    "customer_id": null,
+    "customer_name": "Walk-in",
+    "cashier_name": "Dina Akter",
+    "salesperson_name": "",
+    "subtotal": "441.00",
+    "discount": "0.00",
+    "tax_total": "0.00",
+    "rounding": "0.00",
+    "total": "441.00",
+    "paid": "441.00",
+    "due": "0.00",
+    "tax_mode": "inclusive",
+    "points_earned": 0,
+    "note": "",
+    "flags": [],
+    "lines": [
+     {
+      "id": "01a11082-bc49-7b6c-a53f-73c78871d420",
+      "variant_id": "01a11082-b29f-76ce-9cf4-957e40dcb784",
+      "product_id": "01a11082-b29e-70a8-8a91-81d46625d84a",
+      "product_name": "Potato",
+      "variant_label": "",
+      "sku": "POTA-00002",
+      "unit": "kg",
+      "unit_factor": "1.000",
+      "qty": "2.000",
+      "base_qty": "2.000",
+      "unit_price": "38.00",
+      "discount": "0.00",
+      "tax_rate": "0.00",
+      "tax_amount": "0.00",
+      "line_total": "76.00",
+      "charged_total": "76.00",
+      "returned_qty": "0.000",
+      "warranty_months": 0,
+      "note": ""
+     },
+     {
+      "id": "01a11082-bc49-7633-91de-81a3c8ee9d6f",
+      "variant_id": "01a11082-b2e8-760b-a812-59a698af5b4f",
+      "product_id": "01a11082-b2e7-725d-a652-b62e4b3e9810",
+      "product_name": "Soybean Oil 2 L",
+      "variant_label": "",
+      "sku": "SOYB-00015",
+      "unit": "pc",
+      "unit_factor": "1.000",
+      "qty": "1.000",
+      "base_qty": "1.000",
+      "unit_price": "365.00",
+      "discount": "0.00",
+      "tax_rate": "0.00",
+      "tax_amount": "0.00",
+      "line_total": "365.00",
+      "charged_total": "365.00",
+      "returned_qty": "0.000",
+      "warranty_months": 0,
+      "note": ""
+     }
+    ],
+    "payments": [
+     {
+      "id": "01a11082-bc49-7eb3-aaa8-c1becd20c456",
+      "method": "cash",
+      "amount": "441.00",
+      "reference": "",
+      "kind": "sale",
+      "received_by_name": "Dina Akter",
+      "paid_at": "2026-10-06T05:36:00Z"
+     }
+    ]
+   },
+   {
+    "id": "01a11082-bc5f-7ac5-ba4b-7b5115db3cb7",
+    "invoice_no": "INV-D01-000408",
+    "status": "completed",
+    "branch_id": "01a11082-b295-7f78-b49c-7596bb82a4fa",
+    "device_id": "01a11082-b53d-7d79-a4b6-936132d3fe9b",
+    "sold_at": "2026-10-06T04:31:00Z",
+    "customer_id": "01a11082-b53e-7d33-a4ed-63214fb311a3",
+    "customer_name": "Shirin Sultana",
+    "cashier_name": "Tanvir Ahmed",
+    "salesperson_name": "",
+    "subtotal": "455.00",
+    "discount": "0.00",
+    "tax_total": "41.74",
+    "rounding": "0.00",
+    "total": "455.00",
+    "paid": "455.00",
+    "due": "0.00",
+    "tax_mode": "inclusive",
+    "points_earned": 4,
+    "note": "",
+    "flags": [],
+    "lines": [
+     {
+      "id": "01a11082-bc5f-7691-b0d3-94d6ca675dfe",
+      "variant_id": "01a11082-b33b-753b-90b3-5b476e07e4dd",
+      "product_id": "01a11082-b33b-706e-9199-529447730e08",
+      "product_name": "Shampoo 340 ml",
+      "variant_label": "",
+      "sku": "SHAM-00031",
+      "unit": "pc",
+      "unit_factor": "1.000",
+      "qty": "1.000",
+      "base_qty": "1.000",
+      "unit_price": "320.00",
+      "discount": "0.00",
+      "tax_rate": "15.00",
+      "tax_amount": "41.74",
+      "line_total": "320.00",
+      "charged_total": "320.00",
+      "returned_qty": "0.000",
+      "warranty_months": 0,
+      "note": ""
+     },
+     {
+      "id": "01a11082-bc5f-72e2-b75c-95e28a5bb066",
+      "variant_id": "01a11082-b2a3-7ebf-9e78-8e098b46fe7c",
+      "product_id": "01a11082-b2a2-7096-b4b9-fbb16eccfb1f",
+      "product_name": "Tomato",
+      "variant_label": "",
+      "sku": "TOMA-00003",
+      "unit": "kg",
+      "unit_factor": "1.000",
+      "qty": "1.500",
+      "base_qty": "1.500",
+      "unit_price": "90.00",
+      "discount": "0.00",
+      "tax_rate": "0.00",
+      "tax_amount": "0.00",
+      "line_total": "135.00",
+      "charged_total": "135.00",
+      "returned_qty": "0.000",
+      "warranty_months": 0,
+      "note": ""
+     }
+    ],
+    "payments": [
+     {
+      "id": "01a11082-bc5f-7105-80f9-8a6b41694cfb",
+      "method": "cash",
+      "amount": "455.00",
+      "reference": "",
+      "kind": "sale",
+      "received_by_name": "Tanvir Ahmed",
+      "paid_at": "2026-10-06T04:31:00Z"
+     }
+    ]
+   },
+   {
+    "id": "01a11082-bc50-7fc1-a020-dfba82886c67",
+    "invoice_no": "INV-D01-000404",
+    "status": "completed",
+    "branch_id": "01a11082-b53c-7fe6-bf5b-ec19907aaadd",
+    "device_id": null,
+    "sold_at": "2026-10-06T03:15:00Z",
+    "customer_id": "01a11082-b53e-7f9a-8019-292bbf27e992",
+    "customer_name": "Farhana Islam",
+    "cashier_name": "Sohel Rana",
+    "salesperson_name": "",
+    "subtotal": "940.00",
+    "discount": "0.00",
+    "tax_total": "0.00",
+    "rounding": "0.00",
+    "total": "940.00",
+    "paid": "940.00",
+    "due": "0.00",
+    "tax_mode": "inclusive",
+    "points_earned": 9,
+    "note": "",
+    "flags": [],
+    "lines": [
+     {
+      "id": "01a11082-bc50-7d09-a459-f455f1be2ce9",
+      "variant_id": "01a11082-b2e8-760b-a812-59a698af5b4f",
+      "product_id": "01a11082-b2e7-725d-a652-b62e4b3e9810",
+      "product_name": "Soybean Oil 2 L",
+      "variant_label": "",
+      "sku": "SOYB-00015",
+      "unit": "pc",
+      "unit_factor": "1.000",
+      "qty": "2.000",
+      "base_qty": "2.000",
+      "unit_price": "365.00",
+      "discount": "0.00",
+      "tax_rate": "0.00",
+      "tax_amount": "0.00",
+      "line_total": "730.00",
+      "charged_total": "730.00",
+      "returned_qty": "0.000",
+      "warranty_months": 0,
+      "note": ""
+     },
+     {
+      "id": "01a11082-bc50-7a06-83ac-5e2fb77f7dde",
+      "variant_id": "01a11082-b2fd-79c3-8ed7-ff3ca7df951c",
+      "product_id": "01a11082-b2fc-7640-9b3c-e6af6bcc4fa6",
+      "product_name": "Turmeric Powder 200 g",
+      "variant_label": "",
+      "sku": "TURM-00019",
+      "unit": "pc",
+      "unit_factor": "1.000",
+      "qty": "2.000",
+      "base_qty": "2.000",
+      "unit_price": "105.00",
+      "discount": "0.00",
+      "tax_rate": "0.00",
+      "tax_amount": "0.00",
+      "line_total": "210.00",
+      "charged_total": "210.00",
+      "returned_qty": "0.000",
+      "warranty_months": 0,
+      "note": ""
+     }
+    ],
+    "payments": [
+     {
+      "id": "01a11082-bc50-77d5-a7d7-09848dbfeedb",
+      "method": "cash",
+      "amount": "940.00",
+      "reference": "",
+      "kind": "sale",
+      "received_by_name": "Sohel Rana",
+      "paid_at": "2026-10-06T03:15:00Z"
+     }
+    ]
+   },
+   {
+    "id": "01a11082-bc2a-743e-ae6e-068526d3d914",
+    "invoice_no": "INV-D01-000391",
+    "status": "completed",
+    "branch_id": "01a11082-b295-7f78-b49c-7596bb82a4fa",
+    "device_id": "01a11082-b53d-7d79-a4b6-936132d3fe9b",
+    "sold_at": "2026-10-05T15:51:00Z",
+    "customer_id": null,
+    "customer_name": "Walk-in",
+    "cashier_name": "Sohel Rana",
+    "salesperson_name": "",
+    "subtotal": "38.00",
+    "discount": "0.00",
+    "tax_total": "0.00",
+    "rounding": "0.00",
+    "total": "38.00",
+    "paid": "38.00",
+    "due": "0.00",
+    "tax_mode": "inclusive",
+    "points_earned": 0,
+    "note": "",
+    "flags": [],
+    "lines": [
+     {
+      "id": "01a11082-bc2a-7764-b6ea-b1060be7aae9",
+      "variant_id": "01a11082-b29f-76ce-9cf4-957e40dcb784",
+      "product_id": "01a11082-b29e-70a8-8a91-81d46625d84a",
+      "product_name": "Potato",
+      "variant_label": "",
+      "sku": "POTA-00002",
+      "unit": "kg",
+      "unit_factor": "1.000",
+      "qty": "1.000",
+      "base_qty": "1.000",
+      "unit_price": "38.00",
+      "discount": "0.00",
+      "tax_rate": "0.00",
+      "tax_amount": "0.00",
+      "line_total": "38.00",
+      "charged_total": "38.00",
+      "returned_qty": "0.000",
+      "warranty_months": 0,
+      "note": ""
+     }
+    ],
+    "payments": [
+     {
+      "id": "01a11082-bc2a-7bb5-b929-077f6e07e134",
+      "method": "bkash",
+      "amount": "38.00",
+      "reference": "",
+      "kind": "sale",
+      "received_by_name": "Sohel Rana",
+      "paid_at": "2026-10-05T15:51:00Z"
+     }
+    ]
+   }
+  ],
+  "total": 408,
+  "limit": 8,
+  "offset": 0
+ },
+ "billing_sub": {
+  "plan": {
+   "key": "business",
+   "name": "Business",
+   "tagline": "Growing shops with several staff and branches",
+   "monthly_price": "1999.00",
+   "yearly_price": "19990.00",
+   "currency": "BDT",
+   "trial_days": 14,
+   "limits": {
+    "staff": 10,
+    "devices": 6,
+    "branches": 3,
+    "products": 10000,
+    "sales_per_month": -1
+   },
+   "features": [
+    "pos",
+    "inventory",
+    "purchases",
+    "customers",
+    "reports",
+    "reports_advanced",
+    "offline_sync",
+    "multi_branch",
+    "staff",
+    "expenses",
+    "export",
+    "orders"
+   ],
+   "capabilities": null,
+   "highlight": true
+  },
+  "status": "active",
+  "state": "active",
+  "billing_cycle": "monthly",
+  "period_end": "2026-10-30T09:19:23.469719+00:00",
+  "valid_until": "2026-11-02T09:19:23.469719+00:00",
+  "days_left": 23,
+  "usage": {
+   "products": 34,
+   "staff": 4,
+   "branches": 2,
+   "devices": 3,
+   "sales_per_month": 142
+  },
+  "invoices": []
+ },
+ "billing_plans": {
+  "plans": [
+   {
+    "key": "starter",
+    "name": "Starter",
+    "tagline": "One shop, one or two tills",
+    "monthly_price": "999.00",
+    "yearly_price": "9990.00",
+    "currency": "BDT",
+    "trial_days": 14,
+    "limits": {
+     "staff": 3,
+     "devices": 2,
+     "branches": 1,
+     "products": 1000,
+     "sales_per_month": -1
+    },
+    "features": [
+     "pos",
+     "inventory",
+     "purchases",
+     "customers",
+     "reports",
+     "offline_sync",
+     "staff",
+     "expenses"
+    ],
+    "capabilities": null,
+    "highlight": false
+   },
+   {
+    "key": "business",
+    "name": "Business",
+    "tagline": "Growing shops with several staff and branches",
+    "monthly_price": "1999.00",
+    "yearly_price": "19990.00",
+    "currency": "BDT",
+    "trial_days": 14,
+    "limits": {
+     "staff": 10,
+     "devices": 6,
+     "branches": 3,
+     "products": 10000,
+     "sales_per_month": -1
+    },
+    "features": [
+     "pos",
+     "inventory",
+     "purchases",
+     "customers",
+     "reports",
+     "reports_advanced",
+     "offline_sync",
+     "multi_branch",
+     "staff",
+     "expenses",
+     "export",
+     "orders"
+    ],
+    "capabilities": null,
+    "highlight": true
+   },
+   {
+    "key": "enterprise",
+    "name": "Enterprise",
+    "tagline": "Chains and large showrooms — no limits",
+    "monthly_price": "4999.00",
+    "yearly_price": "49990.00",
+    "currency": "BDT",
+    "trial_days": 14,
+    "limits": {
+     "staff": -1,
+     "devices": -1,
+     "branches": -1,
+     "products": -1,
+     "sales_per_month": -1
+    },
+    "features": [
+     "pos",
+     "inventory",
+     "purchases",
+     "customers",
+     "reports",
+     "reports_advanced",
+     "offline_sync",
+     "multi_branch",
+     "staff",
+     "expenses",
+     "export",
+     "orders"
+    ],
+    "capabilities": null,
+    "highlight": false
+   }
+  ],
+  "current": "business"
+ },
+ "billing_requests": [],
+ "users": [
+  {
+   "id": "01a11082-b53a-7e77-8ce7-cfa3669934a2",
+   "name": "Dina Akter",
+   "phone": "01722000004",
+   "email": "",
+   "role": "cashier",
+   "role_label": "Cashier",
+   "active": true,
+   "tenant_id": "01a11082-b1f0-7971-bd29-354e7d9a060a",
+   "permissions": [
+    "collect_dues",
+    "manage_customers",
+    "manage_shifts",
+    "sell",
+    "view_inventory",
+    "view_sales"
+   ],
+   "branch_ids": [
+    "01a11082-b53c-7fe6-bf5b-ec19907aaadd"
+   ],
+   "permission_overrides": null
+  },
+  {
+   "id": "01a11082-b53a-795c-b9c4-52ad7f0c26a3",
+   "name": "Mitu Rahman",
+   "phone": "01722000002",
+   "email": "",
+   "role": "manager",
+   "role_label": "Manager",
+   "active": true,
+   "tenant_id": "01a11082-b1f0-7971-bd29-354e7d9a060a",
+   "permissions": [
+    "adjust_stock",
+    "apply_discount",
+    "collect_dues",
+    "export_data",
+    "manage_customers",
+    "manage_devices",
+    "manage_expenses",
+    "manage_orders",
+    "manage_products",
+    "manage_purchases",
+    "manage_shifts",
+    "override_price",
+    "refund",
+    "sell",
+    "view_cost",
+    "view_inventory",
+    "view_margin",
+    "view_reports",
+    "view_sales",
+    "void_sale"
+   ],
+   "branch_ids": null,
+   "permission_overrides": null
+  },
+  {
+   "id": "01a11082-b53a-7d80-ae50-e5123c54220c",
+   "name": "Sohel Rana",
+   "phone": "01722000003",
+   "email": "",
+   "role": "cashier",
+   "role_label": "Cashier",
+   "active": true,
+   "tenant_id": "01a11082-b1f0-7971-bd29-354e7d9a060a",
+   "permissions": [
+    "collect_dues",
+    "manage_customers",
+    "manage_shifts",
+    "sell",
+    "view_inventory",
+    "view_sales"
+   ],
+   "branch_ids": null,
+   "permission_overrides": null
+  },
+  {
+   "id": "01a11082-b295-759c-aa7b-fce412f12098",
+   "name": "Tanvir Ahmed",
+   "phone": "01722000001",
+   "email": "",
+   "role": "owner",
+   "role_label": "Owner",
+   "active": true,
+   "tenant_id": "01a11082-b1f0-7971-bd29-354e7d9a060a",
+   "permissions": [
+    "adjust_stock",
+    "apply_discount",
+    "collect_dues",
+    "export_data",
+    "manage_branches",
+    "manage_customers",
+    "manage_devices",
+    "manage_expenses",
+    "manage_orders",
+    "manage_products",
+    "manage_purchases",
+    "manage_settings",
+    "manage_shifts",
+    "manage_staff",
+    "manage_subscription",
+    "override_price",
+    "refund",
+    "sell",
+    "view_cost",
+    "view_inventory",
+    "view_margin",
+    "view_reports",
+    "view_sales",
+    "void_sale"
+   ],
+   "branch_ids": null,
+   "permission_overrides": null
+  }
+ ],
+ "users_roles": {
+  "roles": [
+   {
+    "key": "owner",
+    "label": "Owner",
+    "permissions": [
+     "adjust_stock",
+     "apply_discount",
+     "collect_dues",
+     "export_data",
+     "manage_branches",
+     "manage_customers",
+     "manage_devices",
+     "manage_expenses",
+     "manage_orders",
+     "manage_products",
+     "manage_purchases",
+     "manage_settings",
+     "manage_shifts",
+     "manage_staff",
+     "manage_subscription",
+     "override_price",
+     "refund",
+     "sell",
+     "view_cost",
+     "view_inventory",
+     "view_margin",
+     "view_reports",
+     "view_sales",
+     "void_sale"
+    ]
+   },
+   {
+    "key": "manager",
+    "label": "Manager",
+    "permissions": [
+     "adjust_stock",
+     "apply_discount",
+     "collect_dues",
+     "export_data",
+     "manage_customers",
+     "manage_devices",
+     "manage_expenses",
+     "manage_orders",
+     "manage_products",
+     "manage_purchases",
+     "manage_shifts",
+     "override_price",
+     "refund",
+     "sell",
+     "view_cost",
+     "view_inventory",
+     "view_margin",
+     "view_reports",
+     "view_sales",
+     "void_sale"
+    ]
+   },
+   {
+    "key": "cashier",
+    "label": "Cashier",
+    "permissions": [
+     "collect_dues",
+     "manage_customers",
+     "manage_shifts",
+     "sell",
+     "view_inventory",
+     "view_sales"
+    ]
+   },
+   {
+    "key": "salesperson",
+    "label": "Salesperson",
+    "permissions": [
+     "manage_customers",
+     "manage_orders",
+     "sell",
+     "view_inventory",
+     "view_sales"
+    ]
+   },
+   {
+    "key": "stock_keeper",
+    "label": "Stock keeper",
+    "permissions": [
+     "adjust_stock",
+     "manage_products",
+     "manage_purchases",
+     "view_cost",
+     "view_inventory"
+    ]
+   },
+   {
+    "key": "accountant",
+    "label": "Accountant",
+    "permissions": [
+     "collect_dues",
+     "export_data",
+     "manage_customers",
+     "manage_expenses",
+     "view_cost",
+     "view_inventory",
+     "view_margin",
+     "view_reports",
+     "view_sales"
+    ]
+   }
+  ],
+  "permissions": [
+   "sell",
+   "apply_discount",
+   "override_price",
+   "void_sale",
+   "refund",
+   "view_sales",
+   "view_inventory",
+   "manage_products",
+   "adjust_stock",
+   "view_cost",
+   "manage_purchases",
+   "manage_customers",
+   "collect_dues",
+   "manage_expenses",
+   "manage_shifts",
+   "manage_orders",
+   "view_reports",
+   "view_margin",
+   "export_data",
+   "manage_staff",
+   "manage_branches",
+   "manage_devices",
+   "manage_settings"
+  ]
+ },
+ "branches": [
+  {
+   "id": "01a11082-b295-7f78-b49c-7596bb82a4fa",
+   "name": "Banani",
+   "code": "MAIN",
+   "address": "",
+   "phone": "01722000001",
+   "manager_name": "",
+   "is_main": true,
+   "active": true
+  },
+  {
+   "id": "01a11082-b53c-7fe6-bf5b-ec19907aaadd",
+   "name": "Uttara",
+   "code": "UTTA",
+   "address": "Uttara Sector 7",
+   "phone": "",
+   "manager_name": "",
+   "is_main": false,
+   "active": true
+  }
+ ],
+ "context_local_shop": {
+  "tenant": {
+   "id": "01a11082-a7fd-7cdd-b3a8-e7dcdfd7ff43",
+   "name": "Rahim General Store",
+   "owner_name": "Abdur Rahim",
+   "phone": "01711000001",
+   "address": "",
+   "city": "Mirpur, Dhaka"
+  },
+  "business_type": {
+   "key": "local_shop",
+   "label": "Local Shop",
+   "family": "counter_retail",
+   "version": 1,
+   "theme": {
+    "icon": "store",
+    "accent": "#E8A200"
+   }
+  },
+  "capabilities": [
+   "barcode_scanning",
+   "customer_credit",
+   "fractional_qty",
+   "multi_uom"
+  ],
+  "capability_catalogue": {
+   "barcode_scanning": {
+    "label": "Barcode scanning",
+    "group": "Selling"
+   },
+   "fractional_qty": {
+    "label": "Sell by weight / length",
+    "group": "Selling"
+   },
+   "multi_uom": {
+    "label": "Multiple units",
+    "group": "Selling"
+   },
+   "customer_credit": {
+    "label": "Customer credit (baki / due)",
+    "group": "Selling"
+   }
+  },
+  "features": [
+   "pos",
+   "inventory",
+   "purchases",
+   "customers",
+   "reports",
+   "offline_sync",
+   "staff",
+   "expenses"
+  ],
+  "limits": {
+   "staff": 3,
+   "devices": 2,
+   "branches": 1,
+   "products": 1000,
+   "sales_per_month": -1
+  },
+  "usage": {
+   "products": 31,
+   "staff": 2,
+   "branches": 1,
+   "devices": 2,
+   "sales_per_month": 110
+  },
+  "modules": [
+   {
+    "id": "dashboard",
+    "label": "Dashboard",
+    "available": true,
+    "locked_reason": null
+   },
+   {
+    "id": "pos",
+    "label": "Sell",
+    "available": true,
+    "locked_reason": null
+   },
+   {
+    "id": "orders",
+    "label": "Orders",
+    "available": false,
+    "locked_reason": "capability"
+   },
+   {
+    "id": "sales",
+    "label": "Sales",
+    "available": true,
+    "locked_reason": null
+   },
+   {
+    "id": "products",
+    "label": "Products",
+    "available": true,
+    "locked_reason": null
+   },
+   {
+    "id": "stock",
+    "label": "Stock",
+    "available": true,
+    "locked_reason": null
+   },
+   {
+    "id": "purchases",
+    "label": "Purchases",
+    "available": true,
+    "locked_reason": null
+   },
+   {
+    "id": "customers",
+    "label": "Customers",
+    "available": true,
+    "locked_reason": null
+   },
+   {
+    "id": "expenses",
+    "label": "Expenses",
+    "available": true,
+    "locked_reason": null
+   },
+   {
+    "id": "shifts",
+    "label": "Shifts",
+    "available": false,
+    "locked_reason": "capability"
+   },
+   {
+    "id": "reports",
+    "label": "Reports",
+    "available": true,
+    "locked_reason": null
+   },
+   {
+    "id": "settings",
+    "label": "Settings",
+    "available": true,
+    "locked_reason": null
+   },
+   {
+    "id": "billing",
+    "label": "Subscription",
+    "available": true,
+    "locked_reason": null
+   }
+  ],
+  "terminology": {
+   "due": "Baki",
+   "product": "Item",
+   "customer": "Customer",
+   "supplier": "Supplier"
+  },
+  "attributes": [
+   {
+    "key": "brand",
+    "type": "select_or_create",
+    "unit": null,
+    "flags": {
+     "filterable": true,
+     "searchable": true,
+     "show_in_pos": true,
+     "show_on_label": false,
+     "show_on_receipt": false
+    },
+    "group": "Details",
+    "label": "Brand",
+    "source": "template",
+    "options": [],
+    "label_bn": "ব্র্যান্ড",
+    "required": false
+   },
+   {
+    "key": "shelf",
+    "type": "text",
+    "unit": null,
+    "flags": {
+     "filterable": false,
+     "searchable": false,
+     "show_in_pos": false,
+     "show_on_label": false,
+     "show_on_receipt": false
+    },
+    "group": "Storage",
+    "label": "Shelf / rack",
+    "source": "template",
+    "options": [],
+    "label_bn": "তাক",
+    "required": false
+   }
+  ],
+  "variant_axes": [],
+  "units": [
+   {
+    "code": "pc",
+    "label": "Piece",
+    "label_bn": "পিস",
+    "allow_fraction": false
+   },
+   {
+    "code": "kg",
+    "label": "Kilogram",
+    "label_bn": "কেজি",
+    "allow_fraction": true
+   },
+   {
+    "code": "g",
+    "label": "Gram",
+    "label_bn": "গ্রাম",
+    "allow_fraction": true
+   },
+   {
+    "code": "litre",
+    "label": "Litre",
+    "label_bn": "লিটার",
+    "allow_fraction": true
+   },
+   {
+    "code": "dozen",
+    "label": "Dozen",
+    "label_bn": "ডজন",
+    "allow_fraction": false
+   },
+   {
+    "code": "pack",
+    "label": "Packet",
+    "label_bn": "প্যাকেট",
+    "allow_fraction": false
+   },
+   {
+    "code": "bag",
+    "label": "Bag",
+    "label_bn": "বস্তা",
+    "allow_fraction": false
+   },
+   {
+    "code": "carton",
+    "label": "Carton",
+    "label_bn": "কার্টন",
+    "allow_fraction": false
+   }
+  ],
+  "settings": {
+   "currency": "BDT",
+   "currency_symbol": "৳",
+   "language": "bn",
+   "timezone": "Asia/Dhaka",
+   "tax": {
+    "mode": "inclusive",
+    "cash_rounding": "none"
+   },
+   "stock": {
+    "costing": "weighted_average",
+    "allocation": "none",
+    "allow_negative": true,
+    "reorder_default": 5
+   },
+   "pos": {
+    "layout": "quick",
+    "quick_keys": true,
+    "hold_resume": true,
+    "require_customer": false
+   },
+   "loyalty": {
+    "enabled": false,
+    "points_per_100": 0
+   },
+   "receipt": {
+    "phone": "01711000001",
+    "footer": "Thank you for shopping with us! ধন্যবাদ",
+    "header": "Rahim General Store",
+    "address": "",
+    "show_tax": true,
+    "vat_reg_no": ""
+   },
+   "payment_methods": [
+    {
+     "code": "cash",
+     "kind": "cash",
+     "label": "Cash",
+     "enabled": true,
+     "label_bn": "নগদ"
+    },
+    {
+     "code": "bkash",
+     "kind": "mobile",
+     "label": "bKash",
+     "enabled": true,
+     "label_bn": "বিকাশ"
+    },
+    {
+     "code": "nagad",
+     "kind": "mobile",
+     "label": "Nagad",
+     "enabled": true,
+     "label_bn": "নগদ (Nagad)"
+    },
+    {
+     "code": "rocket",
+     "kind": "mobile",
+     "label": "Rocket",
+     "enabled": false,
+     "label_bn": "রকেট"
+    },
+    {
+     "code": "upay",
+     "kind": "mobile",
+     "label": "Upay",
+     "enabled": false,
+     "label_bn": "উপায়"
+    },
+    {
+     "code": "card",
+     "kind": "card",
+     "label": "Card",
+     "enabled": true,
+     "label_bn": "কার্ড"
+    },
+    {
+     "code": "bank",
+     "kind": "bank",
+     "label": "Bank transfer",
+     "enabled": false,
+     "label_bn": "ব্যাংক"
+    }
+   ],
+   "scale": {
+    "mode": "weight",
+    "prefix": "20"
+   },
+   "documents": {
+    "invoice": "a4_simple",
+    "receipt": "thermal_80"
+   },
+   "dashboard": [
+    "today_sales",
+    "sales_trend",
+    "dues",
+    "low_stock",
+    "payment_mix",
+    "top_products"
+   ],
+   "reports": [
+    "sales_summary",
+    "daily_book",
+    "due_ageing",
+    "stock_valuation",
+    "expenses"
+   ],
+   "deposit_percent_min": 0
+  },
+  "subscription": {
+   "plan": {
+    "key": "starter",
+    "name": "Starter",
+    "monthly_price": "999.00",
+    "yearly_price": "9990.00"
+   },
+   "state": "active",
+   "status": "active",
+   "billing_cycle": "monthly",
+   "period_end": "2026-10-30T09:19:20.977918+00:00",
+   "valid_until": "2026-11-02T09:19:20.977918+00:00",
+   "days_left": 23,
+   "lapsed": false,
+   "notice": null
+  },
+  "user": {
+   "id": "01a11082-a8a5-70e9-bcd4-772bc4b522b1",
+   "name": "Abdur Rahim",
+   "phone": "01711000001",
+   "email": "",
+   "role": "owner",
+   "role_label": "Owner",
+   "active": true,
+   "tenant_id": "01a11082-a7fd-7cdd-b3a8-e7dcdfd7ff43",
+   "permissions": [
+    "adjust_stock",
+    "apply_discount",
+    "collect_dues",
+    "export_data",
+    "manage_branches",
+    "manage_customers",
+    "manage_devices",
+    "manage_expenses",
+    "manage_orders",
+    "manage_products",
+    "manage_purchases",
+    "manage_settings",
+    "manage_shifts",
+    "manage_staff",
+    "manage_subscription",
+    "override_price",
+    "refund",
+    "sell",
+    "view_cost",
+    "view_inventory",
+    "view_margin",
+    "view_reports",
+    "view_sales",
+    "void_sale"
+   ],
+   "branch_ids": null,
+   "permission_overrides": null
+  },
+  "branches": [
+   {
+    "id": "01a11082-a8a5-7345-b1c7-bad74cb6315b",
+    "name": "Mirpur 10",
+    "code": "MAIN",
+    "is_main": true,
+    "address": ""
+   }
+  ],
+  "server_time": "2026-10-06T10:17:40.927775+00:00"
+ },
+ "context_cosmetic": {
+  "tenant": {
+   "id": "01a11082-bc65-7775-9a7b-70f253386b23",
+   "name": "Glow & Co Beauty",
+   "owner_name": "Nabila Chowdhury",
+   "phone": "01733000001",
+   "address": "",
+   "city": "Dhanmondi, Dhaka"
+  },
+  "business_type": {
+   "key": "cosmetic",
+   "label": "Cosmetic Shop",
+   "family": "counter_retail",
+   "version": 1,
+   "theme": {
+    "icon": "spa",
+    "accent": "#D6336C"
+   }
+  },
+  "capabilities": [
+   "barcode_scanning",
+   "customer_credit",
+   "expiry_tracking",
+   "item_tax",
+   "lot_tracking",
+   "loyalty",
+   "shifts",
+   "variants"
+  ],
+  "capability_catalogue": {
+   "barcode_scanning": {
+    "label": "Barcode scanning",
+    "group": "Selling"
+   },
+   "item_tax": {
+    "label": "Item-level VAT",
+    "group": "Selling"
+   },
+   "customer_credit": {
+    "label": "Customer credit (baki / due)",
+    "group": "Selling"
+   },
+   "loyalty": {
+    "label": "Loyalty points",
+    "group": "Selling"
+   },
+   "shifts": {
+    "label": "Register shifts",
+    "group": "Selling"
+   },
+   "variants": {
+    "label": "Variants",
+    "group": "Catalogue"
+   },
+   "lot_tracking": {
+    "label": "Batch / lot tracking",
+    "group": "Inventory"
+   },
+   "expiry_tracking": {
+    "label": "Expiry dates",
+    "group": "Inventory"
+   }
+  },
+  "features": [
+   "pos",
+   "inventory",
+   "purchases",
+   "customers",
+   "reports",
+   "reports_advanced",
+   "offline_sync",
+   "multi_branch",
+   "staff",
+   "expenses",
+   "export",
+   "orders"
+  ],
+  "limits": {
+   "staff": 10,
+   "devices": 6,
+   "branches": 3,
+   "products": 10000,
+   "sales_per_month": -1
+  },
+  "usage": {
+   "products": 17,
+   "staff": 2,
+   "branches": 1,
+   "devices": 1,
+   "sales_per_month": 46
+  },
+  "modules": [
+   {
+    "id": "dashboard",
+    "label": "Dashboard",
+    "available": true,
+    "locked_reason": null
+   },
+   {
+    "id": "pos",
+    "label": "Sell",
+    "available": true,
+    "locked_reason": null
+   },
+   {
+    "id": "orders",
+    "label": "Orders",
+    "available": false,
+    "locked_reason": "capability"
+   },
+   {
+    "id": "sales",
+    "label": "Sales",
+    "available": true,
+    "locked_reason": null
+   },
+   {
+    "id": "products",
+    "label": "Products",
+    "available": true,
+    "locked_reason": null
+   },
+   {
+    "id": "stock",
+    "label": "Stock",
+    "available": true,
+    "locked_reason": null
+   },
+   {
+    "id": "purchases",
+    "label": "Purchases",
+    "available": true,
+    "locked_reason": null
+   },
+   {
+    "id": "customers",
+    "label": "Customers",
+    "available": true,
+    "locked_reason": null
+   },
+   {
+    "id": "expenses",
+    "label": "Expenses",
+    "available": true,
+    "locked_reason": null
+   },
+   {
+    "id": "shifts",
+    "label": "Shifts",
+    "available": true,
+    "locked_reason": null
+   },
+   {
+    "id": "reports",
+    "label": "Reports",
+    "available": true,
+    "locked_reason": null
+   },
+   {
+    "id": "settings",
+    "label": "Settings",
+    "available": true,
+    "locked_reason": null
+   },
+   {
+    "id": "billing",
+    "label": "Subscription",
+    "available": true,
+    "locked_reason": null
+   }
+  ],
+  "terminology": {
+   "due": "Due",
+   "product": "Product",
+   "customer": "Customer",
+   "supplier": "Supplier"
+  },
+  "attributes": [
+   {
+    "key": "brand",
+    "type": "select_or_create",
+    "unit": null,
+    "flags": {
+     "filterable": true,
+     "searchable": true,
+     "show_in_pos": true,
+     "show_on_label": false,
+     "show_on_receipt": false
+    },
+    "group": "Details",
+    "label": "Brand",
+    "source": "template",
+    "options": [],
+    "label_bn": "ব্র্যান্ড",
+    "required": true
+   },
+   {
+    "key": "skin_type",
+    "type": "multiselect",
+    "unit": null,
+    "flags": {
+     "filterable": true,
+     "searchable": false,
+     "show_in_pos": false,
+     "show_on_label": false,
+     "show_on_receipt": false
+    },
+    "group": "Details",
+    "label": "Skin type",
+    "source": "template",
+    "options": [
+     "Oily",
+     "Dry",
+     "Combination",
+     "Sensitive",
+     "All"
+    ],
+    "label_bn": "ত্বকের ধরন",
+    "required": false
+   },
+   {
+    "key": "pao_months",
+    "type": "int",
+    "unit": "months",
+    "flags": {
+     "filterable": false,
+     "searchable": false,
+     "show_in_pos": false,
+     "show_on_label": true,
+     "show_on_receipt": false
+    },
+    "group": "Details",
+    "label": "Period after opening",
+    "source": "template",
+    "options": [],
+    "label_bn": "খোলার পর মেয়াদ",
+    "required": false
+   },
+   {
+    "key": "origin",
+    "type": "text",
+    "unit": null,
+    "flags": {
+     "filterable": false,
+     "searchable": false,
+     "show_in_pos": false,
+     "show_on_label": false,
+     "show_on_receipt": false
+    },
+    "group": "Sourcing",
+    "label": "Country of origin",
+    "source": "template",
+    "options": [],
+    "label_bn": "উৎপত্তিস্থল",
+    "required": false
+   },
+   {
+    "key": "ingredients",
+    "type": "textarea",
+    "unit": null,
+    "flags": {
+     "filterable": false,
+     "searchable": false,
+     "show_in_pos": false,
+     "show_on_label": false,
+     "show_on_receipt": false
+    },
+    "group": "Details",
+    "label": "Key ingredients",
+    "source": "template",
+    "options": [],
+    "label_bn": "উপাদান",
+    "required": false
+   }
+  ],
+  "variant_axes": [
+   {
+    "key": "shade",
+    "label": "Shade",
+    "label_bn": "শেড"
+   },
+   {
+    "key": "size",
+    "label": "Size",
+    "label_bn": "সাইজ"
+   }
+  ],
+  "units": [
+   {
+    "code": "pc",
+    "label": "Piece",
+    "label_bn": "পিস",
+    "allow_fraction": false
+   },
+   {
+    "code": "set",
+    "label": "Set",
+    "label_bn": "সেট",
+    "allow_fraction": false
+   }
+  ],
+  "settings": {
+   "currency": "BDT",
+   "currency_symbol": "৳",
+   "language": "en",
+   "timezone": "Asia/Dhaka",
+   "tax": {
+    "mode": "inclusive",
+    "cash_rounding": "nearest_1"
+   },
+   "stock": {
+    "costing": "weighted_average",
+    "allocation": "fefo",
+    "allow_negative": false,
+    "reorder_default": 3,
+    "expiry_alert_days": [
+     90,
+     30
+    ]
+   },
+   "pos": {
+    "layout": "counter",
+    "quick_keys": false,
+    "hold_resume": true,
+    "require_customer": false
+   },
+   "loyalty": {
+    "enabled": true,
+    "points_per_100": 2
+   },
+   "receipt": {
+    "phone": "01733000001",
+    "footer": "Thank you for shopping with us! ধন্যবাদ",
+    "header": "Glow & Co Beauty",
+    "address": "",
+    "show_tax": true,
+    "vat_reg_no": ""
+   },
+   "payment_methods": [
+    {
+     "code": "cash",
+     "kind": "cash",
+     "label": "Cash",
+     "enabled": true,
+     "label_bn": "নগদ"
+    },
+    {
+     "code": "bkash",
+     "kind": "mobile",
+     "label": "bKash",
+     "enabled": true,
+     "label_bn": "বিকাশ"
+    },
+    {
+     "code": "nagad",
+     "kind": "mobile",
+     "label": "Nagad",
+     "enabled": true,
+     "label_bn": "নগদ (Nagad)"
+    },
+    {
+     "code": "rocket",
+     "kind": "mobile",
+     "label": "Rocket",
+     "enabled": false,
+     "label_bn": "রকেট"
+    },
+    {
+     "code": "upay",
+     "kind": "mobile",
+     "label": "Upay",
+     "enabled": false,
+     "label_bn": "উপায়"
+    },
+    {
+     "code": "card",
+     "kind": "card",
+     "label": "Card",
+     "enabled": true,
+     "label_bn": "কার্ড"
+    },
+    {
+     "code": "bank",
+     "kind": "bank",
+     "label": "Bank transfer",
+     "enabled": false,
+     "label_bn": "ব্যাংক"
+    }
+   ],
+   "scale": {
+    "mode": "weight",
+    "prefix": "20"
+   },
+   "documents": {
+    "invoice": "a4_simple",
+    "receipt": "thermal_80"
+   },
+   "dashboard": [
+    "today_sales",
+    "sales_trend",
+    "expiring_soon",
+    "low_stock",
+    "top_products",
+    "payment_mix"
+   ],
+   "reports": [
+    "sales_summary",
+    "brand_performance",
+    "expiry_loss",
+    "stock_valuation"
+   ],
+   "deposit_percent_min": 0
+  },
+  "subscription": {
+   "plan": {
+    "key": "business",
+    "name": "Business",
+    "monthly_price": "1999.00",
+    "yearly_price": "19990.00"
+   },
+   "state": "active",
+   "status": "active",
+   "billing_cycle": "monthly",
+   "period_end": "2026-10-30T09:19:26.110144+00:00",
+   "valid_until": "2026-11-02T09:19:26.110144+00:00",
+   "days_left": 23,
+   "lapsed": false,
+   "notice": null
+  },
+  "user": {
+   "id": "01a11082-bd0a-7669-a5f6-89854a976bcd",
+   "name": "Nabila Chowdhury",
+   "phone": "01733000001",
+   "email": "",
+   "role": "owner",
+   "role_label": "Owner",
+   "active": true,
+   "tenant_id": "01a11082-bc65-7775-9a7b-70f253386b23",
+   "permissions": [
+    "adjust_stock",
+    "apply_discount",
+    "collect_dues",
+    "export_data",
+    "manage_branches",
+    "manage_customers",
+    "manage_devices",
+    "manage_expenses",
+    "manage_orders",
+    "manage_products",
+    "manage_purchases",
+    "manage_settings",
+    "manage_shifts",
+    "manage_staff",
+    "manage_subscription",
+    "override_price",
+    "refund",
+    "sell",
+    "view_cost",
+    "view_inventory",
+    "view_margin",
+    "view_reports",
+    "view_sales",
+    "void_sale"
+   ],
+   "branch_ids": null,
+   "permission_overrides": null
+  },
+  "branches": [
+   {
+    "id": "01a11082-bd0a-77b1-a3bb-1eec9cf986f8",
+    "name": "Main branch",
+    "code": "MAIN",
+    "is_main": true,
+    "address": ""
+   }
+  ],
+  "server_time": "2026-10-06T10:17:41.100171+00:00"
+ },
+ "products_cosmetic": {
+  "items": [
+   {
+    "id": "01a11082-bd65-72b7-86b0-f024f80d7f6a",
+    "name": "Argan Hair Oil",
+    "name_local": "",
+    "description": "",
+    "category_id": "01a11082-bd0a-77a2-82c8-593853e7b598",
+    "type": "stockable",
+    "base_unit": "pc",
+    "alt_units": [],
+    "allow_fraction": false,
+    "tracking": "lot",
+    "track_expiry": true,
+    "tax_class_id": "01a11082-bd0a-72e2-a141-9b7217476d17",
+    "attributes": {
+     "brand": "Maison Rêve",
+     "origin": "Morocco",
+     "pao_months": 18
+    },
+    "image_url": "",
+    "reorder_level": "3.000",
+    "warranty_months": 0,
+    "active": true,
+    "variants": [
+     {
+      "id": "01a11082-bd66-72a5-839a-e1a8dcf3605a",
+      "sku": "ARGA-00024",
+      "label": "100 ml",
+      "option_values": {
+       "size": "100 ml"
+      },
+      "price": "780.00",
+      "mrp": "0.00",
+      "cost": "470.00",
+      "plu": null,
+      "active": true,
+      "barcodes": [
+       {
+        "id": "01a11082-bd67-7675-8242-49be357b82b0",
+        "code": "8800000090238",
+        "unit": null,
+        "qty_per_scan": "1.000"
+       }
+      ]
+     },
+     {
+      "id": "01a11082-bd68-70d1-89dd-4875bf10b67b",
+      "sku": "ARGA-00025",
+      "label": "200 ml",
+      "option_values": {
+       "size": "200 ml"
+      },
+      "price": "1380.00",
+      "mrp": "0.00",
+      "cost": "840.00",
+      "plu": null,
+      "active": true,
+      "barcodes": [
+       {
+        "id": "01a11082-bd6a-7db8-a346-4cec64b268c5",
+        "code": "8800000090245",
+        "unit": null,
+        "qty_per_scan": "1.000"
+       }
+      ]
+     }
+    ],
+    "updated_at": "2026-10-06T09:19:25.796829+00:00"
+   },
+   {
+    "id": "01a11082-bd94-7827-99f3-5b56341fbd07",
+    "name": "Beauty Blender",
+    "name_local": "",
+    "description": "",
+    "category_id": "01a11082-bd0a-7b82-9428-0c058a7bbed3",
+    "type": "stockable",
+    "base_unit": "pc",
+    "alt_units": [],
+    "allow_fraction": false,
+    "tracking": "none",
+    "track_expiry": false,
+    "tax_class_id": "01a11082-bd0a-72e2-a141-9b7217476d17",
+    "attributes": {
+     "brand": "Lumé",
+     "origin": "China"
+    },
+    "image_url": "",
+    "reorder_level": "5.000",
+    "warranty_months": 0,
+    "active": true,
+    "variants": [
+     {
+      "id": "01a11082-bd94-7588-a4d6-4d89e7d8359a",
+      "sku": "BEAU-00034",
+      "label": "",
+      "option_values": {},
+      "price": "450.00",
+      "mrp": "0.00",
+      "cost": "240.00",
+      "plu": null,
+      "active": true,
+      "barcodes": [
+       {
+        "id": "01a11082-bd96-7e3a-8105-5109be326e57",
+        "code": "8800000090337",
+        "unit": null,
+        "qty_per_scan": "1.000"
+       }
+      ]
+     }
+    ],
+    "updated_at": "2026-10-06T09:19:25.796829+00:00"
+   },
+   {
+    "id": "01a11082-bd84-78b4-a957-b80525c145fb",
+    "name": "Body Lotion",
+    "name_local": "",
+    "description": "",
+    "category_id": "01a11082-bd0a-78cd-841f-f96bf990657c",
+    "type": "stockable",
+    "base_unit": "pc",
+    "alt_units": [],
+    "allow_fraction": false,
+    "tracking": "lot",
+    "track_expiry": true,
+    "tax_class_id": "01a11082-bd0a-72e2-a141-9b7217476d17",
+    "attributes": {
+     "brand": "Kaya Botanics",
+     "origin": "Bangladesh",
+     "skin_type": [
+      "Dry"
+     ],
+     "pao_months": 12
+    },
+    "image_url": "",
+    "reorder_level": "4.000",
+    "warranty_months": 0,
+    "active": true,
+    "variants": [
+     {
+      "id": "01a11082-bd85-7d3a-bb09-a9f500c374b5",
+      "sku": "BODY-00031",
+      "label": "200 ml",
+      "option_values": {
+       "size": "200 ml"
+      },
+      "price": "480.00",
+      "mrp": "0.00",
+      "cost": "280.00",
+      "plu": null,
+      "active": true,
+      "barcodes": [
+       {
+        "id": "01a11082-bd87-76ec-a7ac-7d6cc2e1e1ab",
+        "code": "8800000090306",
+        "unit": null,
+        "qty_per_scan": "1.000"
+       }
+      ]
+     },
+     {
+      "id": "01a11082-bd88-70ba-9dfc-4c692256450b",
+      "sku": "BODY-00032",
+      "label": "400 ml",
+      "option_values": {
+       "size": "400 ml"
+      },
+      "price": "820.00",
+      "mrp": "0.00",
+      "cost": "500.00",
+      "plu": null,
+      "active": true,
+      "barcodes": [
+       {
+        "id": "01a11082-bd8a-785e-86c8-dc1ed9f17c54",
+        "code": "8800000090313",
+        "unit": null,
+        "qty_per_scan": "1.000"
+       }
+      ]
+     }
+    ],
+    "updated_at": "2026-10-06T09:19:25.796829+00:00"
+   },
+   {
+    "id": "01a11082-bd27-76e7-a927-dd01c5be2336",
+    "name": "Eyeshadow Palette (12)",
+    "name_local": "",
+    "description": "",
+    "category_id": "01a11082-bd0a-7728-983a-a9b4cf3490da",
+    "type": "stockable",
+    "base_unit": "pc",
+    "alt_units": [],
+    "allow_fraction": false,
+    "tracking": "lot",
+    "track_expiry": true,
+    "tax_class_id": "01a11082-bd0a-72e2-a141-9b7217476d17",
+    "attributes": {
+     "brand": "Maison Rêve",
+     "origin": "Italy",
+     "pao_months": 24
+    },
+    "image_url": "",
+    "reorder_level": "2.000",
+    "warranty_months": 0,
+    "active": true,
+    "variants": [
+     {
+      "id": "01a11082-bd28-7440-915e-80b7e61cf60e",
+      "sku": "EYES-00009",
+      "label": "Sunset",
+      "option_values": {
+       "shade": "Sunset"
+      },
+      "price": "1980.00",
+      "mrp": "0.00",
+      "cost": "1290.00",
+      "plu": null,
+      "active": true,
+      "barcodes": [
+       {
+        "id": "01a11082-bd29-7188-86b9-81dbedcca82b",
+        "code": "8800000090085",
+        "unit": null,
+        "qty_per_scan": "1.000"
+       }
+      ]
+     },
+     {
+      "id": "01a11082-bd2a-7366-aafb-3207aca5a50c",
+      "sku": "EYES-00010",
+      "label": "Nude Dream",
+      "option_values": {
+       "shade": "Nude Dream"
+      },
+      "price": "1980.00",
+      "mrp": "0.00",
+      "cost": "1290.00",
+      "plu": null,
+      "active": true,
+      "barcodes": [
+       {
+        "id": "01a11082-bd2b-731e-98b3-acc9c1d8658b",
+        "code": "8800000090092",
+        "unit": null,
+        "qty_per_scan": "1.000"
+       }
+      ]
+     }
+    ],
+    "updated_at": "2026-10-06T09:19:25.796829+00:00"
+   },
+   {
+    "id": "01a11082-bd34-7296-a294-c5e4c8f54fea",
+    "name": "Gel Nail Polish",
+    "name_local": "",
+    "description": "",
+    "category_id": "01a11082-bd0a-7692-8044-0c1b323f3ff3",
+    "type": "stockable",
+    "base_unit": "pc",
+    "alt_units": [],
+    "allow_fraction": false,
+    "tracking": "lot",
+    "track_expiry": true,
+    "tax_class_id": "01a11082-bd0a-72e2-a141-9b7217476d17",
+    "attributes": {
+     "brand": "Dew & Dune",
+     "origin": "Korea",
+     "pao_months": 24
+    },
+    "image_url": "",
+    "reorder_level": "4.000",
+    "warranty_months": 0,
+    "active": true,
+    "variants": [
+     {
+      "id": "01a11082-bd34-7f06-8313-a71f3b7d9ba8",
+      "sku": "GELN-00012",
+      "label": "Red",
+      "option_values": {
+       "shade": "Red"
+      },
+      "price": "320.00",
+      "mrp": "0.00",
+      "cost": "190.00",
+      "plu": null,
+      "active": true,
+      "barcodes": [
+       {
+        "id": "01a11082-bd35-7ab3-a200-51c1556c030c",
+        "code": "8800000090115",
+        "unit": null,
+        "qty_per_scan": "1.000"
+       }
+      ]
+     },
+     {
+      "id": "01a11082-bd36-7f0a-8a04-df761712ceb3",
+      "sku": "GELN-00013",
+      "label": "Pink",
+      "option_values": {
+       "shade": "Pink"
+      },
+      "price": "320.00",
+      "mrp": "0.00",
+      "cost": "190.00",
+      "plu": null,
+      "active": true,
+      "barcodes": [
+       {
+        "id": "01a11082-bd38-7851-a26f-5467a443a8cb",
+        "code": "8800000090122",
+        "unit": null,
+        "qty_per_scan": "1.000"
+       }
+      ]
+     },
+     {
+      "id": "01a11082-bd39-73ec-8c15-86e5a279feaf",
+      "sku": "GELN-00014",
+      "label": "Navy",
+      "option_values": {
+       "shade": "Navy"
+      },
+      "price": "320.00",
+      "mrp": "0.00",
+      "cost": "190.00",
+      "plu": null,
+      "active": true,
+      "barcodes": [
+       {
+        "id": "01a11082-bd3a-7f35-adcb-b004433b7f2d",
+        "code": "8800000090139",
+        "unit": null,
+        "qty_per_scan": "1.000"
+       }
+      ]
+     },
+     {
+      "id": "01a11082-bd3b-72c5-8ee6-8049a180da35",
+      "sku": "GELN-00015",
+      "label": "Mint",
+      "option_values": {
+       "shade": "Mint"
+      },
+      "price": "320.00",
+      "mrp": "0.00",
+      "cost": "190.00",
+      "plu": null,
+      "active": true,
+      "barcodes": [
+       {
+        "id": "01a11082-bd3d-7b1f-a789-aad26b0a3560",
+        "code": "8800000090146",
+        "unit": null,
+        "qty_per_scan": "1.000"
+       }
+      ]
+     },
+     {
+      "id": "01a11082-bd3e-7162-bc48-7337265a6bca",
+      "sku": "GELN-00016",
+      "label": "Nude",
+      "option_values": {
+       "shade": "Nude"
+      },
+      "price": "320.00",
+      "mrp": "0.00",
+      "cost": "190.00",
+      "plu": null,
+      "active": true,
+      "barcodes": [
+       {
+        "id": "01a11082-bd3f-784d-99d4-4c3efe463b13",
+        "code": "8800000090153",
+        "unit": null,
+        "qty_per_scan": "1.000"
+       }
+      ]
+     }
+    ],
+    "updated_at": "2026-10-06T09:19:25.796829+00:00"
+   }
+  ],
+  "total": 17,
+  "limit": 5,
+  "offset": 0
+ },
+ "context_furniture": {
+  "tenant": {
+   "id": "01a11082-c118-717a-bd59-968f5c78ec0e",
+   "name": "Nakshi Furniture Showroom",
+   "owner_name": "Kamal Hossain",
+   "phone": "01744000001",
+   "address": "",
+   "city": "Gulshan, Dhaka"
+  },
+  "business_type": {
+   "key": "furniture",
+   "label": "Furniture Showroom",
+   "family": "order_based",
+   "version": 1,
+   "theme": {
+    "icon": "chair",
+    "accent": "#B5651D"
+   }
+  },
+  "capabilities": [
+   "barcode_scanning",
+   "custom_orders",
+   "customer_credit",
+   "delivery",
+   "document_flow",
+   "item_tax",
+   "salesperson_commission",
+   "variants",
+   "warranty"
+  ],
+  "capability_catalogue": {
+   "barcode_scanning": {
+    "label": "Barcode scanning",
+    "group": "Selling"
+   },
+   "item_tax": {
+    "label": "Item-level VAT",
+    "group": "Selling"
+   },
+   "customer_credit": {
+    "label": "Customer credit (baki / due)",
+    "group": "Selling"
+   },
+   "variants": {
+    "label": "Variants",
+    "group": "Catalogue"
+   },
+   "warranty": {
+    "label": "Warranty",
+    "group": "Inventory"
+   },
+   "document_flow": {
+    "label": "Quotation → order → delivery",
+    "group": "Orders"
+   },
+   "delivery": {
+    "label": "Delivery scheduling",
+    "group": "Orders"
+   },
+   "custom_orders": {
+    "label": "Made-to-order",
+    "group": "Orders"
+   },
+   "salesperson_commission": {
+    "label": "Salesperson attribution",
+    "group": "Orders"
+   }
+  },
+  "features": [
+   "pos",
+   "inventory",
+   "purchases",
+   "customers",
+   "reports",
+   "reports_advanced",
+   "offline_sync",
+   "multi_branch",
+   "staff",
+   "expenses",
+   "export",
+   "orders"
+  ],
+  "limits": {
+   "staff": 10,
+   "devices": 6,
+   "branches": 3,
+   "products": 10000,
+   "sales_per_month": -1
+  },
+  "usage": {
+   "products": 15,
+   "staff": 3,
+   "branches": 1,
+   "devices": 1,
+   "sales_per_month": 12
+  },
+  "modules": [
+   {
+    "id": "dashboard",
+    "label": "Dashboard",
+    "available": true,
+    "locked_reason": null
+   },
+   {
+    "id": "pos",
+    "label": "Sell",
+    "available": true,
+    "locked_reason": null
+   },
+   {
+    "id": "orders",
+    "label": "Orders",
+    "available": true,
+    "locked_reason": null
+   },
+   {
+    "id": "sales",
+    "label": "Sales",
+    "available": true,
+    "locked_reason": null
+   },
+   {
+    "id": "products",
+    "label": "Products",
+    "available": true,
+    "locked_reason": null
+   },
+   {
+    "id": "stock",
+    "label": "Stock",
+    "available": true,
+    "locked_reason": null
+   },
+   {
+    "id": "purchases",
+    "label": "Purchases",
+    "available": true,
+    "locked_reason": null
+   },
+   {
+    "id": "customers",
+    "label": "Customers",
+    "available": true,
+    "locked_reason": null
+   },
+   {
+    "id": "expenses",
+    "label": "Expenses",
+    "available": true,
+    "locked_reason": null
+   },
+   {
+    "id": "shifts",
+    "label": "Shifts",
+    "available": false,
+    "locked_reason": "capability"
+   },
+   {
+    "id": "reports",
+    "label": "Reports",
+    "available": true,
+    "locked_reason": null
+   },
+   {
+    "id": "settings",
+    "label": "Settings",
+    "available": true,
+    "locked_reason": null
+   },
+   {
+    "id": "billing",
+    "label": "Subscription",
+    "available": true,
+    "locked_reason": null
+   }
+  ],
+  "terminology": {
+   "due": "Balance",
+   "product": "Piece",
+   "customer": "Client",
+   "supplier": "Supplier"
+  },
+  "attributes": [
+   {
+    "key": "material",
+    "type": "select_or_create",
+    "unit": null,
+    "flags": {
+     "filterable": true,
+     "searchable": true,
+     "show_in_pos": true,
+     "show_on_label": false,
+     "show_on_receipt": false
+    },
+    "group": "Details",
+    "label": "Material",
+    "source": "template",
+    "options": [],
+    "label_bn": "উপাদান",
+    "required": false
+   },
+   {
+    "key": "dimensions",
+    "type": "text",
+    "unit": null,
+    "flags": {
+     "filterable": false,
+     "searchable": false,
+     "show_in_pos": true,
+     "show_on_label": false,
+     "show_on_receipt": true
+    },
+    "group": "Details",
+    "label": "Dimensions (L × W × H)",
+    "source": "template",
+    "options": [],
+    "label_bn": "মাপ",
+    "required": false
+   },
+   {
+    "key": "weight_kg",
+    "type": "decimal",
+    "unit": "kg",
+    "flags": {
+     "filterable": false,
+     "searchable": false,
+     "show_in_pos": false,
+     "show_on_label": false,
+     "show_on_receipt": false
+    },
+    "group": "Logistics",
+    "label": "Weight",
+    "source": "template",
+    "options": [],
+    "label_bn": "ওজন",
+    "required": false
+   },
+   {
+    "key": "assembly",
+    "type": "bool",
+    "unit": null,
+    "flags": {
+     "filterable": false,
+     "searchable": false,
+     "show_in_pos": false,
+     "show_on_label": false,
+     "show_on_receipt": false
+    },
+    "group": "Logistics",
+    "label": "Assembly required",
+    "source": "template",
+    "options": [],
+    "label_bn": "জোড়া লাগাতে হবে",
+    "required": false
+   },
+   {
+    "key": "lead_time_days",
+    "type": "int",
+    "unit": "days",
+    "flags": {
+     "filterable": false,
+     "searchable": false,
+     "show_in_pos": false,
+     "show_on_label": false,
+     "show_on_receipt": false
+    },
+    "group": "Logistics",
+    "label": "Lead time",
+    "source": "template",
+    "options": [],
+    "label_bn": "সময় (দিন)",
+    "required": false
+   },
+   {
+    "key": "room",
+    "type": "select",
+    "unit": null,
+    "flags": {
+     "filterable": true,
+     "searchable": false,
+     "show_in_pos": false,
+     "show_on_label": false,
+     "show_on_receipt": false
+    },
+    "group": "Details",
+    "label": "Room",
+    "source": "template",
+    "options": [
+     "Living",
+     "Bedroom",
+     "Dining",
+     "Office",
+     "Outdoor"
+    ],
+    "label_bn": "কক্ষ",
+    "required": false
+   }
+  ],
+  "variant_axes": [
+   {
+    "key": "finish",
+    "label": "Finish / colour",
+    "label_bn": "রং"
+   },
+   {
+    "key": "size",
+    "label": "Size",
+    "label_bn": "সাইজ"
+   }
+  ],
+  "units": [
+   {
+    "code": "pc",
+    "label": "Piece",
+    "label_bn": "পিস",
+    "allow_fraction": false
+   },
+   {
+    "code": "set",
+    "label": "Set",
+    "label_bn": "সেট",
+    "allow_fraction": false
+   }
+  ],
+  "settings": {
+   "currency": "BDT",
+   "currency_symbol": "৳",
+   "language": "en",
+   "timezone": "Asia/Dhaka",
+   "tax": {
+    "mode": "exclusive",
+    "cash_rounding": "nearest_1"
+   },
+   "stock": {
+    "costing": "weighted_average",
+    "allocation": "none",
+    "allow_negative": true,
+    "reorder_default": 1
+   },
+   "pos": {
+    "layout": "order",
+    "quick_keys": false,
+    "hold_resume": true,
+    "require_customer": true
+   },
+   "loyalty": {
+    "enabled": false,
+    "points_per_100": 0
+   },
+   "receipt": {
+    "phone": "01744000001",
+    "footer": "Thank you for shopping with us! ধন্যবাদ",
+    "header": "Nakshi Furniture Showroom",
+    "address": "",
+    "show_tax": true,
+    "vat_reg_no": ""
+   },
+   "payment_methods": [
+    {
+     "code": "cash",
+     "kind": "cash",
+     "label": "Cash",
+     "enabled": true,
+     "label_bn": "নগদ"
+    },
+    {
+     "code": "bkash",
+     "kind": "mobile",
+     "label": "bKash",
+     "enabled": true,
+     "label_bn": "বিকাশ"
+    },
+    {
+     "code": "nagad",
+     "kind": "mobile",
+     "label": "Nagad",
+     "enabled": true,
+     "label_bn": "নগদ (Nagad)"
+    },
+    {
+     "code": "rocket",
+     "kind": "mobile",
+     "label": "Rocket",
+     "enabled": false,
+     "label_bn": "রকেট"
+    },
+    {
+     "code": "upay",
+     "kind": "mobile",
+     "label": "Upay",
+     "enabled": false,
+     "label_bn": "উপায়"
+    },
+    {
+     "code": "card",
+     "kind": "card",
+     "label": "Card",
+     "enabled": true,
+     "label_bn": "কার্ড"
+    },
+    {
+     "code": "bank",
+     "kind": "bank",
+     "label": "Bank transfer",
+     "enabled": false,
+     "label_bn": "ব্যাংক"
+    }
+   ],
+   "scale": {
+    "mode": "weight",
+    "prefix": "20"
+   },
+   "documents": {
+    "invoice": "a4_tax",
+    "receipt": "thermal_80",
+    "quotation": "a4_quote"
+   },
+   "dashboard": [
+    "today_sales",
+    "open_orders",
+    "deliveries_due",
+    "dues",
+    "sales_trend",
+    "top_products"
+   ],
+   "reports": [
+    "sales_summary",
+    "order_pipeline",
+    "receivables",
+    "delivery_schedule"
+   ],
+   "deposit_percent_min": 30
+  },
+  "subscription": {
+   "plan": {
+    "key": "business",
+    "name": "Business",
+    "monthly_price": "1999.00",
+    "yearly_price": "19990.00"
+   },
+   "state": "active",
+   "status": "active",
+   "billing_cycle": "monthly",
+   "period_end": "2026-10-30T09:19:27.251646+00:00",
+   "valid_until": "2026-11-02T09:19:27.251646+00:00",
+   "days_left": 23,
+   "lapsed": false,
+   "notice": null
+  },
+  "user": {
+   "id": "01a11082-c1bd-7f85-b506-9d2ff8dfce14",
+   "name": "Kamal Hossain",
+   "phone": "01744000001",
+   "email": "",
+   "role": "owner",
+   "role_label": "Owner",
+   "active": true,
+   "tenant_id": "01a11082-c118-717a-bd59-968f5c78ec0e",
+   "permissions": [
+    "adjust_stock",
+    "apply_discount",
+    "collect_dues",
+    "export_data",
+    "manage_branches",
+    "manage_customers",
+    "manage_devices",
+    "manage_expenses",
+    "manage_orders",
+    "manage_products",
+    "manage_purchases",
+    "manage_settings",
+    "manage_shifts",
+    "manage_staff",
+    "manage_subscription",
+    "override_price",
+    "refund",
+    "sell",
+    "view_cost",
+    "view_inventory",
+    "view_margin",
+    "view_reports",
+    "view_sales",
+    "void_sale"
+   ],
+   "branch_ids": null,
+   "permission_overrides": null
+  },
+  "branches": [
+   {
+    "id": "01a11082-c1bd-7344-bc84-cad013d75687",
+    "name": "Main branch",
+    "code": "MAIN",
+    "is_main": true,
+    "address": ""
+   }
+  ],
+  "server_time": "2026-10-06T10:17:41.274356+00:00"
+ },
+ "orders": {
+  "items": [
+   {
+    "id": "01a11082-c431-7191-a5bd-1eb2b0407508",
+    "number": "ORD-000001",
+    "status": "quotation",
+    "branch_id": "01a11082-c1bd-7344-bc84-cad013d75687",
+    "customer_id": "01a11082-c35e-735f-b31c-be1727f61b64",
+    "customer_name": "Dr. Anwar Hossain",
+    "salesperson_name": "Kamal Hossain",
+    "valid_until": "2026-10-16",
+    "delivery_date": null,
+    "delivery_address": "Flat 4B, Road 11, Gulshan-1, Dhaka",
+    "delivery_charge": "2500.00",
+    "discount": "5000.00",
+    "subtotal": "143000.00",
+    "tax_total": "20699.99",
+    "total": "161199.99",
+    "deposit_paid": "0.00",
+    "balance": "161199.99",
+    "terms": "30% advance, balance on delivery. Quotation valid for 10 days.",
+    "note": "",
+    "sale_id": null,
+    "created_by": "Kamal Hossain",
+    "created_at": "2026-10-06T09:19:26.999866+00:00",
+    "lines": [
+     {
+      "id": "01a11082-c436-7768-bbbb-361ebcec93a7",
+      "variant_id": "01a11082-c1c1-740d-ac09-5a645c757fd7",
+      "product_name": "Oslo 3-Seater Sofa",
+      "variant_label": "Charcoal",
+      "qty": "1.000",
+      "unit_price": "58000.00",
+      "discount": "0.00",
+      "tax_rate": "15.00",
+      "line_total": "64367.83",
+      "spec_note": "Charcoal, extra cushions",
+      "lead_time_days": 0
+     },
+     {
+      "id": "01a11082-c436-7216-8537-83c4710ae8e6",
+      "variant_id": "01a11082-c1e3-746a-a7dd-8d6eee4d4796",
+      "product_name": "Aria Dining Table 6-Seater",
+      "variant_label": "Teak",
+      "qty": "1.000",
+      "unit_price": "46000.00",
+      "discount": "0.00",
+      "tax_rate": "15.00",
+      "line_total": "51050.35",
+      "spec_note": "",
+      "lead_time_days": 10
+     },
+     {
+      "id": "01a11082-c436-7c34-8cc8-0942a99c7095",
+      "variant_id": "01a11082-c1e9-791a-ba6b-ffef32bf6803",
+      "product_name": "Aria Dining Chair",
+      "variant_label": "Beige",
+      "qty": "6.000",
+      "unit_price": "6500.00",
+      "discount": "0.00",
+      "tax_rate": "15.00",
+      "line_total": "43281.81",
+      "spec_note": "",
+      "lead_time_days": 0
+     }
+    ],
+    "payments": []
+   },
+   {
+    "id": "01a11082-c43e-754d-b2c2-1fa8a96aedd8",
+    "number": "ORD-000002",
+    "status": "confirmed",
+    "branch_id": "01a11082-c1bd-7344-bc84-cad013d75687",
+    "customer_id": "01a11082-c35e-7b3b-9bb1-38bbb669c3c8",
+    "customer_name": "Mrs. Rahman",
+    "salesperson_name": "Kamal Hossain",
+    "valid_until": null,
+    "delivery_date": "2026-10-13",
+    "delivery_address": "Flat 4B, Road 11, Gulshan-1, Dhaka",
+    "delivery_charge": "3000.00",
+    "discount": "0.00",
+    "subtotal": "126000.00",
+    "tax_total": "18900.00",
+    "total": "147900.00",
+    "deposit_paid": "60000.00",
+    "balance": "87900.00",
+    "terms": "",
+    "note": "",
+    "sale_id": null,
+    "created_by": "Kamal Hossain",
+    "created_at": "2026-10-06T09:19:26.999866+00:00",
+    "lines": [
+     {
+      "id": "01a11082-c43e-7809-964d-bffdaa427303",
+      "variant_id": "01a11082-c1d1-709b-a2bd-cff7694c5813",
+      "product_name": "Haven King Bed",
+      "variant_label": "Walnut",
+      "qty": "1.000",
+      "unit_price": "72000.00",
+      "discount": "0.00",
+      "tax_rate": "15.00",
+      "line_total": "82800.00",
+      "spec_note": "Walnut finish, mattress cut-out",
+      "lead_time_days": 14
+     },
+     {
+      "id": "01a11082-c43e-771a-8627-7ba614a9764a",
+      "variant_id": "01a11082-c1ef-75d2-bc3c-dd51f27f2c9c",
+      "product_name": "Compass Wardrobe 3-Door",
+      "variant_label": "White",
+      "qty": "1.000",
+      "unit_price": "54000.00",
+      "discount": "0.00",
+      "tax_rate": "15.00",
+      "line_total": "62100.00",
+      "spec_note": "",
+      "lead_time_days": 0
+     }
+    ],
+    "payments": [
+     {
+      "id": "01a11082-c443-79c2-802c-83b3f0a69e35",
+      "method": "bkash",
+      "amount": "60000.00",
+      "reference": "BK7H2QK9",
+      "kind": "deposit",
+      "paid_at": "2026-10-06T09:19:27.810029+00:00",
+      "received_by": "Kamal Hossain"
+     }
+    ]
+   },
+   {
+    "id": "01a11082-c446-7ed3-bccd-5a6e62272bb0",
+    "number": "ORD-000003",
+    "status": "ready",
+    "branch_id": "01a11082-c1bd-7344-bc84-cad013d75687",
+    "customer_id": "01a11082-c35e-7548-bd10-e5ec1e926212",
+    "customer_name": "Shafiq Enterprise",
+    "salesperson_name": "Kamal Hossain",
+    "valid_until": null,
+    "delivery_date": "2026-10-07",
+    "delivery_address": "Plot 9, Banani Commercial Area",
+    "delivery_charge": "0.00",
+    "discount": "0.00",
+    "subtotal": "98000.00",
+    "tax_total": "14700.00",
+    "total": "112700.00",
+    "deposit_paid": "50000.00",
+    "balance": "62700.00",
+    "terms": "",
+    "note": "",
+    "sale_id": null,
+    "created_by": "Kamal Hossain",
+    "created_at": "2026-10-06T09:19:26.999866+00:00",
+    "lines": [
+     {
+      "id": "01a11082-c446-7f9e-a8b7-17aaba45044b",
+      "variant_id": "01a11082-c1e9-791a-ba6b-ffef32bf6803",
+      "product_name": "Aria Dining Chair",
+      "variant_label": "Beige",
+      "qty": "8.000",
+      "unit_price": "6500.00",
+      "discount": "0.00",
+      "tax_rate": "15.00",
+      "line_total": "59800.00",
+      "spec_note": "",
+      "lead_time_days": 0
+     },
+     {
+      "id": "01a11082-c446-7518-8c2e-178625f35c8f",
+      "variant_id": "01a11082-c1e3-746a-a7dd-8d6eee4d4796",
+      "product_name": "Aria Dining Table 6-Seater",
+      "variant_label": "Teak",
+      "qty": "1.000",
+      "unit_price": "46000.00",
+      "discount": "0.00",
+      "tax_rate": "15.00",
+      "line_total": "52900.00",
+      "spec_note": "",
+      "lead_time_days": 0
+     }
+    ],
+    "payments": [
+     {
+      "id": "01a11082-c44a-7740-aaa4-8b3fba9645c5",
+      "method": "cash",
+      "amount": "50000.00",
+      "reference": "",
+      "kind": "deposit",
+      "paid_at": "2026-10-06T09:19:27.817381+00:00",
+      "received_by": "Kamal Hossain"
+     }
+    ]
+   },
+   {
+    "id": "01a11082-c44e-71d2-baeb-7982bab42bad",
+    "number": "ORD-000004",
+    "status": "delivered",
+    "branch_id": "01a11082-c1bd-7344-bc84-cad013d75687",
+    "customer_id": "01a11082-c35e-7676-a9d7-f365446e97b4",
+    "customer_name": "Mrs. Khatun",
+    "salesperson_name": "Kamal Hossain",
+    "valid_until": null,
+    "delivery_date": null,
+    "delivery_address": "Flat 4B, Road 11, Gulshan-1, Dhaka",
+    "delivery_charge": "800.00",
+    "discount": "0.00",
+    "subtotal": "26000.00",
+    "tax_total": "3900.00",
+    "total": "30700.00",
+    "deposit_paid": "30700.00",
+    "balance": "0.00",
+    "terms": "",
+    "note": "",
+    "sale_id": "01a11082-c455-7a60-af00-860b94048d92",
+    "created_by": "Kamal Hossain",
+    "created_at": "2026-10-06T09:19:26.999866+00:00",
+    "lines": [
+     {
+      "id": "01a11082-c44f-7d2e-ba75-a5599bd33c42",
+      "variant_id": "01a11082-c1e9-791a-ba6b-ffef32bf6803",
+      "product_name": "Aria Dining Chair",
+      "variant_label": "Beige",
+      "qty": "4.000",
+      "unit_price": "6500.00",
+      "discount": "0.00",
+      "tax_rate": "15.00",
+      "line_total": "29900.00",
+      "spec_note": "",
+      "lead_time_days": 0
+     }
+    ],
+    "payments": [
+     {
+      "id": "01a11082-c451-75a6-9a61-668a4df19dc4",
+      "method": "cash",
+      "amount": "10000.00",
+      "reference": "",
+      "kind": "deposit",
+      "paid_at": "2026-10-06T09:19:27.825396+00:00",
+      "received_by": "Kamal Hossain"
+     },
+     {
+      "id": "01a11082-c45b-7f25-8c3f-4f388fefa46d",
+      "method": "cash",
+      "amount": "20700.00",
+      "reference": "",
+      "kind": "deposit",
+      "paid_at": "2026-10-06T09:19:27.827865+00:00",
+      "received_by": "Kamal Hossain"
+     }
+    ]
+   }
+  ],
+  "total": 4,
+  "limit": 20,
+  "offset": 0
+ },
+ "context_pharmacy": {
+  "tenant": {
+   "id": "01a11082-c45e-7478-899e-181b1983a2c8",
+   "name": "Shefa Pharmacy",
+   "owner_name": "Dr. Mahmud Hasan",
+   "phone": "01755000001",
+   "address": "",
+   "city": "Chattogram"
+  },
+  "business_type": {
+   "key": "pharmacy",
+   "label": "Pharmacy",
+   "family": "counter_retail",
+   "version": 1,
+   "theme": {
+    "icon": "medication",
+    "accent": "#0891B2"
+   }
+  },
+  "capabilities": [
+   "barcode_scanning",
+   "customer_credit",
+   "expiry_tracking",
+   "item_tax",
+   "lot_tracking",
+   "multi_uom",
+   "regulated_items",
+   "shifts"
+  ],
+  "capability_catalogue": {
+   "barcode_scanning": {
+    "label": "Barcode scanning",
+    "group": "Selling"
+   },
+   "multi_uom": {
+    "label": "Multiple units",
+    "group": "Selling"
+   },
+   "item_tax": {
+    "label": "Item-level VAT",
+    "group": "Selling"
+   },
+   "customer_credit": {
+    "label": "Customer credit (baki / due)",
+    "group": "Selling"
+   },
+   "shifts": {
+    "label": "Register shifts",
+    "group": "Selling"
+   },
+   "lot_tracking": {
+    "label": "Batch / lot tracking",
+    "group": "Inventory"
+   },
+   "expiry_tracking": {
+    "label": "Expiry dates",
+    "group": "Inventory"
+   },
+   "regulated_items": {
+    "label": "Regulated items",
+    "group": "Inventory"
+   }
+  },
+  "features": [
+   "pos",
+   "inventory",
+   "purchases",
+   "customers",
+   "reports",
+   "offline_sync",
+   "staff",
+   "expenses"
+  ],
+  "limits": {
+   "staff": 3,
+   "devices": 2,
+   "branches": 1,
+   "products": 1000,
+   "sales_per_month": -1
+  },
+  "usage": {
+   "products": 8,
+   "staff": 2,
+   "branches": 1,
+   "devices": 1,
+   "sales_per_month": 114
+  },
+  "modules": [
+   {
+    "id": "dashboard",
+    "label": "Dashboard",
+    "available": true,
+    "locked_reason": null
+   },
+   {
+    "id": "pos",
+    "label": "Sell",
+    "available": true,
+    "locked_reason": null
+   },
+   {
+    "id": "orders",
+    "label": "Orders",
+    "available": false,
+    "locked_reason": "capability"
+   },
+   {
+    "id": "sales",
+    "label": "Sales",
+    "available": true,
+    "locked_reason": null
+   },
+   {
+    "id": "products",
+    "label": "Products",
+    "available": true,
+    "locked_reason": null
+   },
+   {
+    "id": "stock",
+    "label": "Stock",
+    "available": true,
+    "locked_reason": null
+   },
+   {
+    "id": "purchases",
+    "label": "Purchases",
+    "available": true,
+    "locked_reason": null
+   },
+   {
+    "id": "customers",
+    "label": "Customers",
+    "available": true,
+    "locked_reason": null
+   },
+   {
+    "id": "expenses",
+    "label": "Expenses",
+    "available": true,
+    "locked_reason": null
+   },
+   {
+    "id": "shifts",
+    "label": "Shifts",
+    "available": true,
+    "locked_reason": null
+   },
+   {
+    "id": "reports",
+    "label": "Reports",
+    "available": true,
+    "locked_reason": null
+   },
+   {
+    "id": "settings",
+    "label": "Settings",
+    "available": true,
+    "locked_reason": null
+   },
+   {
+    "id": "billing",
+    "label": "Subscription",
+    "available": true,
+    "locked_reason": null
+   }
+  ],
+  "terminology": {
+   "due": "Due",
+   "product": "Medicine",
+   "customer": "Patient",
+   "supplier": "Supplier"
+  },
+  "attributes": [
+   {
+    "key": "generic_name",
+    "type": "text",
+    "unit": null,
+    "flags": {
+     "filterable": false,
+     "searchable": true,
+     "show_in_pos": true,
+     "show_on_label": false,
+     "show_on_receipt": false
+    },
+    "group": "Details",
+    "label": "Generic name",
+    "source": "template",
+    "options": [],
+    "label_bn": "জেনেরিক নাম",
+    "required": false
+   },
+   {
+    "key": "strength",
+    "type": "text",
+    "unit": null,
+    "flags": {
+     "filterable": false,
+     "searchable": false,
+     "show_in_pos": false,
+     "show_on_label": false,
+     "show_on_receipt": true
+    },
+    "group": "Details",
+    "label": "Strength",
+    "source": "template",
+    "options": [],
+    "label_bn": "শক্তি",
+    "required": false
+   },
+   {
+    "key": "dosage_form",
+    "type": "select",
+    "unit": null,
+    "flags": {
+     "filterable": true,
+     "searchable": false,
+     "show_in_pos": false,
+     "show_on_label": false,
+     "show_on_receipt": false
+    },
+    "group": "Details",
+    "label": "Dosage form",
+    "source": "template",
+    "options": [
+     "Tablet",
+     "Capsule",
+     "Syrup",
+     "Injection",
+     "Cream",
+     "Drops",
+     "Inhaler",
+     "Other"
+    ],
+    "label_bn": "ধরন",
+    "required": false
+   },
+   {
+    "key": "manufacturer",
+    "type": "select_or_create",
+    "unit": null,
+    "flags": {
+     "filterable": true,
+     "searchable": true,
+     "show_in_pos": false,
+     "show_on_label": false,
+     "show_on_receipt": false
+    },
+    "group": "Details",
+    "label": "Manufacturer",
+    "source": "template",
+    "options": [],
+    "label_bn": "প্রস্তুতকারক",
+    "required": false
+   },
+   {
+    "key": "rx_only",
+    "type": "bool",
+    "unit": null,
+    "flags": {
+     "filterable": false,
+     "searchable": false,
+     "show_in_pos": true,
+     "show_on_label": false,
+     "show_on_receipt": false
+    },
+    "group": "Details",
+    "label": "Prescription only",
+    "source": "template",
+    "options": [],
+    "label_bn": "প্রেসক্রিপশন লাগবে",
+    "required": false
+   },
+   {
+    "key": "storage_condition",
+    "type": "text",
+    "unit": null,
+    "flags": {
+     "filterable": false,
+     "searchable": false,
+     "show_in_pos": false,
+     "show_on_label": false,
+     "show_on_receipt": false
+    },
+    "group": "Storage",
+    "label": "Storage condition",
+    "source": "template",
+    "options": [],
+    "label_bn": "সংরক্ষণ",
+    "required": false
+   }
+  ],
+  "variant_axes": [],
+  "units": [
+   {
+    "code": "tablet",
+    "label": "Tablet",
+    "label_bn": "ট্যাবলেট",
+    "allow_fraction": false
+   },
+   {
+    "code": "capsule",
+    "label": "Capsule",
+    "label_bn": "ক্যাপসুল",
+    "allow_fraction": false
+   },
+   {
+    "code": "ml",
+    "label": "Millilitre",
+    "label_bn": "মিলি",
+    "allow_fraction": true
+   },
+   {
+    "code": "strip",
+    "label": "Strip",
+    "label_bn": "স্ট্রিপ",
+    "allow_fraction": false
+   },
+   {
+    "code": "box",
+    "label": "Box",
+    "label_bn": "বক্স",
+    "allow_fraction": false
+   },
+   {
+    "code": "pc",
+    "label": "Piece",
+    "label_bn": "পিস",
+    "allow_fraction": false
+   },
+   {
+    "code": "bottle",
+    "label": "Bottle",
+    "label_bn": "বোতল",
+    "allow_fraction": false
+   }
+  ],
+  "settings": {
+   "currency": "BDT",
+   "currency_symbol": "৳",
+   "language": "en",
+   "timezone": "Asia/Dhaka",
+   "tax": {
+    "mode": "inclusive",
+    "cash_rounding": "none"
+   },
+   "stock": {
+    "costing": "weighted_average",
+    "allocation": "fefo",
+    "allow_negative": false,
+    "reorder_default": 10,
+    "expiry_alert_days": [
+     90,
+     30
+    ]
+   },
+   "pos": {
+    "layout": "counter",
+    "quick_keys": false,
+    "hold_resume": true,
+    "require_customer": false
+   },
+   "loyalty": {
+    "enabled": false,
+    "points_per_100": 0
+   },
+   "receipt": {
+    "phone": "01755000001",
+    "footer": "Thank you for shopping with us! ধন্যবাদ",
+    "header": "Shefa Pharmacy",
+    "address": "",
+    "show_tax": true,
+    "vat_reg_no": ""
+   },
+   "payment_methods": [
+    {
+     "code": "cash",
+     "kind": "cash",
+     "label": "Cash",
+     "enabled": true,
+     "label_bn": "নগদ"
+    },
+    {
+     "code": "bkash",
+     "kind": "mobile",
+     "label": "bKash",
+     "enabled": true,
+     "label_bn": "বিকাশ"
+    },
+    {
+     "code": "nagad",
+     "kind": "mobile",
+     "label": "Nagad",
+     "enabled": true,
+     "label_bn": "নগদ (Nagad)"
+    },
+    {
+     "code": "rocket",
+     "kind": "mobile",
+     "label": "Rocket",
+     "enabled": false,
+     "label_bn": "রকেট"
+    },
+    {
+     "code": "upay",
+     "kind": "mobile",
+     "label": "Upay",
+     "enabled": false,
+     "label_bn": "উপায়"
+    },
+    {
+     "code": "card",
+     "kind": "card",
+     "label": "Card",
+     "enabled": true,
+     "label_bn": "কার্ড"
+    },
+    {
+     "code": "bank",
+     "kind": "bank",
+     "label": "Bank transfer",
+     "enabled": false,
+     "label_bn": "ব্যাংক"
+    }
+   ],
+   "scale": {
+    "mode": "weight",
+    "prefix": "20"
+   },
+   "documents": {
+    "invoice": "a4_simple",
+    "receipt": "thermal_80"
+   },
+   "dashboard": [
+    "today_sales",
+    "sales_trend",
+    "expiring_soon",
+    "low_stock",
+    "dues",
+    "top_products"
+   ],
+   "reports": [
+    "sales_summary",
+    "expiry_loss",
+    "stock_valuation",
+    "due_ageing"
+   ],
+   "deposit_percent_min": 0
+  },
+  "subscription": {
+   "plan": {
+    "key": "starter",
+    "name": "Starter",
+    "monthly_price": "999.00",
+    "yearly_price": "9990.00"
+   },
+   "state": "active",
+   "status": "active",
+   "billing_cycle": "monthly",
+   "period_end": "2026-10-30T09:19:28.052480+00:00",
+   "valid_until": "2026-11-02T09:19:28.052480+00:00",
+   "days_left": 23,
+   "lapsed": false,
+   "notice": null
+  },
+  "user": {
+   "id": "01a11082-c504-7dd2-a72a-4f2160afde9a",
+   "name": "Dr. Mahmud Hasan",
+   "phone": "01755000001",
+   "email": "",
+   "role": "owner",
+   "role_label": "Owner",
+   "active": true,
+   "tenant_id": "01a11082-c45e-7478-899e-181b1983a2c8",
+   "permissions": [
+    "adjust_stock",
+    "apply_discount",
+    "collect_dues",
+    "export_data",
+    "manage_branches",
+    "manage_customers",
+    "manage_devices",
+    "manage_expenses",
+    "manage_orders",
+    "manage_products",
+    "manage_purchases",
+    "manage_settings",
+    "manage_shifts",
+    "manage_staff",
+    "manage_subscription",
+    "override_price",
+    "refund",
+    "sell",
+    "view_cost",
+    "view_inventory",
+    "view_margin",
+    "view_reports",
+    "view_sales",
+    "void_sale"
+   ],
+   "branch_ids": null,
+   "permission_overrides": null
+  },
+  "branches": [
+   {
+    "id": "01a11082-c504-7a62-a7ef-271b1ee6f6ac",
+    "name": "Main branch",
+    "code": "MAIN",
+    "is_main": true,
+    "address": ""
+   }
+  ],
+  "server_time": "2026-10-06T10:17:41.453994+00:00"
+ },
+ "admin_plans": {
+  "plans": [
+   {
+    "key": "starter",
+    "name": "Starter",
+    "tagline": "One shop, one or two tills",
+    "monthly_price": "999.00",
+    "yearly_price": "9990.00",
+    "currency": "BDT",
+    "trial_days": 14,
+    "limits": {
+     "staff": 3,
+     "devices": 2,
+     "branches": 1,
+     "products": 1000,
+     "sales_per_month": -1
+    },
+    "features": [
+     "pos",
+     "inventory",
+     "purchases",
+     "customers",
+     "reports",
+     "offline_sync",
+     "staff",
+     "expenses"
+    ],
+    "capabilities": null,
+    "highlight": false,
+    "id": "01a11082-a744-724f-b29b-8cfed8346713",
+    "public": true,
+    "active": true,
+    "sort_order": 1,
+    "tenant_count": 2
+   },
+   {
+    "key": "business",
+    "name": "Business",
+    "tagline": "Growing shops with several staff and branches",
+    "monthly_price": "1999.00",
+    "yearly_price": "19990.00",
+    "currency": "BDT",
+    "trial_days": 14,
+    "limits": {
+     "staff": 10,
+     "devices": 6,
+     "branches": 3,
+     "products": 10000,
+     "sales_per_month": -1
+    },
+    "features": [
+     "pos",
+     "inventory",
+     "purchases",
+     "customers",
+     "reports",
+     "reports_advanced",
+     "offline_sync",
+     "multi_branch",
+     "staff",
+     "expenses",
+     "export",
+     "orders"
+    ],
+    "capabilities": null,
+    "highlight": true,
+    "id": "01a11082-a746-7fce-80d7-3e7cb1ca87cf",
+    "public": true,
+    "active": true,
+    "sort_order": 2,
+    "tenant_count": 3
+   },
+   {
+    "key": "enterprise",
+    "name": "Enterprise",
+    "tagline": "Chains and large showrooms — no limits",
+    "monthly_price": "4999.00",
+    "yearly_price": "49990.00",
+    "currency": "BDT",
+    "trial_days": 14,
+    "limits": {
+     "staff": -1,
+     "devices": -1,
+     "branches": -1,
+     "products": -1,
+     "sales_per_month": -1
+    },
+    "features": [
+     "pos",
+     "inventory",
+     "purchases",
+     "customers",
+     "reports",
+     "reports_advanced",
+     "offline_sync",
+     "multi_branch",
+     "staff",
+     "expenses",
+     "export",
+     "orders"
+    ],
+    "capabilities": null,
+    "highlight": false,
+    "id": "01a11082-a746-7318-85c1-272138d66495",
+    "public": true,
+    "active": true,
+    "sort_order": 3,
+    "tenant_count": 2
+   }
+  ],
+  "features": {
+   "pos": "Point of sale",
+   "inventory": "Inventory & catalogue",
+   "purchases": "Purchases & suppliers",
+   "customers": "Customers & due ledger",
+   "reports": "Standard reports",
+   "reports_advanced": "Advanced reports (margin, exceptions)",
+   "offline_sync": "Offline selling with automatic sync",
+   "multi_branch": "Multiple branches",
+   "staff": "Staff accounts & roles",
+   "expenses": "Expenses & day book",
+   "export": "Data export (CSV)",
+   "orders": "Orders & quotations"
+  },
+  "limit_keys": {
+   "products": "Products",
+   "staff": "Staff accounts",
+   "branches": "Branches",
+   "devices": "Registered devices",
+   "sales_per_month": "Sales per month"
+  },
+  "capabilities": {
+   "barcode_scanning": {
+    "label": "Barcode scanning",
+    "group": "Selling",
+    "status": "ready"
+   },
+   "fractional_qty": {
+    "label": "Sell by weight / length",
+    "group": "Selling",
+    "status": "ready"
+   },
+   "multi_uom": {
+    "label": "Multiple units",
+    "group": "Selling",
+    "status": "ready"
+   },
+   "scale_barcode": {
+    "label": "Scale barcodes",
+    "group": "Selling",
+    "status": "ready"
+   },
+   "item_tax": {
+    "label": "Item-level VAT",
+    "group": "Selling",
+    "status": "ready"
+   },
+   "customer_credit": {
+    "label": "Customer credit (baki / due)",
+    "group": "Selling",
+    "status": "ready"
+   },
+   "loyalty": {
+    "label": "Loyalty points",
+    "group": "Selling",
+    "status": "ready"
+   },
+   "shifts": {
+    "label": "Register shifts",
+    "group": "Selling",
+    "status": "ready"
+   },
+   "promotions": {
+    "label": "Promotions",
+    "group": "Selling",
+    "status": "planned"
+   },
+   "variants": {
+    "label": "Variants",
+    "group": "Catalogue",
+    "status": "ready"
+   },
+   "bundles": {
+    "label": "Bundles & kits",
+    "group": "Catalogue",
+    "status": "planned"
+   },
+   "lot_tracking": {
+    "label": "Batch / lot tracking",
+    "group": "Inventory",
+    "status": "ready"
+   },
+   "expiry_tracking": {
+    "label": "Expiry dates",
+    "group": "Inventory",
+    "status": "ready"
+   },
+   "serial_tracking": {
+    "label": "Serial numbers",
+    "group": "Inventory",
+    "status": "planned"
+   },
+   "warranty": {
+    "label": "Warranty",
+    "group": "Inventory",
+    "status": "ready"
+   },
+   "multi_location": {
+    "label": "Multiple locations",
+    "group": "Inventory",
+    "status": "planned"
+   },
+   "regulated_items": {
+    "label": "Regulated items",
+    "group": "Inventory",
+    "status": "ready"
+   },
+   "document_flow": {
+    "label": "Quotation → order → delivery",
+    "group": "Orders",
+    "status": "ready"
+   },
+   "delivery": {
+    "label": "Delivery scheduling",
+    "group": "Orders",
+    "status": "ready"
+   },
+   "custom_orders": {
+    "label": "Made-to-order",
+    "group": "Orders",
+    "status": "ready"
+   },
+   "installments": {
+    "label": "Instalments",
+    "group": "Orders",
+    "status": "planned"
+   },
+   "salesperson_commission": {
+    "label": "Salesperson attribution",
+    "group": "Orders",
+    "status": "ready"
+   }
+  }
+ },
+ "admin_types": {
+  "business_types": [
+   {
+    "id": "01a11082-a73d-7ee4-9bd7-8106d4d96d75",
+    "key": "local_shop",
+    "label": "Local Shop",
+    "description": "Corner store, grocery and general trade. Fast to learn, sells loose goods by weight, keeps a customer due ledger (baki khata).",
+    "family": "counter_retail",
+    "version": 1,
+    "sort_order": 1,
+    "active": true,
+    "definition": {
+     "pos": {
+      "layout": "quick",
+      "quick_keys": true,
+      "hold_resume": true,
+      "require_customer": false
+     },
+     "tax": {
+      "mode": "inclusive",
+      "classes": [
+       {
+        "name": "No VAT",
+        "rate": 0,
+        "default": true
+       }
+      ],
+      "cash_rounding": "none"
+     },
+     "stock": {
+      "costing": "weighted_average",
+      "allocation": "none",
+      "allow_negative": true,
+      "reorder_default": 5
+     },
+     "theme": {
+      "icon": "store",
+      "accent": "#E8A200"
+     },
+     "units": [
+      {
+       "code": "pc",
+       "label": "Piece",
+       "label_bn": "পিস",
+       "allow_fraction": false
+      },
+      {
+       "code": "kg",
+       "label": "Kilogram",
+       "label_bn": "কেজি",
+       "allow_fraction": true
+      },
+      {
+       "code": "g",
+       "label": "Gram",
+       "label_bn": "গ্রাম",
+       "allow_fraction": true
+      },
+      {
+       "code": "litre",
+       "label": "Litre",
+       "label_bn": "লিটার",
+       "allow_fraction": true
+      },
+      {
+       "code": "dozen",
+       "label": "Dozen",
+       "label_bn": "ডজন",
+       "allow_fraction": false
+      },
+      {
+       "code": "pack",
+       "label": "Packet",
+       "label_bn": "প্যাকেট",
+       "allow_fraction": false
+      },
+      {
+       "code": "bag",
+       "label": "Bag",
+       "label_bn": "বস্তা",
+       "allow_fraction": false
+      },
+      {
+       "code": "carton",
+       "label": "Carton",
+       "label_bn": "কার্টন",
+       "allow_fraction": false
+      }
+     ],
+     "loyalty": {
+      "enabled": false,
+      "points_per_100": 0
+     },
+     "reports": [
+      "sales_summary",
+      "daily_book",
+      "due_ageing",
+      "stock_valuation",
+      "expenses"
+     ],
+     "dashboard": [
+      "today_sales",
+      "sales_trend",
+      "dues",
+      "low_stock",
+      "payment_mix",
+      "top_products"
+     ],
+     "documents": {
+      "invoice": "a4_simple",
+      "receipt": "thermal_80"
+     },
+     "attributes": [
+      {
+       "key": "brand",
+       "type": "select_or_create",
+       "unit": null,
+       "flags": {
+        "filterable": true,
+        "searchable": true,
+        "show_in_pos": true,
+        "show_on_label": false,
+        "show_on_receipt": false
+       },
+       "group": "Details",
+       "label": "Brand",
+       "options": [],
+       "label_bn": "ব্র্যান্ড",
+       "required": false
+      },
+      {
+       "key": "shelf",
+       "type": "text",
+       "unit": null,
+       "flags": {
+        "filterable": false,
+        "searchable": false,
+        "show_in_pos": false,
+        "show_on_label": false,
+        "show_on_receipt": false
+       },
+       "group": "Storage",
+       "label": "Shelf / rack",
+       "options": [],
+       "label_bn": "তাক",
+       "required": false
+      }
+     ],
+     "categories": [
+      "Rice & Grains",
+      "Pulses",
+      "Oil & Ghee",
+      "Spices",
+      "Vegetables",
+      "Dairy & Eggs",
+      "Beverages",
+      "Snacks & Biscuits",
+      "Soap & Cleaning",
+      "Stationery",
+      "Others"
+     ],
+     "terminology": {
+      "due": "Baki",
+      "product": "Item",
+      "customer": "Customer",
+      "supplier": "Supplier"
+     },
+     "capabilities": [
+      "barcode_scanning",
+      "fractional_qty",
+      "multi_uom",
+      "customer_credit"
+     ],
+     "variant_axes": []
+    },
+    "tenant_count": 3,
+    "tenants_on_older_version": 0
+   },
+   {
+    "id": "01a11082-a73f-7fe5-8b0b-61a2d23c4974",
+    "key": "supershop",
+    "label": "Supershop",
+    "description": "Barcode-first self-service retail: weighed goods with scale labels, VAT, expiry and FEFO, loyalty and cash-register shifts.",
+    "family": "counter_retail",
+    "version": 1,
+    "sort_order": 2,
+    "active": true,
+    "definition": {
+     "pos": {
+      "layout": "counter",
+      "quick_keys": true,
+      "hold_resume": true,
+      "require_customer": false
+     },
+     "tax": {
+      "mode": "inclusive",
+      "classes": [
+       {
+        "name": "No VAT",
+        "rate": 0,
+        "default": true
+       },
+       {
+        "name": "VAT 5%",
+        "rate": 5
+       },
+       {
+        "name": "VAT 15%",
+        "rate": 15
+       }
+      ],
+      "cash_rounding": "nearest_1"
+     },
+     "stock": {
+      "costing": "weighted_average",
+      "allocation": "fefo",
+      "allow_negative": false,
+      "reorder_default": 10,
+      "expiry_alert_days": [
+       90,
+       30
+      ]
+     },
+     "theme": {
+      "icon": "shopping_basket",
+      "accent": "#0E9F6E"
+     },
+     "units": [
+      {
+       "code": "pc",
+       "label": "Piece",
+       "label_bn": "পিস",
+       "allow_fraction": false
+      },
+      {
+       "code": "kg",
+       "label": "Kilogram",
+       "label_bn": "কেজি",
+       "allow_fraction": true
+      },
+      {
+       "code": "g",
+       "label": "Gram",
+       "label_bn": "গ্রাম",
+       "allow_fraction": true
+      },
+      {
+       "code": "litre",
+       "label": "Litre",
+       "label_bn": "লিটার",
+       "allow_fraction": true
+      },
+      {
+       "code": "dozen",
+       "label": "Dozen",
+       "label_bn": "ডজন",
+       "allow_fraction": false
+      },
+      {
+       "code": "pack",
+       "label": "Packet",
+       "label_bn": "প্যাকেট",
+       "allow_fraction": false
+      },
+      {
+       "code": "carton",
+       "label": "Carton",
+       "label_bn": "কার্টন",
+       "allow_fraction": false
+      }
+     ],
+     "loyalty": {
+      "enabled": true,
+      "points_per_100": 1
+     },
+     "reports": [
+      "sales_summary",
+      "department_margin",
+      "tax_summary",
+      "shift_z",
+      "expiry_loss",
+      "stock_valuation"
+     ],
+     "dashboard": [
+      "today_sales",
+      "sales_trend",
+      "shift_status",
+      "expiring_soon",
+      "low_stock",
+      "payment_mix",
+      "top_products"
+     ],
+     "documents": {
+      "invoice": "a4_tax",
+      "receipt": "thermal_80"
+     },
+     "attributes": [
+      {
+       "key": "brand",
+       "type": "select_or_create",
+       "unit": null,
+       "flags": {
+        "filterable": true,
+        "searchable": true,
+        "show_in_pos": true,
+        "show_on_label": false,
+        "show_on_receipt": false
+       },
+       "group": "Details",
+       "label": "Brand",
+       "options": [],
+       "label_bn": "ব্র্যান্ড",
+       "required": false
+      },
+      {
+       "key": "origin",
+       "type": "text",
+       "unit": null,
+       "flags": {
+        "filterable": false,
+        "searchable": false,
+        "show_in_pos": false,
+        "show_on_label": false,
+        "show_on_receipt": false
+       },
+       "group": "Sourcing",
+       "label": "Country of origin",
+       "options": [],
+       "label_bn": "উৎপত্তিস্থল",
+       "required": false
+      },
+      {
+       "key": "shelf_life_days",
+       "type": "int",
+       "unit": "days",
+       "flags": {
+        "filterable": false,
+        "searchable": false,
+        "show_in_pos": false,
+        "show_on_label": false,
+        "show_on_receipt": false
+       },
+       "group": "Storage",
+       "label": "Shelf life",
+       "options": [],
+       "label_bn": "মেয়াদ (দিন)",
+       "required": false
+      },
+      {
+       "key": "aisle",
+       "type": "text",
+       "unit": null,
+       "flags": {
+        "filterable": true,
+        "searchable": false,
+        "show_in_pos": false,
+        "show_on_label": false,
+        "show_on_receipt": false
+       },
+       "group": "Storage",
+       "label": "Aisle / section",
+       "options": [],
+       "label_bn": "সেকশন",
+       "required": false
+      }
+     ],
+     "categories": [
+      "Fresh Produce",
+      "Meat & Fish",
+      "Dairy & Eggs",
+      "Bakery",
+      "Rice, Oil & Staples",
+      "Spices",
+      "Beverages",
+      "Snacks",
+      "Frozen",
+      "Personal Care",
+      "Household",
+      "Baby"
+     ],
+     "terminology": {
+      "due": "Credit",
+      "product": "Item",
+      "customer": "Member",
+      "supplier": "Supplier"
+     },
+     "capabilities": [
+      "barcode_scanning",
+      "fractional_qty",
+      "multi_uom",
+      "scale_barcode",
+      "item_tax",
+      "customer_credit",
+      "loyalty",
+      "shifts",
+      "lot_tracking",
+      "expiry_tracking"
+     ],
+     "variant_axes": []
+    },
+    "tenant_count": 1,
+    "tenants_on_older_version": 0
+   },
+   {
+    "id": "01a11082-a741-7980-9dcd-2de6961c3f9f",
+    "key": "cosmetic",
+    "label": "Cosmetic Shop",
+    "description": "Beauty and personal care: shade and size variants, batches with expiry and period-after-opening, brands and loyalty.",
+    "family": "counter_retail",
+    "version": 1,
+    "sort_order": 3,
+    "active": true,
+    "definition": {
+     "pos": {
+      "layout": "counter",
+      "quick_keys": false,
+      "hold_resume": true,
+      "require_customer": false
+     },
+     "tax": {
+      "mode": "inclusive",
+      "classes": [
+       {
+        "name": "No VAT",
+        "rate": 0,
+        "default": true
+       },
+       {
+        "name": "VAT 15%",
+        "rate": 15
+       }
+      ],
+      "cash_rounding": "nearest_1"
+     },
+     "stock": {
+      "costing": "weighted_average",
+      "allocation": "fefo",
+      "allow_negative": false,
+      "reorder_default": 3,
+      "expiry_alert_days": [
+       90,
+       30
+      ]
+     },
+     "theme": {
+      "icon": "spa",
+      "accent": "#D6336C"
+     },
+     "units": [
+      {
+       "code": "pc",
+       "label": "Piece",
+       "label_bn": "পিস",
+       "allow_fraction": false
+      },
+      {
+       "code": "set",
+       "label": "Set",
+       "label_bn": "সেট",
+       "allow_fraction": false
+      }
+     ],
+     "loyalty": {
+      "enabled": true,
+      "points_per_100": 2
+     },
+     "reports": [
+      "sales_summary",
+      "brand_performance",
+      "expiry_loss",
+      "stock_valuation"
+     ],
+     "dashboard": [
+      "today_sales",
+      "sales_trend",
+      "expiring_soon",
+      "low_stock",
+      "top_products",
+      "payment_mix"
+     ],
+     "documents": {
+      "invoice": "a4_simple",
+      "receipt": "thermal_80"
+     },
+     "attributes": [
+      {
+       "key": "brand",
+       "type": "select_or_create",
+       "unit": null,
+       "flags": {
+        "filterable": true,
+        "searchable": true,
+        "show_in_pos": true,
+        "show_on_label": false,
+        "show_on_receipt": false
+       },
+       "group": "Details",
+       "label": "Brand",
+       "options": [],
+       "label_bn": "ব্র্যান্ড",
+       "required": true
+      },
+      {
+       "key": "skin_type",
+       "type": "multiselect",
+       "unit": null,
+       "flags": {
+        "filterable": true,
+        "searchable": false,
+        "show_in_pos": false,
+        "show_on_label": false,
+        "show_on_receipt": false
+       },
+       "group": "Details",
+       "label": "Skin type",
+       "options": [
+        "Oily",
+        "Dry",
+        "Combination",
+        "Sensitive",
+        "All"
+       ],
+       "label_bn": "ত্বকের ধরন",
+       "required": false
+      },
+      {
+       "key": "pao_months",
+       "type": "int",
+       "unit": "months",
+       "flags": {
+        "filterable": false,
+        "searchable": false,
+        "show_in_pos": false,
+        "show_on_label": true,
+        "show_on_receipt": false
+       },
+       "group": "Details",
+       "label": "Period after opening",
+       "options": [],
+       "label_bn": "খোলার পর মেয়াদ",
+       "required": false
+      },
+      {
+       "key": "origin",
+       "type": "text",
+       "unit": null,
+       "flags": {
+        "filterable": false,
+        "searchable": false,
+        "show_in_pos": false,
+        "show_on_label": false,
+        "show_on_receipt": false
+       },
+       "group": "Sourcing",
+       "label": "Country of origin",
+       "options": [],
+       "label_bn": "উৎপত্তিস্থল",
+       "required": false
+      },
+      {
+       "key": "ingredients",
+       "type": "textarea",
+       "unit": null,
+       "flags": {
+        "filterable": false,
+        "searchable": false,
+        "show_in_pos": false,
+        "show_on_label": false,
+        "show_on_receipt": false
+       },
+       "group": "Details",
+       "label": "Key ingredients",
+       "options": [],
+       "label_bn": "উপাদান",
+       "required": false
+      }
+     ],
+     "categories": [
+      "Skincare",
+      "Makeup",
+      "Hair Care",
+      "Fragrance",
+      "Bath & Body",
+      "Nails",
+      "Tools & Accessories"
+     ],
+     "terminology": {
+      "due": "Due",
+      "product": "Product",
+      "customer": "Customer",
+      "supplier": "Supplier"
+     },
+     "capabilities": [
+      "barcode_scanning",
+      "variants",
+      "lot_tracking",
+      "expiry_tracking",
+      "item_tax",
+      "customer_credit",
+      "loyalty",
+      "shifts"
+     ],
+     "variant_axes": [
+      {
+       "key": "shade",
+       "label": "Shade",
+       "label_bn": "শেড"
+      },
+      {
+       "key": "size",
+       "label": "Size",
+       "label_bn": "সাইজ"
+      }
+     ]
+    },
+    "tenant_count": 1,
+    "tenants_on_older_version": 0
+   },
+   {
+    "id": "01a11082-a741-7660-a986-a75927fc85ea",
+    "key": "furniture",
+    "label": "Furniture Showroom",
+    "description": "High-value, order-based selling: quotations, advance deposits, delivery scheduling, finishes and warranty.",
+    "family": "order_based",
+    "version": 1,
+    "sort_order": 4,
+    "active": true,
+    "definition": {
+     "pos": {
+      "layout": "order",
+      "quick_keys": false,
+      "hold_resume": true,
+      "require_customer": true
+     },
+     "tax": {
+      "mode": "exclusive",
+      "classes": [
+       {
+        "name": "No VAT",
+        "rate": 0
+       },
+       {
+        "name": "VAT 15%",
+        "rate": 15,
+        "default": true
+       }
+      ],
+      "cash_rounding": "nearest_1"
+     },
+     "stock": {
+      "costing": "weighted_average",
+      "allocation": "none",
+      "allow_negative": true,
+      "reorder_default": 1
+     },
+     "theme": {
+      "icon": "chair",
+      "accent": "#B5651D"
+     },
+     "units": [
+      {
+       "code": "pc",
+       "label": "Piece",
+       "label_bn": "পিস",
+       "allow_fraction": false
+      },
+      {
+       "code": "set",
+       "label": "Set",
+       "label_bn": "সেট",
+       "allow_fraction": false
+      }
+     ],
+     "loyalty": {
+      "enabled": false,
+      "points_per_100": 0
+     },
+     "reports": [
+      "sales_summary",
+      "order_pipeline",
+      "receivables",
+      "delivery_schedule"
+     ],
+     "dashboard": [
+      "today_sales",
+      "open_orders",
+      "deliveries_due",
+      "dues",
+      "sales_trend",
+      "top_products"
+     ],
+     "documents": {
+      "invoice": "a4_tax",
+      "receipt": "thermal_80",
+      "quotation": "a4_quote"
+     },
+     "attributes": [
+      {
+       "key": "material",
+       "type": "select_or_create",
+       "unit": null,
+       "flags": {
+        "filterable": true,
+        "searchable": true,
+        "show_in_pos": true,
+        "show_on_label": false,
+        "show_on_receipt": false
+       },
+       "group": "Details",
+       "label": "Material",
+       "options": [],
+       "label_bn": "উপাদান",
+       "required": false
+      },
+      {
+       "key": "dimensions",
+       "type": "text",
+       "unit": null,
+       "flags": {
+        "filterable": false,
+        "searchable": false,
+        "show_in_pos": true,
+        "show_on_label": false,
+        "show_on_receipt": true
+       },
+       "group": "Details",
+       "label": "Dimensions (L × W × H)",
+       "options": [],
+       "label_bn": "মাপ",
+       "required": false
+      },
+      {
+       "key": "weight_kg",
+       "type": "decimal",
+       "unit": "kg",
+       "flags": {
+        "filterable": false,
+        "searchable": false,
+        "show_in_pos": false,
+        "show_on_label": false,
+        "show_on_receipt": false
+       },
+       "group": "Logistics",
+       "label": "Weight",
+       "options": [],
+       "label_bn": "ওজন",
+       "required": false
+      },
+      {
+       "key": "assembly",
+       "type": "bool",
+       "unit": null,
+       "flags": {
+        "filterable": false,
+        "searchable": false,
+        "show_in_pos": false,
+        "show_on_label": false,
+        "show_on_receipt": false
+       },
+       "group": "Logistics",
+       "label": "Assembly required",
+       "options": [],
+       "label_bn": "জোড়া লাগাতে হবে",
+       "required": false
+      },
+      {
+       "key": "lead_time_days",
+       "type": "int",
+       "unit": "days",
+       "flags": {
+        "filterable": false,
+        "searchable": false,
+        "show_in_pos": false,
+        "show_on_label": false,
+        "show_on_receipt": false
+       },
+       "group": "Logistics",
+       "label": "Lead time",
+       "options": [],
+       "label_bn": "সময় (দিন)",
+       "required": false
+      },
+      {
+       "key": "room",
+       "type": "select",
+       "unit": null,
+       "flags": {
+        "filterable": true,
+        "searchable": false,
+        "show_in_pos": false,
+        "show_on_label": false,
+        "show_on_receipt": false
+       },
+       "group": "Details",
+       "label": "Room",
+       "options": [
+        "Living",
+        "Bedroom",
+        "Dining",
+        "Office",
+        "Outdoor"
+       ],
+       "label_bn": "কক্ষ",
+       "required": false
+      }
+     ],
+     "categories": [
+      "Sofas",
+      "Beds",
+      "Dining",
+      "Wardrobes",
+      "Tables",
+      "Chairs",
+      "Office",
+      "Storage",
+      "Decor"
+     ],
+     "terminology": {
+      "due": "Balance",
+      "product": "Piece",
+      "customer": "Client",
+      "supplier": "Supplier"
+     },
+     "capabilities": [
+      "barcode_scanning",
+      "variants",
+      "warranty",
+      "item_tax",
+      "customer_credit",
+      "document_flow",
+      "delivery",
+      "custom_orders",
+      "salesperson_commission"
+     ],
+     "variant_axes": [
+      {
+       "key": "finish",
+       "label": "Finish / colour",
+       "label_bn": "রং"
+      },
+      {
+       "key": "size",
+       "label": "Size",
+       "label_bn": "সাইজ"
+      }
+     ],
+     "deposit_percent_min": 30
+    },
+    "tenant_count": 1,
+    "tenants_on_older_version": 0
+   },
+   {
+    "id": "01a11082-a742-7533-a3c6-3ce09032c1dc",
+    "key": "pharmacy",
+    "label": "Pharmacy",
+    "description": "Medicines with batches and expiry, strip/box units, generic names and prescription-only flags.",
+    "family": "counter_retail",
+    "version": 1,
+    "sort_order": 5,
+    "active": true,
+    "definition": {
+     "pos": {
+      "layout": "counter",
+      "quick_keys": false,
+      "hold_resume": true,
+      "require_customer": false
+     },
+     "tax": {
+      "mode": "inclusive",
+      "classes": [
+       {
+        "name": "No VAT",
+        "rate": 0,
+        "default": true
+       }
+      ],
+      "cash_rounding": "none"
+     },
+     "stock": {
+      "costing": "weighted_average",
+      "allocation": "fefo",
+      "allow_negative": false,
+      "reorder_default": 10,
+      "expiry_alert_days": [
+       90,
+       30
+      ]
+     },
+     "theme": {
+      "icon": "medication",
+      "accent": "#0891B2"
+     },
+     "units": [
+      {
+       "code": "tablet",
+       "label": "Tablet",
+       "label_bn": "ট্যাবলেট",
+       "allow_fraction": false
+      },
+      {
+       "code": "capsule",
+       "label": "Capsule",
+       "label_bn": "ক্যাপসুল",
+       "allow_fraction": false
+      },
+      {
+       "code": "ml",
+       "label": "Millilitre",
+       "label_bn": "মিলি",
+       "allow_fraction": true
+      },
+      {
+       "code": "strip",
+       "label": "Strip",
+       "label_bn": "স্ট্রিপ",
+       "allow_fraction": false
+      },
+      {
+       "code": "box",
+       "label": "Box",
+       "label_bn": "বক্স",
+       "allow_fraction": false
+      },
+      {
+       "code": "pc",
+       "label": "Piece",
+       "label_bn": "পিস",
+       "allow_fraction": false
+      },
+      {
+       "code": "bottle",
+       "label": "Bottle",
+       "label_bn": "বোতল",
+       "allow_fraction": false
+      }
+     ],
+     "loyalty": {
+      "enabled": false,
+      "points_per_100": 0
+     },
+     "reports": [
+      "sales_summary",
+      "expiry_loss",
+      "stock_valuation",
+      "due_ageing"
+     ],
+     "dashboard": [
+      "today_sales",
+      "sales_trend",
+      "expiring_soon",
+      "low_stock",
+      "dues",
+      "top_products"
+     ],
+     "documents": {
+      "invoice": "a4_simple",
+      "receipt": "thermal_80"
+     },
+     "attributes": [
+      {
+       "key": "generic_name",
+       "type": "text",
+       "unit": null,
+       "flags": {
+        "filterable": false,
+        "searchable": true,
+        "show_in_pos": true,
+        "show_on_label": false,
+        "show_on_receipt": false
+       },
+       "group": "Details",
+       "label": "Generic name",
+       "options": [],
+       "label_bn": "জেনেরিক নাম",
+       "required": false
+      },
+      {
+       "key": "strength",
+       "type": "text",
+       "unit": null,
+       "flags": {
+        "filterable": false,
+        "searchable": false,
+        "show_in_pos": false,
+        "show_on_label": false,
+        "show_on_receipt": true
+       },
+       "group": "Details",
+       "label": "Strength",
+       "options": [],
+       "label_bn": "শক্তি",
+       "required": false
+      },
+      {
+       "key": "dosage_form",
+       "type": "select",
+       "unit": null,
+       "flags": {
+        "filterable": true,
+        "searchable": false,
+        "show_in_pos": false,
+        "show_on_label": false,
+        "show_on_receipt": false
+       },
+       "group": "Details",
+       "label": "Dosage form",
+       "options": [
+        "Tablet",
+        "Capsule",
+        "Syrup",
+        "Injection",
+        "Cream",
+        "Drops",
+        "Inhaler",
+        "Other"
+       ],
+       "label_bn": "ধরন",
+       "required": false
+      },
+      {
+       "key": "manufacturer",
+       "type": "select_or_create",
+       "unit": null,
+       "flags": {
+        "filterable": true,
+        "searchable": true,
+        "show_in_pos": false,
+        "show_on_label": false,
+        "show_on_receipt": false
+       },
+       "group": "Details",
+       "label": "Manufacturer",
+       "options": [],
+       "label_bn": "প্রস্তুতকারক",
+       "required": false
+      },
+      {
+       "key": "rx_only",
+       "type": "bool",
+       "unit": null,
+       "flags": {
+        "filterable": false,
+        "searchable": false,
+        "show_in_pos": true,
+        "show_on_label": false,
+        "show_on_receipt": false
+       },
+       "group": "Details",
+       "label": "Prescription only",
+       "options": [],
+       "label_bn": "প্রেসক্রিপশন লাগবে",
+       "required": false
+      },
+      {
+       "key": "storage_condition",
+       "type": "text",
+       "unit": null,
+       "flags": {
+        "filterable": false,
+        "searchable": false,
+        "show_in_pos": false,
+        "show_on_label": false,
+        "show_on_receipt": false
+       },
+       "group": "Storage",
+       "label": "Storage condition",
+       "options": [],
+       "label_bn": "সংরক্ষণ",
+       "required": false
+      }
+     ],
+     "categories": [
+      "Tablets",
+      "Capsules",
+      "Syrups",
+      "Injections",
+      "Topicals",
+      "Baby Care",
+      "Devices",
+      "Supplements"
+     ],
+     "terminology": {
+      "due": "Due",
+      "product": "Medicine",
+      "customer": "Patient",
+      "supplier": "Supplier"
+     },
+     "capabilities": [
+      "barcode_scanning",
+      "multi_uom",
+      "lot_tracking",
+      "expiry_tracking",
+      "regulated_items",
+      "item_tax",
+      "customer_credit",
+      "shifts"
+     ],
+     "variant_axes": []
+    },
+    "tenant_count": 1,
+    "tenants_on_older_version": 0
+   }
+  ],
+  "capabilities": {
+   "barcode_scanning": {
+    "label": "Barcode scanning",
+    "description": "Scan-to-cart, several barcodes per item.",
+    "group": "Selling",
+    "status": "ready",
+    "requires": []
+   },
+   "fractional_qty": {
+    "label": "Sell by weight / length",
+    "description": "Decimal quantities (kg, m, litre).",
+    "group": "Selling",
+    "status": "ready",
+    "requires": []
+   },
+   "multi_uom": {
+    "label": "Multiple units",
+    "description": "Sell in dozen, carton or strip with automatic conversion.",
+    "group": "Selling",
+    "status": "ready",
+    "requires": []
+   },
+   "scale_barcode": {
+    "label": "Scale barcodes",
+    "description": "Weight-embedded labels from deli/produce scales.",
+    "group": "Selling",
+    "status": "ready",
+    "requires": [
+     "fractional_qty"
+    ]
+   },
+   "item_tax": {
+    "label": "Item-level VAT",
+    "description": "Tax class per item, tax lines on the invoice.",
+    "group": "Selling",
+    "status": "ready",
+    "requires": []
+   },
+   "customer_credit": {
+    "label": "Customer credit (baki / due)",
+    "description": "Per-customer due ledger with collection.",
+    "group": "Selling",
+    "status": "ready",
+    "requires": []
+   },
+   "loyalty": {
+    "label": "Loyalty points",
+    "description": "Earn points on every sale.",
+    "group": "Selling",
+    "status": "ready",
+    "requires": [
+     "customer_credit"
+    ]
+   },
+   "shifts": {
+    "label": "Register shifts",
+    "description": "Opening float, cash count, Z-report.",
+    "group": "Selling",
+    "status": "ready",
+    "requires": []
+   },
+   "promotions": {
+    "label": "Promotions",
+    "description": "Rule-based discounts (BOGO, % by category).",
+    "group": "Selling",
+    "status": "planned",
+    "requires": []
+   },
+   "variants": {
+    "label": "Variants",
+    "description": "Size / shade / colour options with their own SKU, price and barcode.",
+    "group": "Catalogue",
+    "status": "ready",
+    "requires": []
+   },
+   "bundles": {
+    "label": "Bundles & kits",
+    "description": "Gift sets and kits that consume component stock.",
+    "group": "Catalogue",
+    "status": "planned",
+    "requires": []
+   },
+   "lot_tracking": {
+    "label": "Batch / lot tracking",
+    "description": "Lot numbers on stock received.",
+    "group": "Inventory",
+    "status": "ready",
+    "requires": []
+   },
+   "expiry_tracking": {
+    "label": "Expiry dates",
+    "description": "FEFO selling and expiry alerts.",
+    "group": "Inventory",
+    "status": "ready",
+    "requires": [
+     "lot_tracking"
+    ]
+   },
+   "serial_tracking": {
+    "label": "Serial numbers",
+    "description": "One serial per unit, traced to the sale.",
+    "group": "Inventory",
+    "status": "planned",
+    "requires": []
+   },
+   "warranty": {
+    "label": "Warranty",
+    "description": "Warranty period printed on the invoice.",
+    "group": "Inventory",
+    "status": "ready",
+    "requires": []
+   },
+   "multi_location": {
+    "label": "Multiple locations",
+    "description": "Showroom, godown and shelf locations.",
+    "group": "Inventory",
+    "status": "planned",
+    "requires": []
+   },
+   "regulated_items": {
+    "label": "Regulated items",
+    "description": "Prescription-only flag and customer profile.",
+    "group": "Inventory",
+    "status": "ready",
+    "requires": [
+     "lot_tracking"
+    ]
+   },
+   "document_flow": {
+    "label": "Quotation → order → delivery",
+    "description": "Order-based selling with advance deposits.",
+    "group": "Orders",
+    "status": "ready",
+    "requires": []
+   },
+   "delivery": {
+    "label": "Delivery scheduling",
+    "description": "Delivery date, address and charge on orders.",
+    "group": "Orders",
+    "status": "ready",
+    "requires": [
+     "document_flow"
+    ]
+   },
+   "custom_orders": {
+    "label": "Made-to-order",
+    "description": "Spec notes and lead time on order lines.",
+    "group": "Orders",
+    "status": "ready",
+    "requires": [
+     "document_flow"
+    ]
+   },
+   "installments": {
+    "label": "Instalments",
+    "description": "Payment plans with a schedule.",
+    "group": "Orders",
+    "status": "planned",
+    "requires": [
+     "customer_credit"
+    ]
+   },
+   "salesperson_commission": {
+    "label": "Salesperson attribution",
+    "description": "Tag each sale with the salesperson.",
+    "group": "Orders",
+    "status": "ready",
+    "requires": []
+   }
+  }
+ },
+ "admin_overview": {
+  "tenants": 7,
+  "by_state": {
+   "active": 5,
+   "trialing": 2
+  },
+  "by_business_type": {
+   "Cosmetic Shop": 1,
+   "Furniture Showroom": 1,
+   "Pharmacy": 1,
+   "Local Shop": 3,
+   "Supershop": 1
+  },
+  "by_plan": {
+   "Business": 3,
+   "Starter": 2,
+   "Enterprise": 2
+  },
+  "mrr": "7995.00",
+  "pending_payments": 0,
+  "expiring_in_7_days": 0,
+  "lapsed": 0,
+  "revenue_by_month": [],
+  "signups_by_month": [
+   {
+    "month": "2026-10",
+    "count": 7
+   }
+  ],
+  "devices": 10,
+  "devices_not_synced_24h": 9,
+  "sales_24h": {
+   "count": 54,
+   "total": "127283.40"
+  }
+ },
+ "admin_tenants": {
+  "items": [
+   {
+    "id": "01a110a3-2e91-7aa2-8d84-7e93bc93de94",
+    "name": "Offline Test Store",
+    "owner_name": "Test Owner",
+    "phone": "01980492173",
+    "email": "",
+    "city": "",
+    "business_type": {
+     "key": "local_shop",
+     "label": "Local Shop",
+     "current_version": 1
+    },
+    "template_version": 1,
+    "plan": {
+     "key": "enterprise",
+     "name": "Enterprise"
+    },
+    "status": "trialing",
+    "state": "trialing",
+    "billing_cycle": "monthly",
+    "period_end": "2026-10-20T09:54:52.177135+00:00",
+    "days_left": 13,
+    "created_at": "2026-10-06T09:54:52.175637+00:00",
+    "last_active_at": "2026-10-06T09:54:52.177135+00:00",
+    "staff_count": 1,
+    "branch_count": 1,
+    "product_count": 31,
+    "device_count": 1,
+    "sales_30d": 3,
+    "revenue_30d": "468.00",
+    "capability_overrides": {
+     "enabled": [],
+     "disabled": []
+    }
+   },
+   {
+    "id": "01a110a2-f50f-739d-a35b-334ba5271b7c",
+    "name": "Offline Test Store",
+    "owner_name": "Test Owner",
+    "phone": "01980477441",
+    "email": "",
+    "city": "",
+    "business_type": {
+     "key": "local_shop",
+     "label": "Local Shop",
+     "current_version": 1
+    },
+    "template_version": 1,
+    "plan": {
+     "key": "enterprise",
+     "name": "Enterprise"
+    },
+    "status": "trialing",
+    "state": "trialing",
+    "billing_cycle": "monthly",
+    "period_end": "2026-10-20T09:54:37.454909+00:00",
+    "days_left": 13,
+    "created_at": "2026-10-06T09:54:37.443363+00:00",
+    "last_active_at": "2026-10-06T09:54:37.454909+00:00",
+    "staff_count": 1,
+    "branch_count": 1,
+    "product_count": 31,
+    "device_count": 1,
+    "sales_30d": 0,
+    "revenue_30d": "0",
+    "capability_overrides": {
+     "enabled": [],
+     "disabled": []
+    }
+   },
+   {
+    "id": "01a11082-c45e-7478-899e-181b1983a2c8",
+    "name": "Shefa Pharmacy",
+    "owner_name": "Dr. Mahmud Hasan",
+    "phone": "01755000001",
+    "email": "",
+    "city": "Chattogram",
+    "business_type": {
+     "key": "pharmacy",
+     "label": "Pharmacy",
+     "current_version": 1
+    },
+    "template_version": 1,
+    "plan": {
+     "key": "starter",
+     "name": "Starter"
+    },
+    "status": "active",
+    "state": "active",
+    "billing_cycle": "monthly",
+    "period_end": "2026-10-30T09:19:28.052480+00:00",
+    "days_left": 23,
+    "created_at": "2026-10-06T09:19:27.837868+00:00",
+    "last_active_at": "2026-10-06T09:19:27.838887+00:00",
+    "staff_count": 2,
+    "branch_count": 1,
+    "product_count": 8,
+    "device_count": 1,
+    "sales_30d": 275,
+    "revenue_30d": "39178.50",
+    "capability_overrides": {
+     "enabled": [],
+     "disabled": []
+    }
+   },
+   {
+    "id": "01a11082-c118-717a-bd59-968f5c78ec0e",
+    "name": "Nakshi Furniture Showroom",
+    "owner_name": "Kamal Hossain",
+    "phone": "01744000001",
+    "email": "",
+    "city": "Gulshan, Dhaka",
+    "business_type": {
+     "key": "furniture",
+     "label": "Furniture Showroom",
+     "current_version": 1
+    },
+    "template_version": 1,
+    "plan": {
+     "key": "business",
+     "name": "Business"
+    },
+    "status": "active",
+    "state": "active",
+    "billing_cycle": "monthly",
+    "period_end": "2026-10-30T09:19:27.251646+00:00",
+    "days_left": 23,
+    "created_at": "2026-10-06T09:19:26.999866+00:00",
+    "last_active_at": "2026-10-06T09:19:27.000451+00:00",
+    "staff_count": 3,
+    "branch_count": 1,
+    "product_count": 15,
+    "device_count": 1,
+    "sales_30d": 30,
+    "revenue_30d": "2463180.00",
+    "capability_overrides": {
+     "enabled": [],
+     "disabled": []
+    }
+   },
+   {
+    "id": "01a11082-bc65-7775-9a7b-70f253386b23",
+    "name": "Glow & Co Beauty",
+    "owner_name": "Nabila Chowdhury",
+    "phone": "01733000001",
+    "email": "",
+    "city": "Dhanmondi, Dhaka",
+    "business_type": {
+     "key": "cosmetic",
+     "label": "Cosmetic Shop",
+     "current_version": 1
+    },
+    "template_version": 1,
+    "plan": {
+     "key": "business",
+     "name": "Business"
+    },
+    "status": "active",
+    "state": "active",
+    "billing_cycle": "monthly",
+    "period_end": "2026-10-30T09:19:26.110144+00:00",
+    "days_left": 23,
+    "created_at": "2026-10-06T09:19:25.796829+00:00",
+    "last_active_at": "2026-10-06T09:19:25.797435+00:00",
+    "staff_count": 2,
+    "branch_count": 1,
+    "product_count": 17,
+    "device_count": 1,
+    "sales_30d": 144,
+    "revenue_30d": "549360.00",
+    "capability_overrides": {
+     "enabled": [],
+     "disabled": []
+    }
+   },
+   {
+    "id": "01a11082-b1f0-7971-bd29-354e7d9a060a",
+    "name": "Fresh Bazar Superstore",
+    "owner_name": "Tanvir Ahmed",
+    "phone": "01722000001",
+    "email": "",
+    "city": "Banani, Dhaka",
+    "business_type": {
+     "key": "supershop",
+     "label": "Supershop",
+     "current_version": 1
+    },
+    "template_version": 1,
+    "plan": {
+     "key": "business",
+     "name": "Business"
+    },
+    "status": "active",
+    "state": "active",
+    "billing_cycle": "monthly",
+    "period_end": "2026-10-30T09:19:23.469719+00:00",
+    "days_left": 23,
+    "created_at": "2026-10-06T09:19:23.119562+00:00",
+    "last_active_at": "2026-10-06T10:10:00.279337+00:00",
+    "staff_count": 4,
+    "branch_count": 2,
+    "product_count": 34,
+    "device_count": 3,
+    "sales_30d": 408,
+    "revenue_30d": "272863.00",
+    "capability_overrides": {
+     "enabled": [],
+     "disabled": []
+    }
+   },
+   {
+    "id": "01a11082-a7fd-7cdd-b3a8-e7dcdfd7ff43",
+    "name": "Rahim General Store",
+    "owner_name": "Abdur Rahim",
+    "phone": "01711000001",
+    "email": "",
+    "city": "Mirpur, Dhaka",
+    "business_type": {
+     "key": "local_shop",
+     "label": "Local Shop",
+     "current_version": 1
+    },
+    "template_version": 1,
+    "plan": {
+     "key": "starter",
+     "name": "Starter"
+    },
+    "status": "active",
+    "state": "active",
+    "billing_cycle": "monthly",
+    "period_end": "2026-10-30T09:19:20.977918+00:00",
+    "days_left": 23,
+    "created_at": "2026-10-06T09:19:20.570048+00:00",
+    "last_active_at": "2026-10-06T09:54:06.581747+00:00",
+    "staff_count": 2,
+    "branch_count": 1,
+    "product_count": 31,
+    "device_count": 2,
+    "sales_30d": 314,
+    "revenue_30d": "110816.50",
+    "capability_overrides": {
+     "enabled": [],
+     "disabled": []
+    }
+   }
+  ],
+  "total": 7,
+  "limit": 10,
+  "offset": 0
+ },
+ "admin_requests": {
+  "items": [],
+  "total": 0,
+  "limit": 10,
+  "offset": 0
+ },
+ "admin_channels": [
+  {
+   "id": "01a11082-a748-7432-8c8e-d8a5c3503eb7",
+   "kind": "bkash",
+   "label": "bKash (demo — replace)",
+   "account_name": "Universal POS",
+   "account_number": "01700000000",
+   "wallet_type": "merchant",
+   "bank_name": "",
+   "branch_name": "",
+   "routing_number": "",
+   "instructions": "Send money to this number, then paste the transaction ID (TrxID) into the app.",
+   "qr_payload": "",
+   "active": true,
+   "sort_order": 1
+  },
+  {
+   "id": "01a11082-a748-7f52-9387-d53f5bdb5deb",
+   "kind": "nagad",
+   "label": "Nagad (demo — replace)",
+   "account_name": "Universal POS",
+   "account_number": "01700000001",
+   "wallet_type": "merchant",
+   "bank_name": "",
+   "branch_name": "",
+   "routing_number": "",
+   "instructions": "Send money to this number, then paste the transaction ID into the app.",
+   "qr_payload": "",
+   "active": true,
+   "sort_order": 2
+  },
+  {
+   "id": "01a11082-a749-77a3-843d-701c75572fe6",
+   "kind": "bank",
+   "label": "Bank transfer (demo — replace)",
+   "account_name": "Universal POS Ltd",
+   "account_number": "0000000000000",
+   "wallet_type": "",
+   "bank_name": "Example Bank",
+   "branch_name": "Dhaka Main",
+   "routing_number": "000000000",
+   "instructions": "Transfer the exact amount and enter the reference number.",
+   "qr_payload": "",
+   "active": true,
+   "sort_order": 3
+  }
+ ],
+ "admin_audit": {
+  "items": [
+   {
+    "id": "01a110a3-31de-7316-9d38-30b5cb7158fb",
+    "at": "2026-10-06T09:54:53.022816+00:00",
+    "action": "device.registered",
+    "actor": "Test Owner",
+    "actor_role": "owner",
+    "entity": "device",
+    "summary": "Test till 1791280493018 (D01) at Main branch",
+    "tenant_id": "01a110a3-2e91-7aa2-8d84-7e93bc93de94",
+    "impersonated": false
+   },
+   {
+    "id": "01a110a3-2f3f-7722-a642-b36d153605f8",
+    "at": "2026-10-06T09:54:52.351394+00:00",
+    "action": "tenant.created",
+    "actor": "Platform Admin",
+    "actor_role": "super_admin",
+    "entity": "tenant",
+    "summary": "Offline Test Store (local_shop, enterprise, trialing)",
+    "tenant_id": null,
+    "impersonated": false
+   },
+   {
+    "id": "01a110a2-f8cb-7d92-b9df-2424cb385194",
+    "at": "2026-10-06T09:54:38.410920+00:00",
+    "action": "device.registered",
+    "actor": "Test Owner",
+    "actor_role": "owner",
+    "entity": "device",
+    "summary": "Test till 1791280478405 (D01) at Main branch",
+    "tenant_id": "01a110a2-f50f-739d-a35b-334ba5271b7c",
+    "impersonated": false
+   },
+   {
+    "id": "01a110a2-f5c3-79d8-a924-18c16557d6a5",
+    "at": "2026-10-06T09:54:37.631489+00:00",
+    "action": "tenant.created",
+    "actor": "Platform Admin",
+    "actor_role": "super_admin",
+    "entity": "tenant",
+    "summary": "Offline Test Store (local_shop, enterprise, trialing)",
+    "tenant_id": null,
+    "impersonated": false
+   },
+   {
+    "id": "01a110a2-7c79-7a3e-8c50-2f0e2a2162a9",
+    "at": "2026-10-06T09:54:06.585328+00:00",
+    "action": "device.registered",
+    "actor": "Abdur Rahim",
+    "actor_role": "owner",
+    "entity": "device",
+    "summary": "Test till 1791280446577 (D02) at Mirpur 10",
+    "tenant_id": "01a11082-a7fd-7cdd-b3a8-e7dcdfd7ff43",
+    "impersonated": false
+   },
+   {
+    "id": "01a11099-0950-77b2-9e2e-487aeeb49b95",
+    "at": "2026-10-06T09:43:47.279729+00:00",
+    "action": "device.registered",
+    "actor": "Tanvir Ahmed",
+    "actor_role": "owner",
+    "entity": "device",
+    "summary": "Web till (D03) at Banani",
+    "tenant_id": "01a11082-b1f0-7971-bd29-354e7d9a060a",
+    "impersonated": false
+   },
+   {
+    "id": "01a11082-cba0-7095-a4fd-fd191c124699",
+    "at": "2026-10-06T09:19:29.696402+00:00",
+    "action": "demo.seeded",
+    "actor": "Platform Admin",
+    "actor_role": "super_admin",
+    "entity": "tenant",
+    "summary": "Shefa Pharmacy: 275 sales",
+    "tenant_id": null,
+    "impersonated": false
+   },
+   {
+    "id": "01a11082-c5f2-7e83-889d-43475d4e766d",
+    "at": "2026-10-06T09:19:28.241928+00:00",
+    "action": "purchase.created",
+    "actor": "Dr. Mahmud Hasan",
+    "actor_role": "owner",
+    "entity": "purchase",
+    "summary": "PO-000002 from Beximco Depot: 3151.10",
+    "tenant_id": "01a11082-c45e-7478-899e-181b1983a2c8",
+    "impersonated": false
+   },
+   {
+    "id": "01a11082-c5e7-7b7f-a078-5dfc0d0ae791",
+    "at": "2026-10-06T09:19:28.230518+00:00",
+    "action": "purchase.created",
+    "actor": "Dr. Mahmud Hasan",
+    "actor_role": "owner",
+    "entity": "purchase",
+    "summary": "PO-000001 from Square Distribution: 8520.15",
+    "tenant_id": "01a11082-c45e-7478-899e-181b1983a2c8",
+    "impersonated": false
+   },
+   {
+    "id": "01a11082-c506-75fa-aedc-e10596da4a0c",
+    "at": "2026-10-06T09:19:28.006657+00:00",
+    "action": "tenant.created",
+    "actor": "Platform Admin",
+    "actor_role": "super_admin",
+    "entity": "tenant",
+    "summary": "Shefa Pharmacy (pharmacy, starter, active)",
+    "tenant_id": null,
+    "impersonated": false
+   }
+  ],
+  "total": 41,
+  "limit": 10,
+  "offset": 0
+ },
+ "admin_settings": {
+  "billing": {
+   "currency": "BDT",
+   "yearly_discount_note": ""
+  },
+  "grace_days": {
+   "days": 3
+  },
+  "maintenance": {
+   "enabled": false,
+   "message": ""
+  },
+  "support": {
+   "email": "",
+   "phone": "",
+   "whatsapp": ""
+  }
+ },
+ "public_types": [
+  {
+   "key": "local_shop",
+   "label": "Local Shop",
+   "description": "Corner store, grocery and general trade. Fast to learn, sells loose goods by weight, keeps a customer due ledger (baki khata).",
+   "family": "counter_retail",
+   "theme": {
+    "icon": "store",
+    "accent": "#E8A200"
+   },
+   "capabilities": [
+    "barcode_scanning",
+    "fractional_qty",
+    "multi_uom",
+    "customer_credit"
+   ]
+  },
+  {
+   "key": "supershop",
+   "label": "Supershop",
+   "description": "Barcode-first self-service retail: weighed goods with scale labels, VAT, expiry and FEFO, loyalty and cash-register shifts.",
+   "family": "counter_retail",
+   "theme": {
+    "icon": "shopping_basket",
+    "accent": "#0E9F6E"
+   },
+   "capabilities": [
+    "barcode_scanning",
+    "fractional_qty",
+    "multi_uom",
+    "scale_barcode",
+    "item_tax",
+    "customer_credit",
+    "loyalty",
+    "shifts",
+    "lot_tracking",
+    "expiry_tracking"
+   ]
+  },
+  {
+   "key": "cosmetic",
+   "label": "Cosmetic Shop",
+   "description": "Beauty and personal care: shade and size variants, batches with expiry and period-after-opening, brands and loyalty.",
+   "family": "counter_retail",
+   "theme": {
+    "icon": "spa",
+    "accent": "#D6336C"
+   },
+   "capabilities": [
+    "barcode_scanning",
+    "variants",
+    "lot_tracking",
+    "expiry_tracking",
+    "item_tax",
+    "customer_credit",
+    "loyalty",
+    "shifts"
+   ]
+  },
+  {
+   "key": "furniture",
+   "label": "Furniture Showroom",
+   "description": "High-value, order-based selling: quotations, advance deposits, delivery scheduling, finishes and warranty.",
+   "family": "order_based",
+   "theme": {
+    "icon": "chair",
+    "accent": "#B5651D"
+   },
+   "capabilities": [
+    "barcode_scanning",
+    "variants",
+    "warranty",
+    "item_tax",
+    "customer_credit",
+    "document_flow",
+    "delivery",
+    "custom_orders",
+    "salesperson_commission"
+   ]
+  },
+  {
+   "key": "pharmacy",
+   "label": "Pharmacy",
+   "description": "Medicines with batches and expiry, strip/box units, generic names and prescription-only flags.",
+   "family": "counter_retail",
+   "theme": {
+    "icon": "medication",
+    "accent": "#0891B2"
+   },
+   "capabilities": [
+    "barcode_scanning",
+    "multi_uom",
+    "lot_tracking",
+    "expiry_tracking",
+    "regulated_items",
+    "item_tax",
+    "customer_credit",
+    "shifts"
+   ]
+  }
+ ],
+ "customers_supershop": {
+  "items": [
+   {
+    "id": "01a11082-b53e-7f9a-8019-292bbf27e992",
+    "name": "Farhana Islam",
+    "phone": "01822200001",
+    "address": "Dhaka",
+    "group": "",
+    "credit_limit": "0.00",
+    "balance": "1943.10",
+    "points": 280,
+    "notes": "",
+    "attributes": {},
+    "active": true,
+    "updated_at": "2026-10-06T09:19:23.119562+00:00"
+   },
+   {
+    "id": "01a11082-b53e-7d13-acc1-c0d4880bb7ae",
+    "name": "Imran Hossain",
+    "phone": "01822200002",
+    "address": "Dhaka",
+    "group": "",
+    "credit_limit": "0.00",
+    "balance": "5717.40",
+    "points": 253,
+    "notes": "",
+    "attributes": {},
+    "active": true,
+    "updated_at": "2026-10-06T09:19:23.119562+00:00"
+   },
+   {
+    "id": "01a11082-b53e-7530-bfe6-5ac58b7ec809",
+    "name": "Rubel Khan",
+    "phone": "01822200004",
+    "address": "Dhaka",
+    "group": "",
+    "credit_limit": "0.00",
+    "balance": "700.00",
+    "points": 300,
+    "notes": "",
+    "attributes": {},
+    "active": true,
+    "updated_at": "2026-10-06T09:19:23.119562+00:00"
+   },
+   {
+    "id": "01a11082-b53e-7d33-a4ed-63214fb311a3",
+    "name": "Shirin Sultana",
+    "phone": "01822200003",
+    "address": "Dhaka",
+    "group": "",
+    "credit_limit": "0.00",
+    "balance": "5227.20",
+    "points": 310,
+    "notes": "",
+    "attributes": {},
+    "active": true,
+    "updated_at": "2026-10-06T09:19:23.119562+00:00"
+   }
+  ],
+  "total": 4,
+  "limit": 30,
+  "offset": 0
+ },
+ "customers_dues": {
+  "total": "13587.70",
+  "customers": [
+   {
+    "customer_id": "01a11082-b53e-7d13-acc1-c0d4880bb7ae",
+    "name": "Imran Hossain",
+    "phone": "01822200002",
+    "balance": "5717.40",
+    "oldest_days": 13
+   },
+   {
+    "customer_id": "01a11082-b53e-7d33-a4ed-63214fb311a3",
+    "name": "Shirin Sultana",
+    "phone": "01822200003",
+    "balance": "5227.20",
+    "oldest_days": 13
+   },
+   {
+    "customer_id": "01a11082-b53e-7f9a-8019-292bbf27e992",
+    "name": "Farhana Islam",
+    "phone": "01822200001",
+    "balance": "1943.10",
+    "oldest_days": 13
+   },
+   {
+    "customer_id": "01a11082-b53e-7530-bfe6-5ac58b7ec809",
+    "name": "Rubel Khan",
+    "phone": "01822200004",
+    "balance": "700.00",
+    "oldest_days": 7
+   }
+  ],
+  "ageing": {
+   "0-30": "13587.70",
+   "31-60": "0.00",
+   "61-90": "0.00",
+   "90+": "0.00"
+  }
+ },
+ "suppliers": [
+  {
+   "id": "01a11082-b53f-709e-bb54-a949a29a2a00",
+   "name": "Agro Fresh Ltd",
+   "company": "",
+   "phone": "01876396954",
+   "address": "",
+   "notes": "",
+   "balance": "74321.20",
+   "active": true
+  },
+  {
+   "id": "01a11082-b53f-7c84-aef2-4f0ff42523ef",
+   "name": "City Dairy",
+   "company": "",
+   "phone": "01817374074",
+   "address": "",
+   "notes": "",
+   "balance": "5300.40",
+   "active": true
+  },
+  {
+   "id": "01a11082-b53f-76a0-bdfa-57ab5574242f",
+   "name": "Metro Distributors",
+   "company": "",
+   "phone": "01864998880",
+   "address": "",
+   "notes": "",
+   "balance": "0.00",
+   "active": true
+  }
+ ],
+ "purchases": {
+  "items": [
+   {
+    "id": "01a11082-b545-7755-92c8-1dc1af92ccb2",
+    "number": "PO-000001",
+    "invoice_no": "",
+    "supplier_id": "01a11082-b53f-709e-bb54-a949a29a2a00",
+    "branch_id": "01a11082-b53c-7fe6-bf5b-ec19907aaadd",
+    "purchase_date": "2026-10-06",
+    "status": "received",
+    "total": "62352.00",
+    "paid": "0.00",
+    "due": "62352.00",
+    "notes": "Opening delivery to Uttara",
+    "lines": [
+     {
+      "variant_id": "01a11082-b345-7866-867f-beb0173e4300",
+      "product_name": "Baby Diaper (M, 44)",
+      "qty": "24.000",
+      "unit_cost": "1080.0000",
+      "lot_no": "UTT-1",
+      "expiry": null,
+      "line_total": "25920.00"
+     },
+     {
+      "variant_id": "01a11082-b2e8-760b-a812-59a698af5b4f",
+      "product_name": "Soybean Oil 2 L",
+      "qty": "24.000",
+      "unit_cost": "338.0000",
+      "lot_no": "UTT-1",
+      "expiry": "2027-03-16",
+      "line_total": "8112.00"
+     },
+     {
+      "variant_id": "01a11082-b2f8-7f3e-a0ac-077e3258e195",
+      "product_name": "Masoor Dal 1 kg",
+      "qty": "24.000",
+      "unit_cost": "118.0000",
+      "lot_no": "UTT-1",
+      "expiry": null,
+      "line_total": "2832.00"
+     },
+     {
+      "variant_id": "01a11082-b323-714b-8773-c08d31f29b30",
+      "product_name": "Frozen Paratha (10 pcs)",
+      "qty": "24.000",
+      "unit_cost": "158.0000",
+      "lot_no": "UTT-1",
+      "expiry": "2026-12-26",
+      "line_total": "3792.00"
+     },
+     {
+      "variant_id": "01a11082-b2a7-7c9e-b9a1-565214e3f892",
+      "product_name": "Carrot",
+      "qty": "24.000",
+      "unit_cost": "62.0000",
+      "lot_no": "UTT-1",
+      "expiry": null,
+      "line_total": "1488.00"
+     },
+     {
+      "variant_id": "01a11082-b303-7371-85c0-0d1197f99d21",
+      "product_name": "Mineral Water 1.5 L",
+      "qty": "24.000",
+      "unit_cost": "27.0000",
+      "lot_no": "UTT-1",
+      "expiry": "2027-01-20",
+      "line_total": "648.00"
+     },
+     {
+      "variant_id": "01a11082-b29f-76ce-9cf4-957e40dcb784",
+      "product_name": "Potato",
+      "qty": "24.000",
+      "unit_cost": "30.0000",
+      "lot_no": "UTT-1",
+      "expiry": null,
+      "line_total": "720.00"
+     },
+     {
+      "variant_id": "01a11082-b2b8-74db-b21a-9593c292d8f1",
+      "product_name": "Fresh Milk 1 L",
+      "qty": "24.000",
+      "unit_cost": "92.0000",
+      "lot_no": "UTT-1",
+      "expiry": "2027-01-13",
+      "line_total": "2208.00"
+     },
+     {
+      "variant_id": "01a11082-b318-7ec8-9ff8-72c34cdbef53",
+      "product_name": "Salted Peanuts 200 g",
+      "qty": "24.000",
+      "unit_cost": "76.0000",
+      "lot_no": "UTT-1",
+      "expiry": "2026-12-28",
+      "line_total": "1824.00"
+     },
+     {
+      "variant_id": "01a11082-b2af-703f-a447-23763687d0db",
+      "product_name": "Broiler Chicken",
+      "qty": "24.000",
+      "unit_cost": "205.0000",
+      "lot_no": "UTT-1",
+      "expiry": null,
+      "line_total": "4920.00"
+     },
+     {
+      "variant_id": "01a11082-b2ee-7e8b-81d6-2bb6a9589b1c",
+      "product_name": "Sugar 1 kg",
+      "qty": "24.000",
+      "unit_cost": "122.0000",
+      "lot_no": "UTT-1",
+      "expiry": null,
+      "line_total": "2928.00"
+     },
+     {
+      "variant_id": "01a11082-b2a3-7ebf-9e78-8e098b46fe7c",
+      "product_name": "Tomato",
+      "qty": "24.000",
+      "unit_cost": "72.0000",
+      "lot_no": "UTT-1",
+      "expiry": null,
+      "line_total": "1728.00"
+     },
+     {
+      "variant_id": "01a11082-b2fd-79c3-8ed7-ff3ca7df951c",
+      "product_name": "Turmeric Powder 200 g",
+      "qty": "24.000",
+      "unit_cost": "88.0000",
+      "lot_no": "UTT-1",
+      "expiry": "2027-04-21",
+      "line_total": "2112.00"
+     },
+     {
+      "variant_id": "01a11082-b2ab-7111-8b6a-a2453a0618ed",
+      "product_name": "Green Chili",
+      "qty": "24.000",
+      "unit_cost": "130.0000",
+      "lot_no": "UTT-1",
+      "expiry": null,
+      "line_total": "3120.00"
+     }
+    ],
+    "payments": []
+   },
+   {
+    "id": "01a11082-b560-7697-949a-3f5dd170b8de",
+    "number": "PO-000002",
+    "invoice_no": "SUP-1323",
+    "supplier_id": "01a11082-b53f-709e-bb54-a949a29a2a00",
+    "branch_id": "01a11082-b295-7f78-b49c-7596bb82a4fa",
+    "purchase_date": "2026-10-03",
+    "status": "received",
+    "total": "29923.00",
+    "paid": "17953.80",
+    "due": "11969.20",
+    "notes": "",
+    "lines": [
+     {
+      "variant_id": "01a11082-b34a-7d8f-ba30-4ce93e57d743",
+      "product_name": "Infant Formula 400 g",
+      "qty": "17.000",
+      "unit_cost": "705.0000",
+      "lot_no": "R770",
+      "expiry": "2027-06-21",
+      "line_total": "11985.00"
+     },
+     {
+      "variant_id": "01a11082-b323-714b-8773-c08d31f29b30",
+      "product_name": "Frozen Paratha (10 pcs)",
+      "qty": "18.000",
+      "unit_cost": "158.0000",
+      "lot_no": "R233",
+      "expiry": "2027-08-07",
+      "line_total": "2844.00"
+     },
+     {
+      "variant_id": "01a11082-b328-7420-8d8f-bbfff156e29d",
+      "product_name": "Frozen Chicken Nuggets",
+      "qty": "11.000",
+      "unit_cost": "360.0000",
+      "lot_no": "R475",
+      "expiry": "2027-08-12",
+      "line_total": "3960.00"
+     },
+     {
+      "variant_id": "01a11082-b33b-753b-90b3-5b476e07e4dd",
+      "product_name": "Shampoo 340 ml",
+      "qty": "37.000",
+      "unit_cost": "262.0000",
+      "lot_no": "R422",
+      "expiry": null,
+      "line_total": "9694.00"
+     },
+     {
+      "variant_id": "01a11082-b2a3-7ebf-9e78-8e098b46fe7c",
+      "product_name": "Tomato",
+      "qty": "20.000",
+      "unit_cost": "72.0000",
+      "lot_no": "R381",
+      "expiry": null,
+      "line_total": "1440.00"
+     }
+    ],
+    "payments": [
+     {
+      "amount": "17953.80",
+      "method": "bkash",
+      "paid_at": "2026-10-06T09:19:24.007536+00:00",
+      "note": ""
+     }
+    ]
+   },
+   {
+    "id": "01a11082-b56a-7e8b-aa3f-6c5d3b9a8a15",
+    "number": "PO-000003",
+    "invoice_no": "SUP-1790",
+    "supplier_id": "01a11082-b53f-7c84-aef2-4f0ff42523ef",
+    "branch_id": "01a11082-b295-7f78-b49c-7596bb82a4fa",
+    "purchase_date": "2026-09-29",
+    "status": "received",
+    "total": "13251.00",
+    "paid": "7950.60",
+    "due": "5300.40",
+    "notes": "",
+    "lines": [
+     {
+      "variant_id": "01a11082-b30d-724e-a219-596c461e7d97",
+      "product_name": "Orange Juice 1 L",
+      "qty": "28.000",
+      "unit_cost": "124.0000",
+      "lot_no": "R932",
+      "expiry": "2027-02-16",
+      "line_total": "3472.00"
+     },
+     {
+      "variant_id": "01a11082-b29a-7f27-8069-ff79c3a6a163",
+      "product_name": "Onion",
+      "qty": "17.000",
+      "unit_cost": "55.0000",
+      "lot_no": "R691",
+      "expiry": null,
+      "line_total": "935.00"
+     },
+     {
+      "variant_id": "01a11082-b340-77ca-8a7f-7d88c8715931",
+      "product_name": "Toothpaste 150 g",
+      "qty": "13.000",
+      "unit_cost": "112.0000",
+      "lot_no": "R218",
+      "expiry": null,
+      "line_total": "1456.00"
+     },
+     {
+      "variant_id": "01a11082-b2e8-760b-a812-59a698af5b4f",
+      "product_name": "Soybean Oil 2 L",
+      "qty": "16.000",
+      "unit_cost": "338.0000",
+      "lot_no": "R172",
+      "expiry": "2027-08-17",
+      "line_total": "5408.00"
+     },
+     {
+      "variant_id": "01a11082-b2d7-72eb-a93b-7ae974ff9bbe",
+      "product_name": "Sandwich Bread",
+      "qty": "36.000",
+      "unit_cost": "55.0000",
+      "lot_no": "R140",
+      "expiry": "2027-10-10",
+      "line_total": "1980.00"
+     }
+    ],
+    "payments": [
+     {
+      "amount": "7950.60",
+      "method": "bkash",
+      "paid_at": "2026-10-06T09:19:24.018440+00:00",
+      "note": ""
+     }
+    ]
+   }
+  ],
+  "total": 3,
+  "limit": 20,
+  "offset": 0
+ },
+ "devices": [
+  {
+   "id": "01a11082-b53d-7d79-a4b6-936132d3fe9b",
+   "name": "Counter 1",
+   "device_code": "D01",
+   "branch_id": "01a11082-b295-7f78-b49c-7596bb82a4fa",
+   "platform": "demo",
+   "app_version": "",
+   "last_seen_at": null,
+   "last_sync_at": null,
+   "active": true
+  },
+  {
+   "id": "01a11082-b53e-7cf1-86c7-8e57793ef3f2",
+   "name": "Uttara counter",
+   "device_code": "D02",
+   "branch_id": "01a11082-b53c-7fe6-bf5b-ec19907aaadd",
+   "platform": "demo",
+   "app_version": "",
+   "last_seen_at": null,
+   "last_sync_at": null,
+   "active": true
+  },
+  {
+   "id": "01a11099-0951-7ef1-a994-a256d691e839",
+   "name": "Web till",
+   "device_code": "D03",
+   "branch_id": "01a11082-b295-7f78-b49c-7596bb82a4fa",
+   "platform": "web",
+   "app_version": "1.0.0",
+   "last_seen_at": "2026-10-06T11:06:00.328941+00:00",
+   "last_sync_at": null,
+   "active": true
+  }
+ ],
+ "report_summary": {
+  "from": "2026-10-05T18:00:00+00:00",
+  "to": "2026-10-06T18:00:00+00:00",
+  "invoices": 7,
+  "gross_sales": "2394.00",
+  "discounts": "0.00",
+  "tax": "89.35",
+  "paid": "2394.00",
+  "due_created": "0.00",
+  "items_sold": "15.500",
+  "returns_count": 0,
+  "returns_total": "0.00",
+  "voids": 0,
+  "net_sales": "2394.00",
+  "avg_bill": "342.00",
+  "by_method": [
+   {
+    "method": "cash",
+    "amount": "2189.00",
+    "count": 4
+   },
+   {
+    "method": "card",
+    "amount": "110.00",
+    "count": 1
+   },
+   {
+    "method": "bkash",
+    "amount": "95.00",
+    "count": 2
+   }
+  ],
+  "gross_profit": "228.65",
+  "cost_of_goods": "2075.50"
+ },
+ "report_stock_valuation": {
+  "units": "261.500",
+  "skus": 15,
+  "retail_value": "18161.00",
+  "cost_value": "14980.00",
+  "potential_profit": "3181.00"
+ },
+ "report_expenses": {
+  "total": "496.00",
+  "by_category": [
+   {
+    "category": "Transport",
+    "amount": "333.00"
+   },
+   {
+    "category": "Tea & snacks",
+    "amount": "163.00"
+   }
+  ]
+ },
+ "report_top_products": [
+  {
+   "product_id": "01a11082-b2e7-725d-a652-b62e4b3e9810",
+   "name": "Soybean Oil 2 L",
+   "revenue": "1095.00",
+   "qty": "3.000"
+  },
+  {
+   "product_id": "01a11082-b33b-706e-9199-529447730e08",
+   "name": "Shampoo 340 ml",
+   "revenue": "640.00",
+   "qty": "2.000"
+  },
+  {
+   "product_id": "01a11082-b2fc-7640-9b3c-e6af6bcc4fa6",
+   "name": "Turmeric Powder 200 g",
+   "revenue": "210.00",
+   "qty": "2.000"
+  },
+  {
+   "product_id": "01a11082-b29e-70a8-8a91-81d46625d84a",
+   "name": "Potato",
+   "revenue": "171.00",
+   "qty": "4.500"
+  },
+  {
+   "product_id": "01a11082-b2a2-7096-b4b9-fbb16eccfb1f",
+   "name": "Tomato",
+   "revenue": "135.00",
+   "qty": "1.500"
+  },
+  {
+   "product_id": "01a11082-b299-78f2-8f28-fc86913b2e5d",
+   "name": "Onion",
+   "revenue": "97.50",
+   "qty": "1.500"
+  },
+  {
+   "product_id": "01a11082-b307-78ef-a74d-6ef68ce07cb9",
+   "name": "Cola 500 ml",
+   "revenue": "45.00",
+   "qty": "1.000"
+  }
+ ],
+ "report_sales_by_day": [
+  {
+   "date": "2026-10-06",
+   "invoices": 7,
+   "total": "2394.00"
+  }
+ ],
+ "report_expiring": [
+  {
+   "lot_id": "01a11082-b554-7016-a976-d4e95c9bc098",
+   "name": "Salted Peanuts 200 g",
+   "label": "",
+   "lot_no": "UTT-1",
+   "expiry": "2026-12-28",
+   "days_left": 83,
+   "qty": "3.000",
+   "value_at_cost": "228.00"
+  }
+ ],
+ "report_exceptions": [],
+ "report_cashiers": [
+  {
+   "cashier": "Sohel Rana",
+   "invoices": 3,
+   "total": "1035.00",
+   "discounts": "0.00"
+  },
+  {
+   "cashier": "Mitu Rahman",
+   "invoices": 2,
+   "total": "463.00",
+   "discounts": "0.00"
+  },
+  {
+   "cashier": "Tanvir Ahmed",
+   "invoices": 1,
+   "total": "455.00",
+   "discounts": "0.00"
+  },
+  {
+   "cashier": "Dina Akter",
+   "invoices": 1,
+   "total": "441.00",
+   "discounts": "0.00"
+  }
+ ],
+ "report_by_category": [
+  {
+   "category": "Rice, Oil & Staples",
+   "revenue": "1095.00"
+  },
+  {
+   "category": "Personal Care",
+   "revenue": "640.00"
+  },
+  {
+   "category": "Fresh Produce",
+   "revenue": "403.50"
+  },
+  {
+   "category": "Spices",
+   "revenue": "210.00"
+  },
+  {
+   "category": "Beverages",
+   "revenue": "45.00"
+  }
+ ],
+ "billing_channels": [
+  {
+   "id": "01a11082-a748-7432-8c8e-d8a5c3503eb7",
+   "kind": "bkash",
+   "label": "bKash (demo — replace)",
+   "account_name": "Universal POS",
+   "account_number": "01700000000",
+   "wallet_type": "merchant",
+   "bank_name": "",
+   "branch_name": "",
+   "routing_number": "",
+   "instructions": "Send money to this number, then paste the transaction ID (TrxID) into the app.",
+   "qr_payload": "",
+   "active": true,
+   "sort_order": 1
+  },
+  {
+   "id": "01a11082-a748-7f52-9387-d53f5bdb5deb",
+   "kind": "nagad",
+   "label": "Nagad (demo — replace)",
+   "account_name": "Universal POS",
+   "account_number": "01700000001",
+   "wallet_type": "merchant",
+   "bank_name": "",
+   "branch_name": "",
+   "routing_number": "",
+   "instructions": "Send money to this number, then paste the transaction ID into the app.",
+   "qr_payload": "",
+   "active": true,
+   "sort_order": 2
+  },
+  {
+   "id": "01a11082-a749-77a3-843d-701c75572fe6",
+   "kind": "bank",
+   "label": "Bank transfer (demo — replace)",
+   "account_name": "Universal POS Ltd",
+   "account_number": "0000000000000",
+   "wallet_type": "",
+   "bank_name": "Example Bank",
+   "branch_name": "Dhaka Main",
+   "routing_number": "000000000",
+   "instructions": "Transfer the exact amount and enter the reference number.",
+   "qr_payload": "",
+   "active": true,
+   "sort_order": 3
+  }
+ ],
+ "orders_furniture": {
+  "items": [
+   {
+    "id": "01a11082-c431-7191-a5bd-1eb2b0407508",
+    "number": "ORD-000001",
+    "status": "quotation",
+    "branch_id": "01a11082-c1bd-7344-bc84-cad013d75687",
+    "customer_id": "01a11082-c35e-735f-b31c-be1727f61b64",
+    "customer_name": "Dr. Anwar Hossain",
+    "salesperson_name": "Kamal Hossain",
+    "valid_until": "2026-10-16",
+    "delivery_date": null,
+    "delivery_address": "Flat 4B, Road 11, Gulshan-1, Dhaka",
+    "delivery_charge": "2500.00",
+    "discount": "5000.00",
+    "subtotal": "143000.00",
+    "tax_total": "20699.99",
+    "total": "161199.99",
+    "deposit_paid": "0.00",
+    "balance": "161199.99",
+    "terms": "30% advance, balance on delivery. Quotation valid for 10 days.",
+    "note": "",
+    "sale_id": null,
+    "created_by": "Kamal Hossain",
+    "created_at": "2026-10-06T09:19:26.999866+00:00",
+    "lines": [
+     {
+      "id": "01a11082-c436-7768-bbbb-361ebcec93a7",
+      "variant_id": "01a11082-c1c1-740d-ac09-5a645c757fd7",
+      "product_name": "Oslo 3-Seater Sofa",
+      "variant_label": "Charcoal",
+      "qty": "1.000",
+      "unit_price": "58000.00",
+      "discount": "0.00",
+      "tax_rate": "15.00",
+      "line_total": "64367.83",
+      "spec_note": "Charcoal, extra cushions",
+      "lead_time_days": 0
+     },
+     {
+      "id": "01a11082-c436-7216-8537-83c4710ae8e6",
+      "variant_id": "01a11082-c1e3-746a-a7dd-8d6eee4d4796",
+      "product_name": "Aria Dining Table 6-Seater",
+      "variant_label": "Teak",
+      "qty": "1.000",
+      "unit_price": "46000.00",
+      "discount": "0.00",
+      "tax_rate": "15.00",
+      "line_total": "51050.35",
+      "spec_note": "",
+      "lead_time_days": 10
+     },
+     {
+      "id": "01a11082-c436-7c34-8cc8-0942a99c7095",
+      "variant_id": "01a11082-c1e9-791a-ba6b-ffef32bf6803",
+      "product_name": "Aria Dining Chair",
+      "variant_label": "Beige",
+      "qty": "6.000",
+      "unit_price": "6500.00",
+      "discount": "0.00",
+      "tax_rate": "15.00",
+      "line_total": "43281.81",
+      "spec_note": "",
+      "lead_time_days": 0
+     }
+    ],
+    "payments": []
+   },
+   {
+    "id": "01a11082-c43e-754d-b2c2-1fa8a96aedd8",
+    "number": "ORD-000002",
+    "status": "confirmed",
+    "branch_id": "01a11082-c1bd-7344-bc84-cad013d75687",
+    "customer_id": "01a11082-c35e-7b3b-9bb1-38bbb669c3c8",
+    "customer_name": "Mrs. Rahman",
+    "salesperson_name": "Kamal Hossain",
+    "valid_until": null,
+    "delivery_date": "2026-10-13",
+    "delivery_address": "Flat 4B, Road 11, Gulshan-1, Dhaka",
+    "delivery_charge": "3000.00",
+    "discount": "0.00",
+    "subtotal": "126000.00",
+    "tax_total": "18900.00",
+    "total": "147900.00",
+    "deposit_paid": "60000.00",
+    "balance": "87900.00",
+    "terms": "",
+    "note": "",
+    "sale_id": null,
+    "created_by": "Kamal Hossain",
+    "created_at": "2026-10-06T09:19:26.999866+00:00",
+    "lines": [
+     {
+      "id": "01a11082-c43e-7809-964d-bffdaa427303",
+      "variant_id": "01a11082-c1d1-709b-a2bd-cff7694c5813",
+      "product_name": "Haven King Bed",
+      "variant_label": "Walnut",
+      "qty": "1.000",
+      "unit_price": "72000.00",
+      "discount": "0.00",
+      "tax_rate": "15.00",
+      "line_total": "82800.00",
+      "spec_note": "Walnut finish, mattress cut-out",
+      "lead_time_days": 14
+     },
+     {
+      "id": "01a11082-c43e-771a-8627-7ba614a9764a",
+      "variant_id": "01a11082-c1ef-75d2-bc3c-dd51f27f2c9c",
+      "product_name": "Compass Wardrobe 3-Door",
+      "variant_label": "White",
+      "qty": "1.000",
+      "unit_price": "54000.00",
+      "discount": "0.00",
+      "tax_rate": "15.00",
+      "line_total": "62100.00",
+      "spec_note": "",
+      "lead_time_days": 0
+     }
+    ],
+    "payments": [
+     {
+      "id": "01a11082-c443-79c2-802c-83b3f0a69e35",
+      "method": "bkash",
+      "amount": "60000.00",
+      "reference": "BK7H2QK9",
+      "kind": "deposit",
+      "paid_at": "2026-10-06T09:19:27.810029+00:00",
+      "received_by": "Kamal Hossain"
+     }
+    ]
+   },
+   {
+    "id": "01a11082-c446-7ed3-bccd-5a6e62272bb0",
+    "number": "ORD-000003",
+    "status": "ready",
+    "branch_id": "01a11082-c1bd-7344-bc84-cad013d75687",
+    "customer_id": "01a11082-c35e-7548-bd10-e5ec1e926212",
+    "customer_name": "Shafiq Enterprise",
+    "salesperson_name": "Kamal Hossain",
+    "valid_until": null,
+    "delivery_date": "2026-10-07",
+    "delivery_address": "Plot 9, Banani Commercial Area",
+    "delivery_charge": "0.00",
+    "discount": "0.00",
+    "subtotal": "98000.00",
+    "tax_total": "14700.00",
+    "total": "112700.00",
+    "deposit_paid": "50000.00",
+    "balance": "62700.00",
+    "terms": "",
+    "note": "",
+    "sale_id": null,
+    "created_by": "Kamal Hossain",
+    "created_at": "2026-10-06T09:19:26.999866+00:00",
+    "lines": [
+     {
+      "id": "01a11082-c446-7f9e-a8b7-17aaba45044b",
+      "variant_id": "01a11082-c1e9-791a-ba6b-ffef32bf6803",
+      "product_name": "Aria Dining Chair",
+      "variant_label": "Beige",
+      "qty": "8.000",
+      "unit_price": "6500.00",
+      "discount": "0.00",
+      "tax_rate": "15.00",
+      "line_total": "59800.00",
+      "spec_note": "",
+      "lead_time_days": 0
+     },
+     {
+      "id": "01a11082-c446-7518-8c2e-178625f35c8f",
+      "variant_id": "01a11082-c1e3-746a-a7dd-8d6eee4d4796",
+      "product_name": "Aria Dining Table 6-Seater",
+      "variant_label": "Teak",
+      "qty": "1.000",
+      "unit_price": "46000.00",
+      "discount": "0.00",
+      "tax_rate": "15.00",
+      "line_total": "52900.00",
+      "spec_note": "",
+      "lead_time_days": 0
+     }
+    ],
+    "payments": [
+     {
+      "id": "01a11082-c44a-7740-aaa4-8b3fba9645c5",
+      "method": "cash",
+      "amount": "50000.00",
+      "reference": "",
+      "kind": "deposit",
+      "paid_at": "2026-10-06T09:19:27.817381+00:00",
+      "received_by": "Kamal Hossain"
+     }
+    ]
+   },
+   {
+    "id": "01a11082-c44e-71d2-baeb-7982bab42bad",
+    "number": "ORD-000004",
+    "status": "delivered",
+    "branch_id": "01a11082-c1bd-7344-bc84-cad013d75687",
+    "customer_id": "01a11082-c35e-7676-a9d7-f365446e97b4",
+    "customer_name": "Mrs. Khatun",
+    "salesperson_name": "Kamal Hossain",
+    "valid_until": null,
+    "delivery_date": null,
+    "delivery_address": "Flat 4B, Road 11, Gulshan-1, Dhaka",
+    "delivery_charge": "800.00",
+    "discount": "0.00",
+    "subtotal": "26000.00",
+    "tax_total": "3900.00",
+    "total": "30700.00",
+    "deposit_paid": "30700.00",
+    "balance": "0.00",
+    "terms": "",
+    "note": "",
+    "sale_id": "01a11082-c455-7a60-af00-860b94048d92",
+    "created_by": "Kamal Hossain",
+    "created_at": "2026-10-06T09:19:26.999866+00:00",
+    "lines": [
+     {
+      "id": "01a11082-c44f-7d2e-ba75-a5599bd33c42",
+      "variant_id": "01a11082-c1e9-791a-ba6b-ffef32bf6803",
+      "product_name": "Aria Dining Chair",
+      "variant_label": "Beige",
+      "qty": "4.000",
+      "unit_price": "6500.00",
+      "discount": "0.00",
+      "tax_rate": "15.00",
+      "line_total": "29900.00",
+      "spec_note": "",
+      "lead_time_days": 0
+     }
+    ],
+    "payments": [
+     {
+      "id": "01a11082-c451-75a6-9a61-668a4df19dc4",
+      "method": "cash",
+      "amount": "10000.00",
+      "reference": "",
+      "kind": "deposit",
+      "paid_at": "2026-10-06T09:19:27.825396+00:00",
+      "received_by": "Kamal Hossain"
+     },
+     {
+      "id": "01a11082-c45b-7f25-8c3f-4f388fefa46d",
+      "method": "cash",
+      "amount": "20700.00",
+      "reference": "",
+      "kind": "deposit",
+      "paid_at": "2026-10-06T09:19:27.827865+00:00",
+      "received_by": "Kamal Hossain"
+     }
+    ]
+   }
+  ],
+  "total": 4,
+  "limit": 20,
+  "offset": 0
+ },
+ "dashboard_furniture": {
+  "date": "2026-10-06",
+  "today": {
+   "from": "2026-10-05T18:00:00+00:00",
+   "to": "2026-10-06T18:00:00+00:00",
+   "invoices": 2,
+   "gross_sales": "103380.00",
+   "discounts": "0.00",
+   "tax": "13380.00",
+   "paid": "103380.00",
+   "due_created": "0.00",
+   "items_sold": "7.000",
+   "returns_count": 0,
+   "returns_total": "0.00",
+   "voids": 0,
+   "net_sales": "103380.00",
+   "avg_bill": "51690.00",
+   "by_method": [
+    {
+     "method": "cash",
+     "amount": "103380.00",
+     "count": 3
+    }
+   ],
+   "gross_profit": "29100.00",
+   "cost_of_goods": "60900.00"
+  },
+  "yesterday": {
+   "from": "2026-10-04T18:00:00+00:00",
+   "to": "2026-10-05T18:00:00+00:00",
+   "invoices": 1,
+   "gross_sales": "63825.00",
+   "discounts": "0.00",
+   "tax": "8325.00",
+   "paid": "19147.50",
+   "due_created": "44677.50",
+   "items_sold": "2.000",
+   "returns_count": 0,
+   "returns_total": "0.00",
+   "voids": 0,
+   "net_sales": "63825.00",
+   "avg_bill": "63825.00",
+   "by_method": [
+    {
+     "method": "cash",
+     "amount": "19147.50",
+     "count": 1
+    }
+   ]
+  },
+  "trend": [
+   {
+    "date": "2026-09-23",
+    "invoices": 1,
+    "total": "116150.00"
+   },
+   {
+    "date": "2026-09-24",
+    "invoices": 2,
+    "total": "375130.00"
+   },
+   {
+    "date": "2026-09-25",
+    "invoices": 5,
+    "total": "630430.00"
+   },
+   {
+    "date": "2026-09-26",
+    "invoices": 2,
+    "total": "190555.00"
+   },
+   {
+    "date": "2026-09-27",
+    "invoices": 2,
+    "total": "161000.00"
+   },
+   {
+    "date": "2026-09-28",
+    "invoices": 2,
+    "total": "100050.00"
+   },
+   {
+    "date": "2026-09-29",
+    "invoices": 2,
+    "total": "199755.00"
+   },
+   {
+    "date": "2026-09-30",
+    "invoices": 2,
+    "total": "172500.00"
+   },
+   {
+    "date": "2026-10-01",
+    "invoices": 1,
+    "total": "66700.00"
+   },
+   {
+    "date": "2026-10-02",
+    "invoices": 2,
+    "total": "100050.00"
+   },
+   {
+    "date": "2026-10-03",
+    "invoices": 4,
+    "total": "91080.00"
+   },
+   {
+    "date": "2026-10-04",
+    "invoices": 2,
+    "total": "92575.00"
+   },
+   {
+    "date": "2026-10-05",
+    "invoices": 1,
+    "total": "63825.00"
+   },
+   {
+    "date": "2026-10-06",
+    "invoices": 2,
+    "total": "103380.00"
+   }
+  ],
+  "hourly": [
+   {
+    "hour": 0,
+    "invoices": 0,
+    "total": "0.00"
+   },
+   {
+    "hour": 1,
+    "invoices": 0,
+    "total": "0.00"
+   },
+   {
+    "hour": 2,
+    "invoices": 0,
+    "total": "0.00"
+   },
+   {
+    "hour": 3,
+    "invoices": 0,
+    "total": "0.00"
+   },
+   {
+    "hour": 4,
+    "invoices": 0,
+    "total": "0.00"
+   },
+   {
+    "hour": 5,
+    "invoices": 0,
+    "total": "0.00"
+   },
+   {
+    "hour": 6,
+    "invoices": 0,
+    "total": "0.00"
+   },
+   {
+    "hour": 7,
+    "invoices": 0,
+    "total": "0.00"
+   },
+   {
+    "hour": 8,
+    "invoices": 0,
+    "total": "0.00"
+   },
+   {
+    "hour": 9,
+    "invoices": 0,
+    "total": "0.00"
+   },
+   {
+    "hour": 10,
+    "invoices": 0,
+    "total": "0.00"
+   },
+   {
+    "hour": 11,
+    "invoices": 0,
+    "total": "0.00"
+   },
+   {
+    "hour": 12,
+    "invoices": 0,
+    "total": "0.00"
+   },
+   {
+    "hour": 13,
+    "invoices": 0,
+    "total": "0.00"
+   },
+   {
+    "hour": 14,
+    "invoices": 0,
+    "total": "0.00"
+   },
+   {
+    "hour": 15,
+    "invoices": 2,
+    "total": "103380.00"
+   },
+   {
+    "hour": 16,
+    "invoices": 0,
+    "total": "0.00"
+   },
+   {
+    "hour": 17,
+    "invoices": 0,
+    "total": "0.00"
+   },
+   {
+    "hour": 18,
+    "invoices": 0,
+    "total": "0.00"
+   },
+   {
+    "hour": 19,
+    "invoices": 0,
+    "total": "0.00"
+   },
+   {
+    "hour": 20,
+    "invoices": 0,
+    "total": "0.00"
+   },
+   {
+    "hour": 21,
+    "invoices": 0,
+    "total": "0.00"
+   },
+   {
+    "hour": 22,
+    "invoices": 0,
+    "total": "0.00"
+   },
+   {
+    "hour": 23,
+    "invoices": 0,
+    "total": "0.00"
+   }
+  ],
+  "top_products": [
+   {
+    "product_id": "01a11082-c1c0-7676-bb19-b00016974e2e",
+    "name": "Oslo 3-Seater Sofa",
+    "revenue": "266800.00",
+    "qty": "4.000"
+   },
+   {
+    "product_id": "01a11082-c1e2-7c29-a336-99983cdcc93a",
+    "name": "Aria Dining Table 6-Seater",
+    "revenue": "215050.00",
+    "qty": "4.000"
+   },
+   {
+    "product_id": "01a11082-c1e8-7e01-8254-432c5e43b3fe",
+    "name": "Aria Dining Chair",
+    "revenue": "59800.00",
+    "qty": "8.000"
+   },
+   {
+    "product_id": "01a11082-c1c9-799a-80d7-c3862992177e",
+    "name": "Oslo 2-Seater Sofa",
+    "revenue": "49450.00",
+    "qty": "1.000"
+   },
+   {
+    "product_id": "01a11082-c204-7c5c-8ccf-415b36009ec7",
+    "name": "Coffee Table",
+    "revenue": "26450.00",
+    "qty": "2.000"
+   },
+   {
+    "product_id": "01a11082-c1dd-733f-ada1-356d79cff701",
+    "name": "Bedside Table (pair)",
+    "revenue": "21850.00",
+    "qty": "2.000"
+   }
+  ],
+  "low_stock": [
+   {
+    "variant_id": "01a11082-c206-7fce-90bc-b7474986dc84",
+    "name": "Coffee Table",
+    "label": "White",
+    "sku": "COFF-00022",
+    "on_hand": "0.000",
+    "reorder_level": "5.000",
+    "unit": "pc"
+   },
+   {
+    "variant_id": "01a11082-c205-76e2-9807-8c826eef6c07",
+    "name": "Coffee Table",
+    "label": "Walnut",
+    "sku": "COFF-00021",
+    "on_hand": "0.000",
+    "reorder_level": "5.000",
+    "unit": "pc"
+   },
+   {
+    "variant_id": "01a11082-c1ef-75d2-bc3c-dd51f27f2c9c",
+    "name": "Compass Wardrobe 3-Door",
+    "label": "White",
+    "sku": "COMP-00015",
+    "on_hand": "0.000",
+    "reorder_level": "1.000",
+    "unit": "pc"
+   },
+   {
+    "variant_id": "01a11082-c1f1-783b-b767-91caa22a6937",
+    "name": "Compass Wardrobe 3-Door",
+    "label": "Walnut",
+    "sku": "COMP-00016",
+    "on_hand": "0.000",
+    "reorder_level": "1.000",
+    "unit": "pc"
+   },
+   {
+    "variant_id": "01a11082-c1fb-76b2-b367-6de3a2459ed8",
+    "name": "Ergo Office Chair",
+    "label": "Grey",
+    "sku": "ERGO-00019",
+    "on_hand": "0.000",
+    "reorder_level": "2.000",
+    "unit": "pc"
+   },
+   {
+    "variant_id": "01a11082-c1d2-7f6b-b725-ca5ab8fb87d2",
+    "name": "Haven King Bed",
+    "label": "Oak",
+    "sku": "HAVE-00007",
+    "on_hand": "0.000",
+    "reorder_level": "1.000",
+    "unit": "pc"
+   },
+   {
+    "variant_id": "01a11082-c1d1-709b-a2bd-cff7694c5813",
+    "name": "Haven King Bed",
+    "label": "Walnut",
+    "sku": "HAVE-00006",
+    "on_hand": "0.000",
+    "reorder_level": "1.000",
+    "unit": "pc"
+   },
+   {
+    "variant_id": "01a11082-c1d9-7e01-94cd-7d4658503e79",
+    "name": "Haven Queen Bed",
+    "label": "Oak",
+    "sku": "HAVE-00009",
+    "on_hand": "0.000",
+    "reorder_level": "1.000",
+    "unit": "pc"
+   }
+  ],
+  "expiring": [],
+  "dues": {
+   "total": "521122.50",
+   "count": 4,
+   "top": [
+    {
+     "customer_id": "01a11082-c35e-7b3b-9bb1-38bbb669c3c8",
+     "name": "Mrs. Rahman",
+     "phone": "01844400001",
+     "balance": "405720.00",
+     "oldest_days": 12
+    },
+    {
+     "customer_id": "01a11082-c35e-735f-b31c-be1727f61b64",
+     "name": "Dr. Anwar Hossain",
+     "phone": "01844400002",
+     "balance": "58075.00",
+     "oldest_days": 13
+    },
+    {
+     "customer_id": "01a11082-c35e-7548-bd10-e5ec1e926212",
+     "name": "Shafiq Enterprise",
+     "phone": "01844400003",
+     "balance": "54337.50",
+     "oldest_days": 7
+    },
+    {
+     "customer_id": "01a11082-c35e-7676-a9d7-f365446e97b4",
+     "name": "Mrs. Khatun",
+     "phone": "01844400004",
+     "balance": "2990.00",
+     "oldest_days": 3
+    }
+   ]
+  }
+ },
+ "admin_invoices": {
+  "items": [],
+  "total": 0,
+  "limit": 50,
+  "offset": 0
+ },
+ "sale_detail": {
+  "id": "01a11082-bc5b-7e8c-9925-09053823d3e5",
+  "invoice_no": "INV-D01-000407",
+  "status": "completed",
+  "branch_id": "01a11082-b295-7f78-b49c-7596bb82a4fa",
+  "device_id": "01a11082-b53d-7d79-a4b6-936132d3fe9b",
+  "sold_at": "2026-10-06T07:55:00Z",
+  "customer_id": "01a11082-b53e-7f9a-8019-292bbf27e992",
+  "customer_name": "Farhana Islam",
+  "cashier_name": "Mitu Rahman",
+  "salesperson_name": "",
+  "subtotal": "352.50",
+  "discount": "0.00",
+  "tax_total": "41.74",
+  "rounding": "0.50",
+  "total": "353.00",
+  "paid": "353.00",
+  "due": "0.00",
+  "tax_mode": "inclusive",
+  "points_earned": 3,
+  "note": "",
+  "flags": [],
+  "lines": [
+   {
+    "id": "01a11082-bc5b-74c9-9b97-11579d63fa9a",
+    "variant_id": "01a11082-b33b-753b-90b3-5b476e07e4dd",
+    "product_id": "01a11082-b33b-706e-9199-529447730e08",
+    "product_name": "Shampoo 340 ml",
+    "variant_label": "",
+    "sku": "SHAM-00031",
+    "unit": "pc",
+    "unit_factor": "1.000",
+    "qty": "1.000",
+    "base_qty": "1.000",
+    "unit_price": "320.00",
+    "discount": "0.00",
+    "tax_rate": "15.00",
+    "tax_amount": "41.74",
+    "line_total": "320.00",
+    "charged_total": "320.00",
+    "returned_qty": "0.000",
+    "warranty_months": 0,
+    "note": ""
+   },
+   {
+    "id": "01a11082-bc5b-7c31-829b-b299100e3555",
+    "variant_id": "01a11082-b29a-7f27-8069-ff79c3a6a163",
+    "product_id": "01a11082-b299-78f2-8f28-fc86913b2e5d",
+    "product_name": "Onion",
+    "variant_label": "",
+    "sku": "ONIO-00001",
+    "unit": "kg",
+    "unit_factor": "1.000",
+    "qty": "0.500",
+    "base_qty": "0.500",
+    "unit_price": "65.00",
+    "discount": "0.00",
+    "tax_rate": "0.00",
+    "tax_amount": "0.00",
+    "line_total": "32.50",
+    "charged_total": "32.50",
+    "returned_qty": "0.000",
+    "warranty_months": 0,
+    "note": ""
+   }
+  ],
+  "payments": [
+   {
+    "id": "01a11082-bc5b-70a1-b5f9-ac2b46b870c7",
+    "method": "cash",
+    "amount": "353.00",
+    "reference": "",
+    "kind": "sale",
+    "received_by_name": "Mitu Rahman",
+    "paid_at": "2026-10-06T07:55:00Z"
+   }
+  ]
+ },
+ "admin_tenant_detail": {
+  "id": "01a110a3-2e91-7aa2-8d84-7e93bc93de94",
+  "name": "Offline Test Store",
+  "owner_name": "Test Owner",
+  "phone": "01980492173",
+  "email": "",
+  "city": "",
+  "business_type": {
+   "key": "local_shop",
+   "label": "Local Shop",
+   "current_version": 1
+  },
+  "template_version": 1,
+  "plan": {
+   "key": "enterprise",
+   "name": "Enterprise"
+  },
+  "status": "trialing",
+  "state": "trialing",
+  "billing_cycle": "monthly",
+  "period_end": "2026-10-20T09:54:52.177135+00:00",
+  "days_left": 13,
+  "created_at": "2026-10-06T09:54:52.175637+00:00",
+  "last_active_at": "2026-10-06T09:54:52.177135+00:00",
+  "staff_count": 1,
+  "branch_count": 1,
+  "product_count": 31,
+  "device_count": 1,
+  "sales_30d": 3,
+  "revenue_30d": "468.00",
+  "capability_overrides": {
+   "enabled": [],
+   "disabled": []
+  },
+  "capabilities": [
+   "barcode_scanning",
+   "customer_credit",
+   "fractional_qty",
+   "multi_uom"
+  ],
+  "capability_base": [
+   "barcode_scanning",
+   "fractional_qty",
+   "multi_uom",
+   "customer_credit"
+  ],
+  "limits": {
+   "staff": -1,
+   "devices": -1,
+   "branches": -1,
+   "products": -1,
+   "sales_per_month": -1
+  },
+  "usage": {
+   "products": 31,
+   "staff": 1,
+   "branches": 1,
+   "devices": 1,
+   "sales_per_month": 3
+  }
+ },
+ "shifts": []
+}
