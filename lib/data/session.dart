@@ -11,34 +11,27 @@ import 'platform_status.dart';
 import 'providers.dart';
 import 'sync/sync_engine.dart';
 
-enum AuthStatus { booting, signedOut, needsDevice, ready }
-
-class DeviceInfo {
-  DeviceInfo({required this.id, required this.code, required this.branchId, required this.name});
-  factory DeviceInfo.fromJson(Map<String, dynamic> j) =>
-      DeviceInfo(id: j['id'] as String, code: j['device_code'] as String? ?? j['code'] as String, branchId: j['branch_id'] as String, name: (j['name'] as String?) ?? '');
-  final String id, code, branchId, name;
-  Map<String, dynamic> toJson() => {'id': id, 'code': code, 'branch_id': branchId, 'name': name};
-}
+enum AuthStatus { booting, signedOut, ready }
 
 @immutable
 class SessionState {
-  const SessionState({this.status = AuthStatus.booting, this.ctx, this.user, this.device, this.message});
+  const SessionState({this.status = AuthStatus.booting, this.ctx, this.user, this.message});
 
   final AuthStatus status;
   final TenantContext? ctx;
   final Map<String, dynamic>? user; // super admins have a user but no tenant context
-  final DeviceInfo? device;
   final String? message;
+
+  /// The branch this till sells for: the main branch, or the first one a branch-restricted user may work in.
+  String? get branchId => ctx?.mainBranch?.id;
 
   bool get isAdmin => user?['role'] == 'super_admin';
   bool get ready => status == AuthStatus.ready;
 
-  SessionState copyWith({AuthStatus? status, TenantContext? ctx, Map<String, dynamic>? user, DeviceInfo? device, String? message, bool clearMessage = false}) => SessionState(
+  SessionState copyWith({AuthStatus? status, TenantContext? ctx, Map<String, dynamic>? user, String? message, bool clearMessage = false}) => SessionState(
         status: status ?? this.status,
         ctx: ctx ?? this.ctx,
         user: user ?? this.user,
-        device: device ?? this.device,
         message: clearMessage ? null : (message ?? this.message),
       );
 }
@@ -64,7 +57,6 @@ class SessionController extends Notifier<SessionState> {
     try {
       final userJson = await _db.kvGet('user');
       final ctxJson = await _db.kvGet('ctx');
-      final devJson = await _db.kvGet('device');
       if (userJson == null) {
         state = const SessionState(status: AuthStatus.signedOut);
         return;
@@ -79,10 +71,9 @@ class SessionController extends Notifier<SessionState> {
         return;
       }
       final ctx = TenantContext.decode(ctxJson);
-      final device = devJson == null ? null : DeviceInfo.fromJson(jsonDecode(devJson) as Map<String, dynamic>);
       await _checkMaintenance();
-      state = SessionState(status: device == null ? AuthStatus.needsDevice : AuthStatus.ready, ctx: ctx, user: user, device: device);
-      if (device != null) ref.read(syncProvider.notifier).start();
+      state = SessionState(status: AuthStatus.ready, ctx: ctx, user: user);
+      ref.read(syncProvider.notifier).start();
       unawaited(refreshContext());
     } catch (_) {
       state = const SessionState(status: AuthStatus.signedOut);
@@ -135,29 +126,8 @@ class SessionController extends Notifier<SessionState> {
       return;
     }
     final ctx = TenantContext.fromJson(ctxJson!);
-    final devJson = await _db.kvGet('device');
-    final device = devJson == null ? null : DeviceInfo.fromJson(jsonDecode(devJson) as Map<String, dynamic>);
-    state = SessionState(status: device == null ? AuthStatus.needsDevice : AuthStatus.ready, ctx: ctx, user: user, device: device);
-    if (device != null) ref.read(syncProvider.notifier).start();
-  }
-
-  /// Register this till with the server. It gets a short code that prefixes every invoice number it issues
-  /// offline, so two tills can never mint the same number.
-  Future<void> registerDevice({required String name, required String branchId}) async {
-    final res = await _api.post('/devices/register', body: {'name': name, 'branch_id': branchId, 'platform': _platformLabel(), 'app_version': '1.0.0'});
-    final device = DeviceInfo.fromJson(res);
-    await _db.kvSet('device', jsonEncode(device.toJson()));
-    await _db.kvSet('invoice_seq', '0');
-    state = state.copyWith(status: AuthStatus.ready, device: device, clearMessage: true);
+    state = SessionState(status: AuthStatus.ready, ctx: ctx, user: user);
     ref.read(syncProvider.notifier).start();
-  }
-
-  String _platformLabel() => kIsWeb ? 'web' : defaultTargetPlatform.name;
-
-  /// The server no longer knows this device (removed in the console). Ask to register again.
-  Future<void> deviceRemoved() async {
-    await _db.kvDelete('device');
-    state = SessionState(status: AuthStatus.needsDevice, ctx: state.ctx, user: state.user, message: 'This device was removed. Register it again to keep selling.');
   }
 
   // ------------------------------------------------------------------------------------ context
@@ -234,3 +204,30 @@ final apiProvider = Provider<ApiClient>((ref) {
   client.setTokens(b.access, b.refresh);
   return client;
 });
+
+/// How long a screen's data is kept after the screen is left. Tests set it to zero.
+final cacheWindowProvider = Provider<Duration>((ref) => const Duration(seconds: 60));
+
+/// Keeps an auto-disposed provider's state for a while after its screen is left, so a quick trip to another page and
+/// back shows the last result at once. Never outlives the session: signing out (or in as someone else) drops it, so
+/// one business's numbers can never appear for another. With [revalidate] the data is quietly re-fetched on return
+/// while the cached copy stays on screen.
+extension CacheForSession on Ref {
+  void cacheForSession({Duration? duration, bool revalidate = false}) {
+    final Duration window = duration ?? read(cacheWindowProvider);
+    if (window == Duration.zero) return; // caching switched off (tests): no keep-alive, no timers
+    final link = keepAlive();
+    Timer? timer;
+    onCancel(() => timer = Timer(window, link.close)); // nobody is looking any more: start the clock
+    onResume(() {
+      timer?.cancel();
+      timer = null;
+      if (revalidate) invalidateSelf();
+    });
+    onDispose(() => timer?.cancel());
+    listen(sessionProvider.select((s) => '${s.status.name}|${s.user?['id']}'), (_, __) {
+      timer?.cancel();
+      link.close();
+    });
+  }
+}

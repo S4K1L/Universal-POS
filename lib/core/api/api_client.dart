@@ -109,6 +109,8 @@ class ApiClient {
       return h.reject(DioException(requestOptions: o, type: DioExceptionType.connectionError, error: 'offline (simulated)'));
     }
     if (accessToken != null && o.extra['noAuth'] != true) o.headers['Authorization'] = 'Bearer $accessToken';
+    // Browsers ignore sendTimeout without a body, and Dio's web adapter then warns and forces a CORS preflight.
+    if (kIsWeb && o.data == null) o.sendTimeout = null;
     h.next(o);
   }
 
@@ -209,7 +211,7 @@ class ApiClient {
     if (forceOffline) return false;
     try {
       final uri = Uri.parse(baseUrl).replace(path: '/health');
-      final r = await _bare.getUri(uri, options: Options(receiveTimeout: const Duration(seconds: 4), sendTimeout: const Duration(seconds: 4)));
+      final r = await _bare.getUri(uri, options: Options(receiveTimeout: const Duration(seconds: 4), sendTimeout: kIsWeb ? null : const Duration(seconds: 4)));
       return r.statusCode == 200;
     } catch (_) {
       return false;

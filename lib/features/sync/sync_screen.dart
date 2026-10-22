@@ -10,8 +10,14 @@ import '../../data/repos/sales_repo.dart';
 import '../../data/session.dart';
 import '../../data/sync/sync_engine.dart';
 
-final _queueProvider = StreamProvider.autoDispose<List<OutboxData>>((ref) => ref.watch(salesRepoProvider).watchOutbox());
-final _doneProvider = StreamProvider.autoDispose<List<OutboxData>>((ref) => ref.watch(salesRepoProvider).watchRecentDone(limit: 25));
+final _queueProvider = StreamProvider.autoDispose<List<OutboxData>>((ref) {
+  ref.cacheForSession();
+  return ref.watch(salesRepoProvider).watchOutbox();
+});
+final _doneProvider = StreamProvider.autoDispose<List<OutboxData>>((ref) {
+  ref.cacheForSession();
+  return ref.watch(salesRepoProvider).watchRecentDone(limit: 25);
+});
 
 const _typeLabel = {
   'sale.create': ('Sale', Icons.receipt_long_rounded),
@@ -38,7 +44,6 @@ class SyncScreen extends ConsumerWidget {
     final done = ref.watch(_doneProvider).value ?? const [];
     final api = ref.watch(apiProvider);
     final ctx = ref.watch(ctxProvider);
-    final device = ref.watch(sessionProvider.select((s) => s.device));
     final failed = queue.where((q) => q.status == 'failed').toList();
     final waiting = queue.where((q) => q.status != 'failed').toList();
     final Color c = s.failed > 0 ? t.danger : (!s.online ? t.warning : (s.syncing ? t.info : t.success));
@@ -90,8 +95,7 @@ class SyncScreen extends ConsumerWidget {
               const SizedBox(height: 18),
               Surface(
                 child: Column(children: [
-                  KV(context.tr('This till'), device == null ? '—' : '${device.name} · ${device.code}', mono: false),
-                  KV(context.tr('Invoice numbers'), device == null ? '—' : 'INV-${device.code}-######', mono: false),
+                  KV(context.tr('Invoice numbers'), 'INV-${ref.watch(tillCodeProvider).value ?? '…'}-######', mono: false),
                   KV(context.tr('Server'), Uri.parse(api.baseUrl).authority),
                   KV(context.tr('Waiting to sync'), f.intN(s.pending)),
                   KV(context.tr('Subscription valid until'), f.date(ctx.validUntil)),

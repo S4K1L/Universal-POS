@@ -6,9 +6,14 @@ import 'package:flutter/services.dart';
 import '../theme/theme.dart';
 import '../theme/tokens.dart';
 import '../i18n/lang.dart';
+import '../util/responsive.dart';
+import 'motion.dart';
 
-/// A surface. Cards are flat with a hairline border — depth comes from contrast, not heavy shadow.
-class Surface extends StatelessWidget {
+export 'motion.dart';
+
+/// A surface. Cards are flat with a hairline border — depth comes from contrast, not heavy shadow. A tappable one
+/// answers the pointer: it sinks slightly under a press and its edge warms up under a mouse.
+class Surface extends StatefulWidget {
   const Surface({super.key, required this.child, this.padding = const EdgeInsets.all(Sp.l), this.onTap, this.color, this.border = true, this.radius = R.card, this.raised = false, this.clip = true});
   final Widget child;
   final EdgeInsetsGeometry padding;
@@ -18,25 +23,92 @@ class Surface extends StatelessWidget {
   final double radius;
 
   @override
+  State<Surface> createState() => _SurfaceState();
+}
+
+class _SurfaceState extends State<Surface> {
+  bool _pressed = false, _hover = false;
+
+  @override
   Widget build(BuildContext context) {
     final t = context.t;
+    final tappable = widget.onTap != null;
+    final hot = tappable && _hover && !_pressed;
     final deco = BoxDecoration(
-      color: color ?? t.surface,
-      borderRadius: BorderRadius.circular(radius),
-      border: border ? Border.all(color: t.outline) : null,
-      boxShadow: raised ? [BoxShadow(color: Colors.black.withValues(alpha: t.dark ? 0.35 : 0.07), blurRadius: 24, offset: const Offset(0, 10))] : null,
+      color: widget.color ?? t.surface,
+      borderRadius: BorderRadius.circular(widget.radius),
+      border: widget.border ? Border.all(color: hot ? Color.lerp(t.outline, t.accent, 0.45)! : t.outline) : null,
+      boxShadow: widget.raised || hot ? [BoxShadow(color: Colors.black.withValues(alpha: t.dark ? 0.35 : (hot ? 0.06 : 0.07)), blurRadius: hot ? 20 : 24, offset: Offset(0, hot ? 8 : 10))] : null,
     );
-    final inner = Padding(padding: padding, child: child);
-    return DecoratedBox(
+    final inner = Padding(padding: widget.padding, child: widget.child);
+    final card = AnimatedContainer(
+      duration: Motion.fast,
+      curve: Motion.settle,
       decoration: deco,
       child: Material(
         type: MaterialType.transparency,
-        borderRadius: BorderRadius.circular(radius),
-        clipBehavior: clip ? Clip.antiAlias : Clip.none,
-        child: onTap == null ? inner : InkWell(onTap: onTap, child: inner),
+        borderRadius: BorderRadius.circular(widget.radius),
+        clipBehavior: widget.clip ? Clip.antiAlias : Clip.none,
+        child: tappable ? InkWell(onTap: widget.onTap, onHover: (v) => setState(() => _hover = v), onHighlightChanged: (v) => setState(() => _pressed = v), child: inner) : inner,
+      ),
+    );
+    if (!tappable) return card;
+    return AnimatedScale(scale: _pressed ? 0.985 : 1, duration: Motion.instant, curve: Curves.easeOut, child: card);
+  }
+}
+
+/// The one panel on a page that carries the number that matters (today's sales). Deep ink with a soft accent glow and
+/// two fine "coin edge" arcs, so it reads as the focal point without any heavy imagery.
+class HeroPanel extends StatelessWidget {
+  const HeroPanel({super.key, required this.child, this.padding = const EdgeInsets.all(24), this.radius = 26});
+  final Widget child;
+  final EdgeInsetsGeometry padding;
+  final double radius;
+
+  @override
+  Widget build(BuildContext context) {
+    final t = context.t;
+    final shape = RoundedRectangleBorder(borderRadius: BorderRadius.circular(radius));
+    return DecoratedBox(
+      decoration: ShapeDecoration(
+        shape: shape,
+        shadows: [BoxShadow(color: t.accent.withValues(alpha: t.dark ? 0.10 : 0.14), blurRadius: 36, offset: const Offset(0, 16))],
+      ),
+      child: ClipPath(
+        clipper: ShapeBorderClipper(shape: shape),
+        child: CustomPaint(
+          painter: _HeroPainter(accent: t.accent, ink: t.ink, outline: Colors.white.withValues(alpha: t.dark ? 0.08 : 0)),
+          child: Padding(padding: padding, child: child),
+        ),
       ),
     );
   }
+}
+
+class _HeroPainter extends CustomPainter {
+  _HeroPainter({required this.accent, required this.ink, required this.outline});
+  final Color accent, ink, outline;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final rect = Offset.zero & size;
+    canvas.drawRect(
+      rect,
+      Paint()..shader = LinearGradient(begin: Alignment.topLeft, end: Alignment.bottomRight, colors: [Color.lerp(ink, accent, 0.20)!, ink, Color.lerp(ink, accent, 0.08)!]).createShader(rect),
+    );
+    void glow(Offset c, double r, Color color) => canvas.drawCircle(c, r, Paint()..shader = RadialGradient(colors: [color, color.withValues(alpha: 0)]).createShader(Rect.fromCircle(center: c, radius: r)));
+    final w = size.width, h = size.height, big = math.max(w, h);
+    glow(Offset(w * 0.9, h * 0.02), big * 0.55, accent.withValues(alpha: 0.5));
+    glow(Offset(w * 0.04, h * 1.08), big * 0.4, Color.lerp(accent, Colors.white, 0.4)!.withValues(alpha: 0.16));
+    final line = Paint()..color = Colors.white.withValues(alpha: 0.06)..style = PaintingStyle.stroke..strokeWidth = 1.2;
+    final c = Offset(w * 0.93, h * 0.08);
+    canvas.drawCircle(c, h * 0.62, line);
+    canvas.drawCircle(c, h * 0.92, line);
+    if (outline.a > 0) canvas.drawRRect(RRect.fromRectAndRadius(rect.deflate(0.5), const Radius.circular(26)), Paint()..color = outline..style = PaintingStyle.stroke);
+  }
+
+  @override
+  bool shouldRepaint(_HeroPainter o) => o.accent != accent || o.ink != ink || o.outline != outline;
 }
 
 class Pill extends StatelessWidget {
@@ -103,7 +175,9 @@ class EmptyState extends StatelessWidget {
     final t = context.t;
     final tt = Theme.of(context).textTheme;
     return Center(
-      child: Padding(
+      child: Reveal(
+        dy: 10,
+        child: Padding(
         padding: EdgeInsets.all(compact ? Sp.l : Sp.xxl),
         child: Column(mainAxisSize: MainAxisSize.min, children: [
           Container(
@@ -120,6 +194,7 @@ class EmptyState extends StatelessWidget {
           ],
           if (action != null) ...[const SizedBox(height: Sp.l), action!],
         ]),
+      ),
       ),
     );
   }
@@ -266,12 +341,12 @@ class StatTile extends StatelessWidget {
               decoration: BoxDecoration(color: t.tint(c, 0.12), borderRadius: BorderRadius.circular(9)),
               child: Icon(icon, size: 17, color: t.dark ? Color.lerp(c, Colors.white, 0.3) : Color.lerp(c, Colors.black, 0.2)),
             ),
-          Expanded(child: Text(context.tr(label), style: Theme.of(context).textTheme.labelMedium!.copyWith(color: t.muted), maxLines: 1, overflow: TextOverflow.ellipsis)),
+          Expanded(child: Text(context.tr(label), style: Theme.of(context).textTheme.labelMedium!.copyWith(color: t.muted), maxLines: 2, overflow: TextOverflow.ellipsis)),
           if (delta != null) _Delta(delta!, deltaGood),
         ]),
         const SizedBox(height: 12),
         FittedBox(fit: BoxFit.scaleDown, alignment: Alignment.centerLeft, child: NumText(value, size: 27, weight: 800)),
-        if (hint != null) Padding(padding: const EdgeInsets.only(top: 4), child: Text(context.tr(hint!), style: Theme.of(context).textTheme.bodySmall, maxLines: 1, overflow: TextOverflow.ellipsis)),
+        if (hint != null) Padding(padding: const EdgeInsets.only(top: 4), child: Text(context.tr(hint!), style: Theme.of(context).textTheme.bodySmall, maxLines: 2, overflow: TextOverflow.ellipsis)),
         if (spark != null && spark!.length > 1) ...[
           const SizedBox(height: 10),
           SizedBox(height: 34, child: Sparkline(values: spark!, color: c)),
@@ -584,10 +659,11 @@ class KV extends StatelessWidget {
     final t = context.t;
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 5),
-      child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        Expanded(child: Text(context.tr(k), style: Theme.of(context).textTheme.bodyMedium!.copyWith(color: bold ? t.text : t.muted, fontWeight: bold ? FontWeight.w700 : null))),
+      // Label left, value flush right. Both may wrap rather than overflow; `spaceBetween` keeps the value at the edge.
+      child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, crossAxisAlignment: CrossAxisAlignment.start, children: [
+        Flexible(flex: 3, child: Text(context.tr(k), style: Theme.of(context).textTheme.bodyMedium!.copyWith(color: bold ? t.text : t.muted, fontWeight: bold ? FontWeight.w700 : null))),
         const SizedBox(width: 12),
-        Flexible(child: NumText(v, size: bold ? 16 : 14, weight: bold ? 800 : 650, color: color, align: TextAlign.end)),
+        Flexible(flex: 2, child: NumText(v, size: bold ? 16 : 14, weight: bold ? 800 : 650, color: color, align: TextAlign.end)),
       ]),
     );
   }
@@ -649,3 +725,119 @@ Future<bool> confirmDialog(BuildContext context, {required String title, require
 }
 
 void haptic() => HapticFeedback.selectionClick();
+
+/// Vertical bars with a faint grid and a scale on the left. The highlighted bar carries the accent. Needs a bounded
+/// width and must not sit inside an `IntrinsicHeight` (it measures itself with a `LayoutBuilder`).
+class BarChart extends StatelessWidget {
+  const BarChart({super.key, required this.values, required this.labels, required this.tips, required this.axis, required this.highlight, required this.height});
+  final List<double> values;
+  final List<String> labels, tips;
+  final String Function(double) axis;
+  final int highlight;
+  final double height;
+
+  @override
+  Widget build(BuildContext context) {
+    final t = context.t;
+    final tt = Theme.of(context).textTheme;
+    final hi = values.isEmpty ? 1.0 : math.max(values.reduce(math.max), 1.0);
+    const labelH = 24.0;
+    final axisW = context.isCompact ? 46.0 : 54.0;
+    final labelStyle = tt.labelSmall!.copyWith(color: t.faint, fontSize: 10.5, letterSpacing: 0);
+    return SizedBox(
+      height: height,
+      child: LayoutBuilder(builder: (c, box) {
+        const top = 10.0;
+        final plotH = box.maxHeight - labelH - top;
+        return Stack(children: [
+          for (final frac in const [0.0, 0.5, 1.0]) ...[
+            Positioned(left: axisW, right: 0, bottom: labelH + frac * (plotH - 1), child: Container(height: 1, color: t.outline.withValues(alpha: frac == 0 ? 1 : 0.55))),
+            Positioned(left: 0, width: axisW - 8, bottom: labelH + frac * (plotH - 1) - 7, child: Text(frac == 0 ? '' : axis(hi * frac), style: labelStyle, textAlign: TextAlign.end, maxLines: 1, softWrap: false, overflow: TextOverflow.visible)),
+          ],
+          Positioned(
+            left: axisW,
+            right: 0,
+            top: top,
+            bottom: 0,
+            child: Row(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+              for (var i = 0; i < values.length; i++)
+                Expanded(
+                  child: Tooltip(
+                    message: tips[i],
+                    child: Column(children: [
+                      Expanded(
+                        child: Align(
+                          alignment: Alignment.bottomCenter,
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 3),
+                            child: ConstrainedBox(
+                              constraints: const BoxConstraints(maxWidth: 34),
+                              child: TweenAnimationBuilder<double>(
+                                tween: Tween(begin: 0, end: values[i] / hi),
+                                duration: Duration(milliseconds: 450 + i * 28),
+                                curve: Curves.easeOutCubic,
+                                builder: (_, v, __) => FractionallySizedBox(
+                                  heightFactor: math.max(v, 0.012),
+                                  child: DecoratedBox(
+                                    decoration: BoxDecoration(
+                                      borderRadius: const BorderRadius.vertical(top: Radius.circular(7), bottom: Radius.circular(2)),
+                                      gradient: i == highlight
+                                          ? LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: [Color.lerp(t.accent, Colors.white, 0.18)!, t.accent])
+                                          : null,
+                                      color: i == highlight ? null : t.accent.withValues(alpha: t.dark ? 0.32 : 0.24),
+                                    ),
+                                    child: const SizedBox.expand(),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        height: labelH,
+                        child: Center(child: Text(labels[i], style: labelStyle.copyWith(color: i == highlight ? t.text : t.faint, fontWeight: i == highlight ? FontWeight.w800 : FontWeight.w600), maxLines: 1, overflow: TextOverflow.clip)),
+                      ),
+                    ]),
+                  ),
+                ),
+            ]),
+          ),
+        ]);
+      }),
+    );
+  }
+}
+
+/// Cards in equal-height rows. The column count follows the width available (never narrower than [minWidth] a card),
+/// every card in a row stretches to the tallest, and a short last row keeps its cards the same width as the rest.
+class CardGrid extends StatelessWidget {
+  const CardGrid({super.key, required this.children, this.minWidth = 400, this.maxColumns = 2, this.gap = 14, this.fillLast = false});
+  final List<Widget> children;
+  final double minWidth, gap;
+  final int maxColumns;
+
+  /// A short last row shares the full width among its cards instead of leaving empty cells.
+  final bool fillLast;
+
+  @override
+  Widget build(BuildContext context) => LayoutBuilder(builder: (c, box) {
+        final cols = math.max(1, math.min(maxColumns, ((box.maxWidth + gap) / (minWidth + gap)).floor()));
+        final rows = <Widget>[];
+        for (var i = 0; i < children.length; i += cols) {
+          final slice = children.skip(i).take(cols).toList();
+          final span = fillLast ? slice.length : cols;
+          rows.add(IntrinsicHeight(
+            child: Row(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+              for (var j = 0; j < span; j++) ...[
+                if (j > 0) SizedBox(width: gap),
+                Expanded(child: j < slice.length ? slice[j] : const SizedBox.shrink()),
+              ],
+            ]),
+          ));
+        }
+        return Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+          for (final (i, r) in rows.indexed) ...[if (i > 0) SizedBox(height: gap), r],
+        ]);
+      });
+}

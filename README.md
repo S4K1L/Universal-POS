@@ -60,7 +60,7 @@ Password `demo12345` for all shops; the platform admin is `01700000000` / `admin
 ## Offline selling, in one paragraph
 
 Every till keeps a local copy of the catalogue, customers and stock (SQLite, via Drift; WebAssembly on the web). Selling never
-waits for the network: a sale is priced on the device, given a till-local invoice number (`INV-D01-000042`), stored, and put
+waits for the network: a sale is priced on the device, given a till-local invoice number (`INV-K7Q2-000042`), stored, and put
 in an **outbox**. A background sync pushes the outbox to `POST /sync/push` — every event has a client-generated UUIDv7 so a
 retry can never double-post — and pulls changes from `GET /sync/pull?cursor=…`. The beacon in the top bar says
 *online / syncing / offline / needs attention*. Details in [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md).

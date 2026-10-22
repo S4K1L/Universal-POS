@@ -9,7 +9,10 @@ import '../../core/ui/forms.dart';
 import '../../core/ui/kit.dart';
 import '../../data/session.dart';
 
-final _platformSettingsProvider = FutureProvider.autoDispose<Map<String, dynamic>>((ref) async => ref.watch(apiProvider).getMap('/admin/settings'));
+final _platformSettingsProvider = FutureProvider.autoDispose<Map<String, dynamic>>((ref) async {
+  ref.cacheForSession(revalidate: true);
+  return ref.watch(apiProvider).getMap('/admin/settings');
+});
 
 class AdminSettingsScreen extends ConsumerStatefulWidget {
   const AdminSettingsScreen({super.key});

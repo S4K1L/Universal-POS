@@ -9,6 +9,7 @@ import '../../core/money/money.dart';
 import '../../core/theme/tokens.dart';
 import '../../core/ui/async_body.dart';
 import '../../core/ui/kit.dart';
+import '../../core/util/responsive.dart';
 import '../../data/session.dart';
 import '../../data/sync/sync_engine.dart';
 
@@ -17,6 +18,7 @@ typedef _Range = ({String from, String to});
 String _d(DateTime d) => '${d.year}-${d.month.toString().padLeft(2, '0')}-${d.day.toString().padLeft(2, '0')}';
 
 final _reportProvider = FutureProvider.autoDispose.family<Map<String, dynamic>, _Range>((ref, r) async {
+  ref.cacheForSession(revalidate: true);
   ref.watch(syncProvider.select((s) => s.revision));
   final api = ref.watch(apiProvider);
   final ctx = ref.watch(ctxProvider);
@@ -147,6 +149,11 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen> {
             final methods = (s['by_method'] as List).cast<Map<String, dynamic>>();
             final gross = parsePaisa(s['gross_sales']);
             final net = parsePaisa(s['net_sales']);
+            final step = days.length > 16 ? (days.length / 10).ceil() : 1;
+            final totals = [for (final x in days) parsePaisa(x['total'])];
+            final bestDay = totals.isEmpty || totals.every((v) => v == 0) ? -1 : totals.indexOf(totals.reduce((a, b) => a > b ? a : b));
+            final from = days.isEmpty ? _range.from : days.first['date'] as String;
+            final to = days.isEmpty ? _range.to : days.last['date'] as String;
             final tiles = [
               StatTile(label: context.tr('Sales'), value: f.money(gross), icon: Icons.payments_rounded, hint: '${f.intN(s['invoices'] as int)} ${context.tr('invoices')}', spark: [for (final x in days) parsePaisa(x['total']) / 100]),
               StatTile(label: context.tr('Net of returns'), value: f.money(net), icon: Icons.assignment_return_rounded, color: t.info, hint: '${f.money(parsePaisa(s['returns_total']))} ${context.tr('returned')}'),
@@ -156,26 +163,28 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen> {
               else StatTile(label: context.tr('Discounts'), value: f.money(parsePaisa(s['discounts'])), icon: Icons.percent_rounded, color: t.warning),
             ];
             return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              LayoutBuilder(builder: (c, box) {
-                final cols = box.maxWidth > 900 ? 4 : 2;
-                final w = (box.maxWidth - 12 * (cols - 1)) / cols;
-                return Wrap(spacing: 12, runSpacing: 12, children: [for (final x in tiles) SizedBox(width: w, child: x)]);
-              }),
+              CardGrid(minWidth: 170, maxColumns: 4, gap: 12, children: tiles),
               const SizedBox(height: 14),
               Surface(
                 child: Section(
                   title: context.tr('Sales by day'),
-                  child: MiniBars(
-                    height: 170,
-                    values: [for (final x in days) parsePaisa(x['total']) / 100],
-                    labels: [for (final x in days) days.length > 16 ? '' : f.digits('${DateTime.parse(x['date'] as String).day}')],
-                    fmt: (v) => f.money((v * 100).round()),
-                  ),
+                  subtitle: '${f.dateShort(DateTime.parse(from))} – ${f.dateShort(DateTime.parse(to))}',
+                  action: NumText(f.money(days.fold<int>(0, (a, x) => a + parsePaisa(x['total']))), size: 20, weight: 800),
+                  child: days.isEmpty
+                      ? Padding(padding: const EdgeInsets.symmetric(vertical: 40), child: Center(child: Text(context.tr('No sales in this period'), style: tt.bodyMedium!.copyWith(color: t.muted))))
+                      : BarChart(
+                          height: context.isCompact ? 180 : 220,
+                          values: [for (final x in days) parsePaisa(x['total']).toDouble()],
+                          // a long range shows every few days' number so the labels never crowd
+                          labels: [for (final (i, x) in days.indexed) i % step == 0 || i == days.length - 1 ? f.digits('${DateTime.parse(x['date'] as String).day}') : ''],
+                          tips: [for (final x in days) '${f.dateShort(DateTime.parse(x['date'] as String))} · ${f.money(parsePaisa(x['total']))}'],
+                          axis: (v) => f.moneyCompact(v.round()),
+                          highlight: bestDay,
+                        ),
                 ),
               ),
               const SizedBox(height: 14),
-              LayoutBuilder(builder: (c, box) {
-                final two = box.maxWidth > 820;
+              Builder(builder: (c) {
                 final mix = Surface(
                   child: Section(
                     title: context.tr('Payment methods'),
@@ -200,11 +209,10 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen> {
                         : Column(children: [for (final p in top) ShareBar(label: p['name'] as String, value: f.money(parsePaisa(p['revenue'])), fraction: parsePaisa(p['revenue']) / (parsePaisa(top.first['revenue']) == 0 ? 1 : parsePaisa(top.first['revenue'])))]),
                   ),
                 );
-                return two ? Row(crossAxisAlignment: CrossAxisAlignment.start, children: [Expanded(child: mix), const SizedBox(width: 14), Expanded(child: topCard)]) : Column(children: [mix, const SizedBox(height: 14), topCard]);
+                return CardGrid(children: [mix, topCard]);
               }),
               const SizedBox(height: 14),
-              LayoutBuilder(builder: (c, box) {
-                final two = box.maxWidth > 820;
+              Builder(builder: (c) {
                 final catCard = Surface(
                   child: Section(
                     title: context.tr('By category'),
@@ -230,12 +238,11 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen> {
                           ]),
                   ),
                 );
-                return two ? Row(crossAxisAlignment: CrossAxisAlignment.start, children: [Expanded(child: catCard), const SizedBox(width: 14), Expanded(child: staffCard)]) : Column(children: [catCard, const SizedBox(height: 14), staffCard]);
+                return CardGrid(children: [catCard, staffCard]);
               }),
               if (val != null || dues != null) ...[
                 const SizedBox(height: 14),
-                LayoutBuilder(builder: (c, box) {
-                  final two = box.maxWidth > 820;
+                Builder(builder: (c) {
                   final valCard = val == null
                       ? null
                       : Surface(
@@ -254,7 +261,7 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen> {
                           ])),
                         );
                   final kids = [?valCard, ?duesCard];
-                  return two && kids.length == 2 ? Row(crossAxisAlignment: CrossAxisAlignment.start, children: [Expanded(child: kids[0]), const SizedBox(width: 14), Expanded(child: kids[1])]) : Column(children: [for (final k in kids) Padding(padding: const EdgeInsets.only(bottom: 14), child: k)]);
+                  return CardGrid(fillLast: true, children: kids);
                 }),
               ],
               if (exceptions != null && exceptions.isNotEmpty) ...[

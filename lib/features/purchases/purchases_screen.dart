@@ -14,9 +14,13 @@ import '../../core/ui/panel.dart';
 import '../../data/session.dart';
 import '../../data/sync/sync_engine.dart';
 
-final _suppliersProvider = FutureProvider.autoDispose<List<Map<String, dynamic>>>((ref) async => (await ref.watch(apiProvider).getList('/suppliers')).cast<Map<String, dynamic>>());
+final _suppliersProvider = FutureProvider.autoDispose<List<Map<String, dynamic>>>((ref) async {
+  ref.cacheForSession(revalidate: true);
+  return (await ref.watch(apiProvider).getList('/suppliers')).cast<Map<String, dynamic>>();
+});
 
 final _purchasesProvider = FutureProvider.autoDispose<List<Map<String, dynamic>>>((ref) async {
+  ref.cacheForSession(revalidate: true);
   ref.watch(syncProvider.select((s) => s.revision));
   final r = await ref.watch(apiProvider).getMap('/purchases', query: {'limit': 100});
   return (r['items'] as List).cast<Map<String, dynamic>>();

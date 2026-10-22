@@ -8,14 +8,20 @@ import '../../core/ui/async_body.dart';
 import '../../core/ui/forms.dart';
 import '../../core/ui/kit.dart';
 import '../../core/ui/panel.dart';
+import '../../core/theme/theme.dart' show tabular;
+import '../../core/util/responsive.dart';
 import '../../data/repos/catalogue_repo.dart';
 import '../../data/repos/sales_repo.dart';
 import '../../data/session.dart';
 import '../../data/sync/sync_engine.dart';
 
-final _stockProvider = StreamProvider.autoDispose<List<ProductView>>((ref) => ref.watch(catalogueRepoProvider).watchProducts(limit: 600, stockedOnly: true));
+final _stockProvider = StreamProvider.autoDispose<List<ProductView>>((ref) {
+  ref.cacheForSession(revalidate: true);
+  return ref.watch(catalogueRepoProvider).watchProducts(limit: 600, stockedOnly: true);
+});
 
 final _expiringProvider = FutureProvider.autoDispose<List<Map<String, dynamic>>>((ref) async {
+  ref.cacheForSession(revalidate: true);
   ref.watch(syncProvider.select((s) => s.revision));
   final r = await ref.watch(apiProvider).getList('/reports/expiring', query: {'days': 180});
   return r.cast<Map<String, dynamic>>();
@@ -42,7 +48,6 @@ class _StockScreenState extends ConsumerState<StockScreen> {
   @override
   Widget build(BuildContext context) {
     final t = context.t;
-    final tt = Theme.of(context).textTheme;
     final f = context.fmt;
     final ctx = ref.watch(ctxProvider);
     final products = ref.watch(_stockProvider);
@@ -51,8 +56,10 @@ class _StockScreenState extends ConsumerState<StockScreen> {
 
     return PageBody(
       maxWidth: 1000,
-      child: products.when(
-        loading: () => const SkeletonList(rows: 6),
+      child: FadeSwitcher(child: products.when(
+        skipLoadingOnReload: true,
+        skipLoadingOnRefresh: true,
+        loading: () => const Deferred(child: SkeletonList(rows: 6)),
         error: (e, _) => ErrorView(error: e),
         data: (all) {
           final rows = <(ProductView, dynamic)>[
@@ -71,22 +78,22 @@ class _StockScreenState extends ConsumerState<StockScreen> {
             return r.$1.product.search.contains(q);
           }).toList();
           return Column(children: [
-            Row(children: [
-              Expanded(child: StatTile(label: context.tr('Items in stock'), value: f.intN(rows.length - out), icon: Icons.inventory_2_rounded, hint: '${f.intN(rows.length)} ${context.tr('tracked')}')),
-              const SizedBox(width: 12),
-              Expanded(child: StatTile(label: context.tr('Running low'), value: f.intN(low), icon: Icons.warning_amber_rounded, color: t.warning, hint: '${f.intN(out)} ${context.tr('out of stock')}')),
-              if (showCost) ...[const SizedBox(width: 12), Expanded(child: StatTile(label: context.tr('Stock value (cost)'), value: f.moneyCompact(value), icon: Icons.account_balance_rounded, color: t.info))],
+            CardGrid(minWidth: 150, maxColumns: 3, gap: 12, fillLast: true, children: [
+              StatTile(label: context.tr('Items in stock'), value: f.intN(rows.length - out), icon: Icons.inventory_2_rounded, hint: '${f.intN(rows.length)} ${context.tr('tracked')}'),
+              StatTile(label: context.tr('Running low'), value: f.intN(low), icon: Icons.warning_amber_rounded, color: t.warning, hint: '${f.intN(out)} ${context.tr('out of stock')}'),
+              if (showCost) StatTile(label: context.tr('Stock value (cost)'), value: f.moneyCompact(value), icon: Icons.account_balance_rounded, color: t.info),
             ]),
             const SizedBox(height: 12),
-            if (expiry) Align(alignment: Alignment.centerLeft, child: SegTabs<String>(items: [('stock', context.tr('Stock')), ('expiry', context.tr('Batches & expiry'))], value: _tab, onChanged: (v) => setState(() => _tab = v))),
-            if (expiry) const SizedBox(height: 10),
+            if (expiry) Align(alignment: Alignment.centerLeft, child: IntrinsicWidth(child: SegTabs<String>(items: [('stock', context.tr('Stock')), ('expiry', context.tr('Batches & expiry'))], value: _tab, onChanged: (v) => setState(() => _tab = v)))),
+            if (expiry) const SizedBox(height: 12),
             if (_tab == 'expiry')
               Expanded(child: _ExpiryList(ctx: ctx))
             else ...[
               AppSearchField(controller: _q, hint: context.tr('Search stock'), onChanged: (_) => setState(() {})),
-              const SizedBox(height: 10),
-              Align(alignment: Alignment.centerLeft, child: SegTabs<String>(items: [('all', context.tr('All')), ('low', context.tr('Low')), ('out', context.tr('Out'))], value: _filter, onChanged: (v) => setState(() => _filter = v))),
-              const SizedBox(height: 10),
+              const SizedBox(height: 12),
+              Align(alignment: Alignment.centerLeft, child: IntrinsicWidth(child: SegTabs<String>(items: [('all', context.tr('All')), ('low', context.tr('Low')), ('out', context.tr('Out'))], value: _filter, onChanged: (v) => setState(() => _filter = v)))),
+              const SizedBox(height: 12),
+              if (!context.isCompact && shown.isNotEmpty) _StockHeader(showCost: showCost),
               Expanded(
                 child: shown.isEmpty
                     ? EmptyState(icon: Icons.inventory_2_outlined, title: context.tr('Nothing to show'), message: _filter == 'all' ? context.tr('Stocked items you add show up here.') : null)
@@ -95,28 +102,83 @@ class _StockScreenState extends ConsumerState<StockScreen> {
                         itemCount: shown.length,
                         itemBuilder: (_, i) {
                           final (p, v) = shown[i];
-                          final a = availOf(p, v);
-                          final status = a <= 0 ? (t.danger, context.tr('Out')) : (a <= p.product.reorderMilli ? (t.warning, context.tr('Low')) : (t.success, context.tr('OK')));
-                          return Padding(
-                            padding: const EdgeInsets.only(bottom: 8),
-                            child: Surface(
-                              onTap: ctx.can('adjust_stock') ? () => showPanel<void>(context, maxWidth: 460, builder: (_) => _AdjustPanel(pv: p, variantId: v.id)) : null,
-                              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 11),
-                              child: Row(children: [
-                                Monogram(p.product.name, size: 40, seed: p.product.categoryId ?? p.product.id),
-                                const SizedBox(width: 12),
-                                Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [Text(v.label.isEmpty ? p.product.name : '${p.product.name} · ${v.label}', style: tt.titleSmall, maxLines: 1, overflow: TextOverflow.ellipsis), Text('${v.sku} · ${context.tr('reorder at')} ${f.qty(p.product.reorderMilli)}', style: tt.bodySmall)])),
-                                if (showCost && v.costP != null) Padding(padding: const EdgeInsets.only(right: 12), child: Text(f.money(v.costP! * a.clamp(0, 1 << 40) ~/ 1000), style: tt.bodySmall)),
-                                Column(crossAxisAlignment: CrossAxisAlignment.end, children: [NumText('${f.qty(a)} ${p.product.baseUnit}', size: 15, weight: 800, color: a <= 0 ? t.danger : t.text), Pill(status.$2, color: status.$1, dense: true)]),
-                              ]),
-                            ),
-                          );
+                          return _StockTile(pv: p, variant: v, available: availOf(p, v), showCost: showCost, onTap: ctx.can('adjust_stock') ? () => showPanel<void>(context, maxWidth: 460, builder: (_) => _AdjustPanel(pv: p, variantId: v.id)) : null);
                         },
                       ),
               ),
             ],
           ]);
         },
+      )),
+    );
+  }
+}
+
+// Column widths shared by the header and every row, so the numbers line up down the page.
+const double _costColW = 130, _qtyColW = 120;
+
+class _StockHeader extends StatelessWidget {
+  const _StockHeader({required this.showCost});
+  final bool showCost;
+
+  @override
+  Widget build(BuildContext context) {
+    final style = Theme.of(context).textTheme.labelSmall!.copyWith(fontWeight: FontWeight.w800);
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(14, 0, 14, 8),
+      child: Row(children: [
+        const SizedBox(width: 52), // the monogram and its gap
+        Expanded(child: Text(context.tr('Item').toUpperCase(), style: style)),
+        if (showCost) SizedBox(width: _costColW, child: Text(context.tr('Value').toUpperCase(), style: style, textAlign: TextAlign.end)),
+        SizedBox(width: _qtyColW, child: Text(context.tr('On hand').toUpperCase(), style: style, textAlign: TextAlign.end)),
+      ]),
+    );
+  }
+}
+
+class _StockTile extends StatelessWidget {
+  const _StockTile({required this.pv, required this.variant, required this.available, required this.showCost, required this.onTap});
+  final ProductView pv;
+  final dynamic variant;
+  final int available;
+  final bool showCost;
+  final VoidCallback? onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final t = context.t;
+    final tt = Theme.of(context).textTheme;
+    final f = context.fmt;
+    final compact = context.isCompact;
+    final p = pv.product;
+    final v = variant;
+    final a = available;
+    final status = a <= 0 ? (t.danger, context.tr('Out')) : (a <= p.reorderMilli ? (t.warning, context.tr('Low')) : (t.success, context.tr('OK')));
+    final cost = showCost && v.costP != null ? f.money((v.costP as int) * a.clamp(0, 1 << 40) ~/ 1000) : null;
+    final qty = Column(crossAxisAlignment: CrossAxisAlignment.end, mainAxisSize: MainAxisSize.min, children: [
+      NumText('${f.qty(a)} ${p.baseUnit}', size: 15, weight: 800, color: a <= 0 ? t.danger : t.text),
+      const SizedBox(height: 3),
+      Pill(status.$2, color: status.$1, dense: true),
+    ]);
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8),
+      child: Surface(
+        onTap: onTap,
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 11),
+        child: Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
+          Monogram(p.name, size: 40, seed: p.categoryId ?? p.id),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              Text(v.label.isEmpty ? p.name : '${p.name} · ${v.label}', style: tt.titleSmall, maxLines: 1, overflow: TextOverflow.ellipsis),
+              const SizedBox(height: 2),
+              Text('${v.sku} · ${context.tr('reorder at')} ${f.qty(p.reorderMilli)}', style: tt.bodySmall, maxLines: 1, softWrap: false, overflow: TextOverflow.ellipsis),
+            ]),
+          ),
+          const SizedBox(width: 10),
+          if (!compact && showCost) SizedBox(width: _costColW, child: Text(cost ?? '—', style: tt.bodyMedium!.copyWith(color: t.muted, fontFeatures: tabular), textAlign: TextAlign.end, maxLines: 1)),
+          if (compact) qty else SizedBox(width: _qtyColW, child: Align(alignment: Alignment.centerRight, child: qty)),
+        ]),
       ),
     );
   }

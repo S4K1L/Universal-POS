@@ -163,8 +163,6 @@ class SyncController extends Notifier<SyncState> {
         state = state.copyWith(online: false, syncing: false, catalogueLoading: false);
       } else if (e.unauthorized) {
         state = state.copyWith(syncing: false, catalogueLoading: false, error: 'Sign in again to keep syncing');
-      } else if (e.code == 'unknown_device') {
-        await ref.read(sessionProvider.notifier).deviceRemoved();
       } else {
         state = state.copyWith(syncing: false, catalogueLoading: false, error: e.message);
       }
@@ -176,8 +174,6 @@ class SyncController extends Notifier<SyncState> {
   // ----------------------------------------------------------------------------------------- push
 
   Future<int> _push() async {
-    final device = ref.read(sessionProvider).device;
-    if (device == null) return 0;
     var count = 0;
     while (true) {
       final rows = await (_db.select(_db.outbox)
@@ -196,7 +192,6 @@ class SyncController extends Notifier<SyncState> {
       Map<String, dynamic> res;
       try {
         res = await _api.post('/sync/push', body: {
-          'device_id': device.id,
           'events': [
             for (final r in rows)
               {
@@ -281,13 +276,11 @@ class SyncController extends Notifier<SyncState> {
   // ----------------------------------------------------------------------------------------- pull
 
   Future<int> _pull() async {
-    final device = ref.read(sessionProvider).device;
-    if (device == null) return 0;
     var total = 0;
     var cursor = int.tryParse(await _db.kvGet('sync_cursor') ?? '0') ?? 0;
     var contextChanged = false;
     while (true) {
-      final res = await _api.getMap('/sync/pull', query: {'device_id': device.id, 'cursor': cursor, 'limit': 500}, timeout: const Duration(seconds: 60));
+      final res = await _api.getMap('/sync/pull', query: {'cursor': cursor, 'limit': 500}, timeout: const Duration(seconds: 60));
       final changes = (res['changes'] as List).cast<Map<String, dynamic>>();
       total += changes.length;
       await _db.transaction(() async {

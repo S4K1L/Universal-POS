@@ -15,12 +15,14 @@ class AsyncBody<T> extends StatelessWidget {
   final Widget? loading;
 
   @override
-  Widget build(BuildContext context) => value.when(
-        skipLoadingOnRefresh: true,
-        skipLoadingOnReload: true,
-        data: data,
-        loading: () => loading ?? const Padding(padding: EdgeInsets.all(20), child: SkeletonList(rows: 5, height: 70)),
-        error: (e, _) => ErrorView(error: e, onRetry: onRetry),
+  Widget build(BuildContext context) => FadeSwitcher(
+        child: value.when(
+          skipLoadingOnRefresh: true,
+          skipLoadingOnReload: true,
+          data: (v) => KeyedSubtree(key: const ValueKey('data'), child: data(v)),
+          loading: () => KeyedSubtree(key: const ValueKey('loading'), child: Deferred(child: loading ?? const Padding(padding: EdgeInsets.all(20), child: SkeletonList(rows: 5, height: 70)))),
+          error: (e, _) => KeyedSubtree(key: const ValueKey('error'), child: ErrorView(error: e, onRetry: onRetry)),
+        ),
       );
 }
 

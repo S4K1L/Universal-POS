@@ -12,9 +12,18 @@ import '../../core/ui/kit.dart';
 import '../../core/ui/panel.dart';
 import '../../data/session.dart';
 
-final _requestsProvider = FutureProvider.autoDispose.family<Map<String, dynamic>, String>((ref, status) async => ref.watch(apiProvider).getMap('/admin/payment-requests', query: {'limit': 100, if (status != 'all') 'status': status}));
-final _channelsProvider = FutureProvider.autoDispose<List<Map<String, dynamic>>>((ref) async => (await ref.watch(apiProvider).getList('/admin/payment-channels')).cast<Map<String, dynamic>>());
-final _invoicesProvider = FutureProvider.autoDispose<Map<String, dynamic>>((ref) async => ref.watch(apiProvider).getMap('/admin/invoices', query: {'limit': 100}));
+final _requestsProvider = FutureProvider.autoDispose.family<Map<String, dynamic>, String>((ref, status) async {
+  ref.cacheForSession(revalidate: true);
+  return ref.watch(apiProvider).getMap('/admin/payment-requests', query: {'limit': 100, if (status != 'all') 'status': status});
+});
+final _channelsProvider = FutureProvider.autoDispose<List<Map<String, dynamic>>>((ref) async {
+  ref.cacheForSession(revalidate: true);
+  return (await ref.watch(apiProvider).getList('/admin/payment-channels')).cast<Map<String, dynamic>>();
+});
+final _invoicesProvider = FutureProvider.autoDispose<Map<String, dynamic>>((ref) async {
+  ref.cacheForSession(revalidate: true);
+  return ref.watch(apiProvider).getMap('/admin/invoices', query: {'limit': 100});
+});
 
 class AdminPaymentsScreen extends ConsumerStatefulWidget {
   const AdminPaymentsScreen({super.key});

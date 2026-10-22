@@ -13,7 +13,10 @@ import '../../core/ui/panel.dart';
 import '../../data/session.dart';
 import 'admin_businesses_screen.dart' show accentOf, typeIcon;
 
-final _typesProvider = FutureProvider.autoDispose<Map<String, dynamic>>((ref) async => ref.watch(apiProvider).getMap('/admin/business-types'));
+final _typesProvider = FutureProvider.autoDispose<Map<String, dynamic>>((ref) async {
+  ref.cacheForSession(revalidate: true);
+  return ref.watch(apiProvider).getMap('/admin/business-types');
+});
 
 /// Business types are data: capabilities, extra product fields, defaults. Edit one here and shops adopt it with
 /// "Update" — no code change, no app release.

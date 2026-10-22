@@ -245,7 +245,7 @@ class _DockItemState extends State<_DockItem> {
           ),
           child: Column(mainAxisSize: MainAxisSize.min, children: [
             Stack(clipBehavior: Clip.none, children: [
-              Icon(sel ? (e.activeIcon ?? e.icon) : e.icon, size: 25, color: fg),
+              AnimatedScale(scale: sel ? 1.1 : (_hover ? 1.06 : 1), duration: Motion.fast, curve: Curves.easeOutBack, child: Icon(sel ? (e.activeIcon ?? e.icon) : e.icon, size: 25, color: fg)),
               if (locked) Positioned(right: -7, top: -5, child: Icon(Icons.lock_rounded, size: 12, color: t.warning)),
             ]),
             const SizedBox(height: 5),
@@ -301,7 +301,7 @@ class _BarItem extends StatelessWidget {
           duration: const Duration(milliseconds: 180),
           padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 4),
           decoration: BoxDecoration(color: on ? t.accentSoft : Colors.transparent, borderRadius: BorderRadius.circular(14)),
-          child: Icon(icon, size: 23, color: on ? t.accentDeep : t.muted),
+          child: AnimatedScale(scale: on ? 1.12 : 1, duration: Motion.fast, curve: Curves.easeOutBack, child: Icon(icon, size: 23, color: on ? t.accentDeep : t.muted)),
         ),
         const SizedBox(height: 2),
         Text(label, style: TextStyle(fontSize: 10.5, fontWeight: FontWeight.w700, color: on ? t.accentDeep : t.muted, fontVariations: const [FontVariation('wght', 650)]), maxLines: 1),
@@ -328,10 +328,21 @@ class _TopBar extends ConsumerWidget {
       child: Row(children: [
         if (compact && session.ctx != null) ...[BrandMark(size: 34, color: session.ctx!.accent), const SizedBox(width: 10)],
         Expanded(
-          child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Text(title, style: compact ? tt.titleLarge : tt.headlineMedium, maxLines: 1, overflow: TextOverflow.ellipsis),
-            if (subtitle != null && !compact) Text(subtitle!, style: tt.bodySmall, maxLines: 1, overflow: TextOverflow.ellipsis),
-          ]),
+          // The heading glides to the new page's name rather than snapping to it.
+          child: AnimatedSwitcher(
+            duration: Motion.reduced(context) ? Duration.zero : Motion.base,
+            switchInCurve: Motion.settle,
+            transitionBuilder: (c, a) => FadeTransition(opacity: a, child: SlideTransition(position: Tween<Offset>(begin: const Offset(0, 0.25), end: Offset.zero).animate(a), child: c)),
+            layoutBuilder: (current, previous) => Stack(alignment: Alignment.centerLeft, children: [...previous, if (current != null) current]),
+            child: Align(
+              key: ValueKey(title),
+              alignment: Alignment.centerLeft,
+              child: Column(mainAxisSize: MainAxisSize.min, crossAxisAlignment: CrossAxisAlignment.start, children: [
+                Text(title, style: compact ? tt.titleLarge : tt.headlineMedium, maxLines: 1, overflow: TextOverflow.ellipsis),
+                if (subtitle != null && !compact) Text(subtitle!, style: tt.bodySmall, maxLines: 1, overflow: TextOverflow.ellipsis),
+              ]),
+            ),
+          ),
         ),
         if (showBeacon) const Beacon(),
         const SizedBox(width: 6),
@@ -572,7 +583,7 @@ class TenantShell extends ConsumerWidget {
     return ShellFrame(
       entries: entries,
       title: context.tr(current?.label ?? ctx.businessName),
-      subtitle: '${ctx.businessName} · ${ctx.branches.where((b) => b.id == session.device?.branchId).firstOrNull?.name ?? ctx.typeLabel}',
+      subtitle: '${ctx.businessName} · ${ctx.branches.where((b) => b.id == session.branchId).firstOrNull?.name ?? ctx.typeLabel}',
       banner: const SubscriptionBanner(),
       primaryIds: const ['dashboard', 'pos', 'sales', 'products', 'customers'],
       onLocked: (e) => _explainLock(context, ctx, e),

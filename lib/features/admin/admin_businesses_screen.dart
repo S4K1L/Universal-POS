@@ -27,7 +27,10 @@ IconData typeIcon(String? name) => switch (name) {
       _ => Icons.store_rounded,
     };
 
-final _publicTypesProvider = FutureProvider.autoDispose<List<Map<String, dynamic>>>((ref) async => (await ref.watch(apiProvider).getList('/public/business-types')).cast<Map<String, dynamic>>());
+final _publicTypesProvider = FutureProvider.autoDispose<List<Map<String, dynamic>>>((ref) async {
+  ref.cacheForSession(revalidate: true);
+  return (await ref.watch(apiProvider).getList('/public/business-types')).cast<Map<String, dynamic>>();
+});
 
 class AdminBusinessesScreen extends ConsumerStatefulWidget {
   const AdminBusinessesScreen({super.key});
@@ -241,7 +244,7 @@ class _BusinessDetailState extends ConsumerState<_BusinessDetail> {
         leading: Monogram(b['name'] as String, size: 46),
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Wrap(spacing: 10, runSpacing: 10, children: [
-            for (final (label, v) in [('Staff', '${usage['staff']}${(limits['staff'] as num) >= 0 ? ' / ${limits['staff']}' : ''}'), ('Branches', '${usage['branches']}${(limits['branches'] as num) >= 0 ? ' / ${limits['branches']}' : ''}'), ('Products', '${usage['products']}${(limits['products'] as num) >= 0 ? ' / ${limits['products']}' : ''}'), ('Tills', '${usage['devices']}${(limits['devices'] as num) >= 0 ? ' / ${limits['devices']}' : ''}'), ('Sales / 30d', f.intN(b['sales_30d'] as int)), ('Revenue / 30d', f.moneyCompact(parsePaisa(b['revenue_30d'])))])
+            for (final (label, v) in [('Staff', '${usage['staff']}${(limits['staff'] as num) >= 0 ? ' / ${limits['staff']}' : ''}'), ('Branches', '${usage['branches']}${(limits['branches'] as num) >= 0 ? ' / ${limits['branches']}' : ''}'), ('Products', '${usage['products']}${(limits['products'] as num) >= 0 ? ' / ${limits['products']}' : ''}'), ('Sales / 30d', f.intN(b['sales_30d'] as int)), ('Revenue / 30d', f.moneyCompact(parsePaisa(b['revenue_30d'])))])
               Container(width: 150, padding: const EdgeInsets.all(12), decoration: BoxDecoration(color: t.surface2, borderRadius: BorderRadius.circular(14), border: Border.all(color: t.outline)), child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [Text(context.tr(label), style: tt.labelSmall), const SizedBox(height: 3), NumText(v.startsWith('৳') ? v : f.digits(v), size: 17, weight: 800)])),
           ]),
           const FormHeading('Owner'),

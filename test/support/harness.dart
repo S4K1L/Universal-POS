@@ -83,8 +83,6 @@ Future<void> loadFonts() async {
   await load('Hind', ['HindSiliguri-Regular.ttf']);
 }
 
-DeviceInfo testDevice() => DeviceInfo(id: 'dev-1', code: 'D01', branchId: 'branch-1', name: 'Test till');
-
 const phone = Size(390, 844);
 const tablet = Size(820, 1180);
 const desktop = Size(1440, 900);
@@ -124,8 +122,9 @@ Future<Rig> pumpScreen(
       ? const SessionState(status: AuthStatus.signedOut)
       : admin
           ? const SessionState(status: AuthStatus.ready, user: {'role': 'super_admin', 'name': 'Platform Admin'})
-          : SessionState(status: AuthStatus.ready, ctx: ctx, user: (ctx.raw['user'] as Map).cast<String, dynamic>(), device: testDevice());
+          : SessionState(status: AuthStatus.ready, ctx: ctx, user: (ctx.raw['user'] as Map).cast<String, dynamic>());
   final container = ProviderContainer(overrides: [
+    cacheWindowProvider.overrideWithValue(Duration.zero), // no keep-alive timers left pending when a test ends
     dbProvider.overrideWithValue(db),
     bootstrapProvider.overrideWithValue(Bootstrap(serverUrl: 'http://fake/api/v1', lang: lang)),
     apiProvider.overrideWithValue(client),
@@ -207,7 +206,6 @@ Map<String, Handler> retailRoutes(Fixtures fx) {
     'GET /users': (_) => fx['users'],
     'GET /users/roles': (_) => fx['users_roles'],
     'GET /branches': (_) => fx['branches'],
-    'GET /devices': (_) => fx['devices'],
     'GET /reports/summary': (_) => fx['report_summary'],
     'GET /reports/stock-valuation': (_) => fx['report_stock_valuation'],
     'GET /reports/expenses': (_) => fx['report_expenses'],

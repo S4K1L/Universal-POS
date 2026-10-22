@@ -36,14 +36,14 @@ It is cached on the device so a till can start offline.
 **Local database** (Drift): products + variants + barcodes, stock balances (per branch), customers, categories, tax
 classes, units, local sales and lines, and the outbox. The POS screen reads only from this database.
 
-**Ids and numbers.** Every row a till creates gets a client UUIDv7. Invoice numbers are per till:
-`INV-{deviceCode}-{seq}` (e.g. `INV-D01-000042`), so two offline tills can never collide. A till is registered once
-(`POST /devices/register`) and receives its code.
+**Ids and numbers.** Every row a till creates gets a client UUIDv7. Invoice numbers are per install:
+`INV-{tillCode}-{seq}` (e.g. `INV-K7Q2-000042`), so two offline tills can never collide. The 4-character code is made up
+on the device the first time it sells and kept locally; nothing is registered with the server.
 
 **Outbox event types**: `sale.create`, `sale.return`, `sale.void`, `payment.receive`, `customer.upsert`,
 `stock.adjust`, `expense.create`, `shift.open`, `shift.close`.
 
-**Push** — `POST /sync/push {device_id, events[≤100]}`. Each event: `{id, type, occurred_at, actor_id, payload}`.
+**Push** — `POST /sync/push {events[≤100]}`. Each event: `{id, type, occurred_at, actor_id, payload}`.
 The server applies each in its own SAVEPOINT and answers per event:
 
 | status | meaning | client does |
@@ -57,10 +57,10 @@ discount beyond the cashier's permission, stock shortfall, credit limit exceeded
 is recorded and **flagged** (`Reports → Flagged sales`), because the customer has already walked out with the goods.
 Network errors and 5xx keep events pending; 401 triggers one token refresh.
 
-**Pull** — `GET /sync/pull?device_id&cursor&limit`. A SQLAlchemy flush hook writes one `sync_changes` row
+**Pull** — `GET /sync/pull?cursor&limit`. A SQLAlchemy flush hook writes one `sync_changes` row
 (`seq`, `entity`, `id`, `op`, `data`) whenever a synced entity changes. The client applies changes in order and stores
 the new cursor. Cursor `0` returns everything and the log is compacted to the latest row per entity. Stock rows are
-scoped to the device's branch; `cost` is stripped unless the user has `view_cost`; the first sync of a new till is
+scoped to the signed-in user's branches; `cost` is stripped unless the user has `view_cost`; the first sync of a new till is
 marked `bootstrapped` so the UI can say "Loading your catalogue…".
 
 **What the cashier sees.** Displayed stock = server snapshot − pending outbox deltas, so selling the last item offline

@@ -13,6 +13,7 @@ import '../../data/session.dart';
 import '../../data/sync/sync_engine.dart';
 
 final _shiftProvider = FutureProvider.autoDispose<({Map<String, dynamic>? shift, int expected, int cashIn, int cashOut, int sales, int invoices})>((ref) async {
+  ref.cacheForSession();
   ref.watch(syncProvider.select((s) => s.pending));
   final repo = ref.watch(salesRepoProvider);
   final shift = await repo.currentShift();
@@ -21,6 +22,7 @@ final _shiftProvider = FutureProvider.autoDispose<({Map<String, dynamic>? shift,
 });
 
 final _shiftHistoryProvider = FutureProvider.autoDispose<List<Map<String, dynamic>>>((ref) async {
+  ref.cacheForSession(revalidate: true);
   ref.watch(syncProvider.select((s) => s.revision));
   return (await ref.watch(apiProvider).getList('/shifts')).cast<Map<String, dynamic>>();
 });
@@ -40,7 +42,9 @@ class ShiftsScreen extends ConsumerWidget {
       maxWidth: 820,
       child: ListView(padding: const EdgeInsets.only(bottom: 28), children: [
         cur.when(
-          loading: () => const SkeletonList(rows: 2, height: 100),
+          skipLoadingOnReload: true,
+          skipLoadingOnRefresh: true,
+          loading: () => const Deferred(child: SkeletonList(rows: 2, height: 100)),
           error: (e, _) => ErrorView(error: e),
           data: (s) {
             final open = s.shift != null;
@@ -76,7 +80,9 @@ class ShiftsScreen extends ConsumerWidget {
         Section(
           title: context.tr('Previous shifts'),
           child: hist.when(
-            loading: () => const SkeletonList(rows: 3, height: 60),
+            skipLoadingOnReload: true,
+            skipLoadingOnRefresh: true,
+            loading: () => const Deferred(child: SkeletonList(rows: 3, height: 60)),
             error: (e, _) => Text(context.tr('History loads when you are online.'), style: tt.bodySmall),
             data: (rows) => rows.where((r) => r['status'] == 'closed').isEmpty
                 ? Text(context.tr('No closed shifts yet.'), style: tt.bodyMedium!.copyWith(color: t.muted))

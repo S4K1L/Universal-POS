@@ -11,6 +11,7 @@ import '../../core/ui/kit.dart';
 import '../../core/ui/panel.dart';
 import '../../core/util/responsive.dart';
 import '../../data/local/database.dart';
+import '../../data/models/context.dart';
 import '../../data/providers.dart';
 import '../../data/repos/sales_repo.dart';
 import '../../data/session.dart';
@@ -24,6 +25,7 @@ class _CustomerRow {
 }
 
 final _customersProvider = StreamProvider.autoDispose<List<_CustomerRow>>((ref) async* {
+  ref.cacheForSession();
   final db = ref.watch(dbProvider);
   final repo = ref.watch(salesRepoProvider);
   final trigger = db.customSelect('SELECT 1', readsFrom: {db.lCustomers, db.outbox}).watch();
@@ -57,7 +59,6 @@ class _CustomersScreenState extends ConsumerState<CustomersScreen> {
   @override
   Widget build(BuildContext context) {
     final t = context.t;
-    final tt = Theme.of(context).textTheme;
     final f = context.fmt;
     final ctx = ref.watch(ctxProvider);
     final all = ref.watch(_customersProvider);
@@ -67,8 +68,10 @@ class _CustomersScreenState extends ConsumerState<CustomersScreen> {
 
     return PageBody(
       maxWidth: 1000,
-      child: all.when(
-        loading: () => const SkeletonList(rows: 6),
+      child: FadeSwitcher(child: all.when(
+        skipLoadingOnReload: true,
+        skipLoadingOnRefresh: true,
+        loading: () => const Deferred(child: SkeletonList(rows: 6)),
         error: (e, _) => ErrorView(error: e),
         data: (rows) {
           final q = _q.text.trim().toLowerCase();
@@ -77,12 +80,11 @@ class _CustomersScreenState extends ConsumerState<CustomersScreen> {
           final owing = rows.where((r) => r.balanceP > 0).length;
           return Column(children: [
             if (credit)
-              Row(children: [
-                Expanded(child: StatTile(label: context.term(ctx, 'due', 'Due'), value: f.money(owed), icon: Icons.menu_book_rounded, color: t.warning, hint: context.trf('{n} owe you money', {'n': f.intN(owing)}))),
-                const SizedBox(width: 12),
-                Expanded(child: StatTile(label: '${word}s', value: f.intN(rows.length), icon: Icons.groups_rounded, hint: ctx.loyaltyOn ? '${f.intN(rows.fold(0, (a, r) => a + r.c.points))} ${context.tr('points issued')}' : null)),
+              CardGrid(minWidth: 150, gap: 12, children: [
+                StatTile(label: context.term(ctx, 'due', 'Due'), value: f.money(owed), icon: Icons.menu_book_rounded, color: t.warning, hint: context.trf('{n} owe you money', {'n': f.intN(owing)})),
+                StatTile(label: '${word}s', value: f.intN(rows.length), icon: Icons.groups_rounded, hint: ctx.loyaltyOn ? '${f.intN(rows.fold(0, (a, r) => a + r.c.points))} ${context.tr('points issued')}' : null),
               ]),
-            const SizedBox(height: 12),
+            if (credit) const SizedBox(height: 12),
             Row(children: [
               Expanded(child: AppSearchField(controller: _q, hint: context.tr('Search by name or phone'), onChanged: (_) => setState(() {}))),
               if (canEdit) ...[
@@ -91,38 +93,73 @@ class _CustomersScreenState extends ConsumerState<CustomersScreen> {
               ],
             ]),
             if (credit) ...[
-              const SizedBox(height: 10),
-              Align(alignment: Alignment.centerLeft, child: SegTabs<bool>(items: [(false, context.tr('Everyone')), (true, context.tr('Owing'))], value: _owing, onChanged: (v) => setState(() => _owing = v))),
+              const SizedBox(height: 12),
+              Align(alignment: Alignment.centerLeft, child: IntrinsicWidth(child: SegTabs<bool>(items: [(false, context.tr('Everyone')), (true, context.tr('Owing'))], value: _owing, onChanged: (v) => setState(() => _owing = v)))),
             ],
-            const SizedBox(height: 10),
+            const SizedBox(height: 12),
             Expanded(
               child: list.isEmpty
                   ? EmptyState(icon: Icons.groups_rounded, title: context.tr('No one here yet'), message: context.trf('Add a {word} to track what they buy and owe.', {'word': word.toLowerCase()}))
                   : ListView.builder(
                       padding: const EdgeInsets.only(bottom: 24),
                       itemCount: list.length,
-                      itemBuilder: (_, i) {
-                        final r = list[i];
-                        return Padding(
-                          padding: const EdgeInsets.only(bottom: 8),
-                          child: Surface(
-                            onTap: () => showCustomerDetail(context, ref, r.c.id),
-                            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
-                            child: Row(children: [
-                              Monogram(r.c.name, size: 44, round: true),
-                              const SizedBox(width: 12),
-                              Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [Text(r.c.name, style: tt.titleSmall), if (r.c.phone.isNotEmpty) Text(f.digits(r.c.phone), style: tt.bodySmall)])),
-                              if (ctx.loyaltyOn && r.c.points > 0) Padding(padding: const EdgeInsets.only(right: 8), child: Pill('${f.intN(r.c.points)} ${context.tr('pts')}', color: t.info, dense: true, icon: Icons.stars_rounded)),
-                              if (r.balanceP > 0) Pill('${context.tr('owes')} ${f.money(r.balanceP)}', color: t.warning) else if (r.balanceP < 0) Pill('${context.tr('credit')} ${f.money(-r.balanceP)}', color: t.success, dense: true),
-                              if (r.pendingP != 0) Padding(padding: const EdgeInsets.only(left: 6), child: Icon(Icons.schedule_rounded, size: 16, color: t.info)),
-                            ]),
-                          ),
-                        );
-                      },
+                      itemBuilder: (_, i) => _CustomerTile(row: list[i], ctx: ctx, onTap: () => showCustomerDetail(context, ref, list[i].c.id)),
                     ),
             ),
           ]);
         },
+      )),
+    );
+  }
+}
+
+/// One customer in the list. Name and phone take the room that is left and truncate; the points and balance sit in
+/// fixed columns on wide screens (so their edges line up down the list) and stack on the right on narrow ones.
+class _CustomerTile extends StatelessWidget {
+  const _CustomerTile({required this.row, required this.ctx, required this.onTap});
+  final _CustomerRow row;
+  final TenantContext ctx;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final t = context.t;
+    final tt = Theme.of(context).textTheme;
+    final f = context.fmt;
+    final compact = context.isCompact;
+    final c = row.c;
+    final pts = ctx.loyaltyOn && c.points > 0 ? Pill('${f.intN(c.points)} ${context.tr('pts')}', color: t.info, dense: true, icon: Icons.stars_rounded) : null;
+    final bal = row.balanceP > 0
+        ? Pill('${context.tr('owes')} ${f.money(row.balanceP)}', color: t.warning)
+        : row.balanceP < 0
+            ? Pill('${context.tr('credit')} ${f.money(-row.balanceP)}', color: t.success)
+            : null;
+    final pending = row.pendingP != 0 ? Padding(padding: const EdgeInsets.only(right: 8), child: Icon(Icons.schedule_rounded, size: 16, color: t.info)) : null;
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8),
+      child: Surface(
+        onTap: onTap,
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+        child: Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
+          Monogram(c.name, size: 44, round: true),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              Text(c.name, style: tt.titleSmall, maxLines: 1, overflow: TextOverflow.ellipsis),
+              if (c.phone.isNotEmpty) Padding(padding: const EdgeInsets.only(top: 2), child: Text(f.digits(c.phone), style: tt.bodySmall, maxLines: 1, softWrap: false, overflow: TextOverflow.ellipsis)),
+            ]),
+          ),
+          const SizedBox(width: 10),
+          if (compact)
+            Column(crossAxisAlignment: CrossAxisAlignment.end, mainAxisSize: MainAxisSize.min, children: [
+              if (bal != null) Row(mainAxisSize: MainAxisSize.min, children: [if (pending != null) pending, bal]) else if (pending != null) pending,
+              if (pts != null) Padding(padding: EdgeInsets.only(top: bal == null ? 0 : 6), child: pts),
+            ])
+          else ...[
+            if (ctx.loyaltyOn) SizedBox(width: 96, child: Align(alignment: Alignment.centerRight, child: pts)),
+            SizedBox(width: 190, child: Align(alignment: Alignment.centerRight, child: Row(mainAxisSize: MainAxisSize.min, children: [if (pending != null) pending, if (bal != null) bal]))),
+          ],
+        ]),
       ),
     );
   }
@@ -181,6 +218,7 @@ class _CustomerFormState extends ConsumerState<_CustomerForm> {
 Future<void> showCustomerDetail(BuildContext context, WidgetRef ref, String id) => showPanel<void>(context, maxWidth: 520, builder: (_) => _CustomerDetail(id: id));
 
 final _ledgerProvider = FutureProvider.autoDispose.family<List<Map<String, dynamic>>, String>((ref, id) async {
+  ref.cacheForSession(revalidate: true);
   ref.watch(syncProvider.select((s) => s.revision));
   return (await ref.watch(apiProvider).getList('/customers/$id/ledger')).cast<Map<String, dynamic>>();
 });
@@ -216,12 +254,23 @@ class _CustomerDetail extends ConsumerWidget {
             if (c.creditLimitP > 0) Column(crossAxisAlignment: CrossAxisAlignment.end, children: [Text(context.tr('Credit limit'), style: tt.labelMedium!.copyWith(color: t.muted)), NumText(f.money(c.creditLimitP), size: 16)]),
           ]),
         ),
-        if (row.pendingP != 0) Padding(padding: const EdgeInsets.only(top: 8), child: Row(children: [Icon(Icons.schedule_rounded, size: 16, color: t.info), const SizedBox(width: 6), Expanded(child: Text(context.tr('Includes changes from this till that have not synced yet.'), style: tt.bodySmall))])),
-        if (c.address.isNotEmpty) Padding(padding: const EdgeInsets.only(top: 12), child: Row(children: [Icon(Icons.home_rounded, size: 18, color: t.muted), const SizedBox(width: 8), Expanded(child: Text(c.address, style: tt.bodyMedium))])),
-        if (ctx.loyaltyOn) Padding(padding: const EdgeInsets.only(top: 10), child: Row(children: [Icon(Icons.stars_rounded, size: 18, color: t.info), const SizedBox(width: 8), Text('${f.intN(c.points)} ${context.tr('loyalty points')}', style: tt.bodyMedium)])),
+        if (row.pendingP != 0) Padding(padding: const EdgeInsets.only(top: 10), child: Row(children: [Icon(Icons.schedule_rounded, size: 16, color: t.info), const SizedBox(width: 8), Expanded(child: Text(context.tr('Includes changes from this till that have not synced yet.'), style: tt.bodySmall))])),
+        if (c.address.isNotEmpty || ctx.loyaltyOn) ...[
+          const SizedBox(height: 12),
+          Surface(
+            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+            child: Column(children: [
+              if (c.address.isNotEmpty) _InfoRow(icon: Icons.home_rounded, label: context.tr('Address'), value: c.address),
+              if (c.address.isNotEmpty && ctx.loyaltyOn) Divider(color: t.outline.withValues(alpha: 0.6)),
+              if (ctx.loyaltyOn) _InfoRow(icon: Icons.stars_rounded, label: context.tr('Loyalty points'), value: f.intN(c.points), color: t.info),
+            ]),
+          ),
+        ],
         const FormHeading('Account history'),
         ledger.when(
-          loading: () => const SkeletonList(rows: 3, height: 48),
+          skipLoadingOnReload: true,
+          skipLoadingOnRefresh: true,
+          loading: () => const Deferred(child: SkeletonList(rows: 3, height: 48)),
           error: (e, _) => Text(context.tr('History loads when you are online.'), style: tt.bodySmall),
           data: (rows) => rows.isEmpty
               ? Text(context.tr('Nothing yet.'), style: tt.bodyMedium!.copyWith(color: t.muted))
@@ -238,6 +287,28 @@ class _CustomerDetail extends ConsumerWidget {
                     ),
                 ]),
         ),
+      ]),
+    );
+  }
+}
+
+class _InfoRow extends StatelessWidget {
+  const _InfoRow({required this.icon, required this.label, required this.value, this.color});
+  final IconData icon;
+  final String label, value;
+  final Color? color;
+
+  @override
+  Widget build(BuildContext context) {
+    final tt = Theme.of(context).textTheme;
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8),
+      child: Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
+        IconSquare(icon, size: 34, color: color),
+        const SizedBox(width: 12),
+        Text(label, style: tt.bodyMedium!.copyWith(color: context.t.muted)),
+        const SizedBox(width: 12),
+        Expanded(child: Text(value, style: tt.titleSmall, textAlign: TextAlign.end, maxLines: 2, overflow: TextOverflow.ellipsis)),
       ]),
     );
   }

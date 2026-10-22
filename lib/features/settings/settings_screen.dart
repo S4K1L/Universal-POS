@@ -29,7 +29,6 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
       if (ctx.can('manage_settings')) ('business', context.tr('Business')),
       if (ctx.can('manage_staff') && ctx.feature('staff')) ('staff', context.tr('Staff')),
       if (ctx.can('manage_branches')) ('branches', context.tr('Branches')),
-      if (ctx.can('manage_devices')) ('devices', context.tr('Tills')),
       ('app', context.tr('This device')),
     ];
     if (!tabs.any((x) => x.$1 == _tab)) _tab = tabs.first.$1;
@@ -43,7 +42,6 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
             'business' => const _BusinessTab(),
             'staff' => const _StaffTab(),
             'branches' => const _BranchesTab(),
-            'devices' => const _DevicesTab(),
             _ => const _DeviceTab(),
           },
         ),
@@ -186,9 +184,18 @@ class _BusinessTabState extends ConsumerState<_BusinessTab> {
 
 // ------------------------------------------------------------------------------------------ staff
 
-final _usersProvider = FutureProvider.autoDispose<List<Map<String, dynamic>>>((ref) async => (await ref.watch(apiProvider).getList('/users')).cast<Map<String, dynamic>>());
-final _rolesProvider = FutureProvider.autoDispose<Map<String, dynamic>>((ref) async => ref.watch(apiProvider).getMap('/users/roles'));
-final _branchesProvider = FutureProvider.autoDispose<List<Map<String, dynamic>>>((ref) async => (await ref.watch(apiProvider).getList('/branches')).cast<Map<String, dynamic>>());
+final _usersProvider = FutureProvider.autoDispose<List<Map<String, dynamic>>>((ref) async {
+  ref.cacheForSession(revalidate: true);
+  return (await ref.watch(apiProvider).getList('/users')).cast<Map<String, dynamic>>();
+});
+final _rolesProvider = FutureProvider.autoDispose<Map<String, dynamic>>((ref) async {
+  ref.cacheForSession(revalidate: true);
+  return ref.watch(apiProvider).getMap('/users/roles');
+});
+final _branchesProvider = FutureProvider.autoDispose<List<Map<String, dynamic>>>((ref) async {
+  ref.cacheForSession(revalidate: true);
+  return (await ref.watch(apiProvider).getList('/branches')).cast<Map<String, dynamic>>();
+});
 
 class _StaffTab extends ConsumerWidget {
   const _StaffTab();
@@ -452,64 +459,6 @@ class _BranchFormState extends ConsumerState<_BranchForm> {
       );
 }
 
-// ---------------------------------------------------------------------------------------- devices
-
-final _devicesProvider = FutureProvider.autoDispose<List<Map<String, dynamic>>>((ref) async => (await ref.watch(apiProvider).getList('/devices')).cast<Map<String, dynamic>>());
-
-class _DevicesTab extends ConsumerWidget {
-  const _DevicesTab();
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final t = context.t;
-    final tt = Theme.of(context).textTheme;
-    final f = context.fmt;
-    final ctx = ref.watch(ctxProvider);
-    final me = ref.watch(sessionProvider.select((s) => s.device?.id));
-    final devices = ref.watch(_devicesProvider);
-    final branches = {for (final b in ctx.branches) b.id: b.name};
-    final limit = ctx.limits['devices'] ?? -1;
-    return AsyncBody<List<Map<String, dynamic>>>(
-      value: devices,
-      onRetry: () => ref.invalidate(_devicesProvider),
-      data: (list) => ListView(padding: const EdgeInsets.only(bottom: 24), children: [
-        Padding(padding: const EdgeInsets.only(bottom: 10), child: Text('${f.intN(list.where((d) => d['active'] == true).length)}${limit >= 0 ? ' / ${f.intN(limit)}' : ''} ${context.tr('registered tills')}', style: tt.titleSmall)),
-        for (final d in list)
-          Padding(
-            padding: const EdgeInsets.only(bottom: 8),
-            child: Opacity(
-              opacity: d['active'] == true ? 1 : 0.55,
-              child: Surface(
-                padding: const EdgeInsets.all(14),
-                child: Row(children: [
-                  IconSquare(d['platform'] == 'web' ? Icons.language_rounded : Icons.point_of_sale_rounded, size: 44),
-                  const SizedBox(width: 12),
-                  Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                    Row(children: [Text(d['name'] as String, style: tt.titleSmall), const SizedBox(width: 8), Pill(d['device_code'] as String, dense: true, mono: true), if (d['id'] == me) ...[const SizedBox(width: 6), Pill(context.tr('This till'), color: t.accent, dense: true)]]),
-                    Text('${branches[d['branch_id']] ?? ''} · ${d['last_sync_at'] == null ? context.tr('never synced') : '${context.tr('synced')} ${f.ago(DateTime.parse(d['last_sync_at'] as String))}'}', style: tt.bodySmall),
-                  ])),
-                  if (d['id'] != me)
-                    Switch(
-                      value: d['active'] == true,
-                      onChanged: (v) async {
-                        try {
-                          await ref.read(apiProvider).patch('/devices/${d['id']}', body: {'active': v});
-                          ref.invalidate(_devicesProvider);
-                        } on ApiError catch (e) {
-                          if (context.mounted) toast(context, e.message, error: true);
-                        }
-                      },
-                    ),
-                ]),
-              ),
-            ),
-          ),
-        Text(context.tr('Switching a till off signs it out of syncing. Sales it already made are kept.'), style: tt.bodySmall),
-      ]),
-    );
-  }
-}
-
 // ----------------------------------------------------------------------------------- this device
 
 class _DeviceTab extends ConsumerWidget {
@@ -522,7 +471,6 @@ class _DeviceTab extends ConsumerWidget {
     final ctx = ref.watch(ctxProvider);
     final lang = ref.watch(langProvider);
     final mode = ref.watch(themeModeProvider);
-    final device = ref.watch(sessionProvider.select((s) => s.device));
     return ListView(padding: const EdgeInsets.only(bottom: 30), children: [
       Surface(
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -543,7 +491,6 @@ class _DeviceTab extends ConsumerWidget {
           KV(context.tr('Business'), ctx.businessName, mono: false),
           KV(context.tr('Type'), ctx.typeLabel, mono: false),
           KV(context.tr('Signed in as'), '${ctx.userName} · ${ctx.roleLabel}', mono: false),
-          KV(context.tr('This till'), device == null ? '—' : '${device.name} (${device.code})', mono: false),
           KV(context.tr('Plan'), '${ctx.planName} · ${context.tr(ctx.subState)}', mono: false),
           KV(context.tr('Server'), Uri.parse(ref.watch(serverUrlProvider)).authority, mono: false),
           const KV('Version', '1.0.0', mono: false),

@@ -158,7 +158,10 @@ class _ProductsScreenState extends ConsumerState<ProductsScreen> {
   }
 }
 
-final _categoriesProvider = StreamProvider.autoDispose<List<LCategory>>((ref) => ref.watch(catalogueRepoProvider).watchCategories());
+final _categoriesProvider = StreamProvider.autoDispose<List<LCategory>>((ref) {
+  ref.cacheForSession();
+  return ref.watch(catalogueRepoProvider).watchCategories();
+});
 
 class _Chip extends StatelessWidget {
   const _Chip({required this.label, required this.selected, required this.onTap, this.icon});

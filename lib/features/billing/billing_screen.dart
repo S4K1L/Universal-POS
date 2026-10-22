@@ -13,6 +13,7 @@ import '../../core/ui/panel.dart';
 import '../../data/session.dart';
 
 final _billingProvider = FutureProvider.autoDispose<Map<String, dynamic>>((ref) async {
+  ref.cacheForSession(revalidate: true);
   final api = ref.watch(apiProvider);
   final r = await Future.wait<Object>([api.getMap('/billing/subscription'), api.getMap('/billing/plans'), api.getList('/billing/payment-requests')]);
   return {'sub': r[0], 'plans': r[1], 'requests': r[2]};
@@ -71,7 +72,7 @@ class _BillingScreenState extends ConsumerState<BillingScreen> {
                 ]),
                 const SizedBox(height: 18),
                 Wrap(spacing: 14, runSpacing: 12, children: [
-                  for (final k in ['products', 'staff', 'branches', 'devices'])
+                  for (final k in ['products', 'staff', 'branches'])
                     SizedBox(
                       width: 200,
                       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -197,7 +198,7 @@ class _PlanCard extends StatelessWidget {
         Row(crossAxisAlignment: CrossAxisAlignment.end, children: [NumText(f.money(price), size: 34, weight: 800), const SizedBox(width: 6), Padding(padding: const EdgeInsets.only(bottom: 6), child: Text(cycle == 'yearly' ? context.tr('/ year') : context.tr('/ month'), style: tt.bodySmall))]),
         if (cycle == 'yearly' && saving > 0) Padding(padding: const EdgeInsets.only(top: 2), child: Text('${f.money(monthlyEq)}/${context.tr('mo')} · ${context.tr('save')} ${f.money(saving)}', style: tt.bodySmall!.copyWith(color: t.success, fontWeight: FontWeight.w700))),
         const SizedBox(height: 14),
-        for (final k in ['products', 'staff', 'branches', 'devices'])
+        for (final k in ['products', 'staff', 'branches'])
           _Feat('${_limitText(context, (limits[k] as num?)?.toInt() ?? -1)} ${context.tr(k)}'),
         const Divider(height: 22),
         for (final x in features.take(8)) _Feat(context.tr(_featureLabel[x] ?? x)),

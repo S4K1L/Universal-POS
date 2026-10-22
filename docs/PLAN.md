@@ -367,7 +367,7 @@ every PharmaCare backend test scenario must pass on Universal with this profile.
 | Module | Core features | Capability-dependent |
 |---|---|---|
 | **Platform console** | Tenants, onboarding wizard, plans & limits, **business types & capability matrix**, billing review, impersonation, announcements, audit, maintenance switch, usage metrics | Template diff/apply, tenant capability overrides |
-| **Identity & access** | Login (phone/email/PIN), roles, per-user overrides, branch restriction, device registration, sessions | Custom roles, manager-PIN overrides |
+| **Identity & access** | Login (phone/email/PIN), roles, per-user overrides, branch restriction, sessions | Custom roles, manager-PIN overrides |
 | **Catalogue** | Products (stockable/service/non-stock/bundle), categories tree, brands, UoM, barcodes, images, price lists, tax classes, import/export (CSV/XLSX), label printing | Variants, attributes, master catalogue, scale barcodes |
 | **Inventory** | Stock ledger, balances, adjustments with reason, stocktake, reorder levels, transfers (instant or with in-transit), valuation, negative-stock policy | Lots/expiry, serials, multi-location, wastage, reservations |
 | **Purchasing** | Suppliers, purchase orders, goods receipt (partial), supplier invoices/payments, purchase returns, landed cost | Lot/expiry/serial capture at receipt |
@@ -405,7 +405,7 @@ every PharmaCare backend test scenario must pass on Universal with this profile.
 ```
 app/
   platform/      tenants, business_types, capabilities, plans, subscriptions, billing, admin, audit, announcements, maintenance
-  identity/      users, memberships, roles, permissions, sessions, devices
+  identity/      users, memberships, roles, permissions, sessions
   catalogue/     products, variants, categories, uoms, barcodes, attributes, price_lists, tax, master_catalogue
   inventory/     ledger, balances, lots, serials, locations, transfers, stocktake, valuation
   purchasing/    suppliers, purchase_orders, receipts, supplier_ledger
@@ -425,7 +425,7 @@ enforces the dependency graph in CI. Route handlers stay thin (as today).
 * **Add Postgres Row-Level Security** as defence-in-depth: each transaction runs
   `SET LOCAL app.tenant_id = …`; policies deny cross-tenant reads even if a query forgets the filter.
 * **Users ↔ tenants via `memberships`** (G18): one person, many businesses; role per membership.
-  Login by phone **or** email; PIN login for cashier terminals bound to a registered device.
+  Login by phone **or** email; PIN login for cashier terminals.
 * Access token 15–30 min; refresh rotation (keep); **secure storage** on device (Keychain /
   Keystore) (G16); web uses in-memory access token + refresh via storage.
 * **Startup guard**: refuse to boot in production with default JWT secret or `CORS_ORIGINS=*` (G17).
@@ -441,7 +441,7 @@ enforces the dependency graph in CI. Route handlers stay thin (as today).
 PLATFORM   business_types(+versions) · plans · plan_modules · plan_limits · subscriptions
            subscription_invoices · payment_channels · payment_requests · audit_log
 TENANT     tenants(name, business_type_id, template_version, currency, locale, tz, settings)
-           tenant_capability_overrides · branches · locations · registers · devices
+           tenant_capability_overrides · branches · locations · registers
 IDENTITY   users · memberships · roles · role_permissions · membership_permission_overrides
 CATALOGUE  categories(tree) · products · product_variants · product_barcodes · uoms · uom_conversions
            attribute_definitions · price_lists(+items) · tax_classes/rates · master_catalogue_items
@@ -466,7 +466,7 @@ product_barcodes(variant_id, barcode, uom_id, qty_per_scan, is_scale)           
 stock_movements(id, tenant_id, variant_id, lot_id?, serial_id?, location_id,
                 qty_delta numeric(14,3), unit_cost numeric(14,4),
                 reason[purchase|sale|return|adjust|transfer_in|transfer_out|count|wastage|opening],
-                ref_type, ref_id, actor_id, device_id, occurred_at)
+                ref_type, ref_id, actor_id, occurred_at)
 stock_balances(tenant_id, variant_id, lot_id?, location_id, on_hand, reserved)    -- updated in same txn
 sale_lines(id, sale_id, variant_id, qty numeric(14,3), uom_id, unit_price, discount, tax,
            unit_cost_snapshot, salesperson_id?)
@@ -594,7 +594,7 @@ above it) → tax (inclusive/exclusive, per item) → cash rounding → total`
 
 ## 9. Plans, billing & limits
 
-* Plan = set of **modules/features** + **limits** (products, staff, branches, devices,
+* Plan = set of **modules/features** + **limits** (products, staff, branches,
   monthly sales, storage) + **allowed capabilities** (e.g. `offline_pos`, `installments` on Pro).
 * Move `PLAN_CATALOG` from code to tables (the existing doc deferred this "later" — Universal
   needs it now so per-business-type pricing works without a deploy).

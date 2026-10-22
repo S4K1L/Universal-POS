@@ -22,7 +22,10 @@ import 'pos_widgets.dart';
 import 'receipt.dart';
 import '../../core/ui/panel.dart';
 
-final _categoriesProvider = StreamProvider.autoDispose<List<LCategory>>((ref) => ref.watch(catalogueRepoProvider).watchCategories());
+final _categoriesProvider = StreamProvider.autoDispose<List<LCategory>>((ref) {
+  ref.cacheForSession();
+  return ref.watch(catalogueRepoProvider).watchCategories();
+});
 
 final _productsProvider = StreamProvider.autoDispose.family<List<ProductView>, ({String q, String? cat})>(
   (ref, a) => ref.watch(catalogueRepoProvider).watchProducts(q: a.q, categoryId: a.cat, limit: 240),
@@ -277,7 +280,6 @@ class _Catalogue extends ConsumerWidget {
     final t = context.t;
     final f = context.fmt;
     final cats = ref.watch(_categoriesProvider).value ?? const [];
-    final products = ref.watch(_productsProvider((q: q, cat: cat)));
     final cart = ref.watch(cartProvider);
     final held = ref.watch(heldCartsProvider).value ?? const [];
     final inCart = <String, int>{};
@@ -308,29 +310,59 @@ class _Catalogue extends ConsumerWidget {
         ]),
       ),
       const SizedBox(height: 12),
-      Expanded(
-        child: products.when(
-          loading: () => const _GridSkeleton(),
-          error: (e, _) => EmptyState(icon: Icons.error_outline_rounded, title: context.tr('Could not read the catalogue'), message: '$e'),
-          data: (list) {
-            if (list.isEmpty) {
-              if (loading) return const _GridSkeleton(message: true);
-              return EmptyState(
-                icon: q.isEmpty ? Icons.inventory_2_outlined : Icons.search_off_rounded,
-                title: q.isEmpty ? context.tr('No items yet') : context.tr('Nothing matches'),
-                message: q.isEmpty ? context.tr('Add products under Items — they appear here, on every till, within seconds.') : '“$q”',
-              );
-            }
-            return GridView.builder(
-              padding: const EdgeInsets.only(bottom: 12),
-              gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(maxCrossAxisExtent: 184, mainAxisSpacing: 12, crossAxisSpacing: 12, childAspectRatio: 1.0),
-              itemCount: list.length,
-              itemBuilder: (_, i) => ProductTile(pv: list[i], inCartMilli: inCart[list[i].product.id] ?? 0, onTap: () => onTap(list[i])),
-            );
-          },
-        ),
-      ),
+      Expanded(child: _ProductGrid(q: q, cat: cat, loading: loading, inCart: inCart, onTap: onTap)),
     ]);
+  }
+}
+
+/// The product grid. While a new search or category is being read it keeps showing the previous results instead of
+/// dropping to a skeleton, so typing in the search box never makes the grid blink.
+class _ProductGrid extends ConsumerStatefulWidget {
+  const _ProductGrid({required this.q, required this.cat, required this.loading, required this.inCart, required this.onTap});
+  final String q;
+  final String? cat;
+  final bool loading;
+  final Map<String, int> inCart;
+  final void Function(ProductView) onTap;
+
+  @override
+  ConsumerState<_ProductGrid> createState() => _ProductGridState();
+}
+
+class _ProductGridState extends ConsumerState<_ProductGrid> {
+  List<ProductView>? _last;
+
+  @override
+  Widget build(BuildContext context) {
+    final products = ref.watch(_productsProvider((q: widget.q, cat: widget.cat)));
+    final fresh = products.value;
+    if (fresh != null) _last = fresh;
+    final list = fresh ?? _last;
+    if (products.hasError && list == null) {
+      return EmptyState(icon: Icons.error_outline_rounded, title: context.tr('Could not read the catalogue'), message: '${products.error}');
+    }
+    final Widget body;
+    if (list == null) {
+      body = const Deferred(key: ValueKey('skeleton'), child: _GridSkeleton());
+    } else if (list.isEmpty) {
+      body = widget.loading
+          ? const _GridSkeleton(key: ValueKey('syncing'), message: true)
+          : EmptyState(
+              key: const ValueKey('empty'),
+              icon: widget.q.isEmpty ? Icons.inventory_2_outlined : Icons.search_off_rounded,
+              title: widget.q.isEmpty ? context.tr('No items yet') : context.tr('Nothing matches'),
+              message: widget.q.isEmpty ? context.tr('Add products under Items — they appear here, on every till, within seconds.') : '“${widget.q}”',
+            );
+    } else {
+      body = GridView.builder(
+        key: const ValueKey('grid'),
+        padding: const EdgeInsets.only(bottom: 12),
+        gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(maxCrossAxisExtent: 184, mainAxisSpacing: 12, crossAxisSpacing: 12, childAspectRatio: 1.0),
+        itemCount: list.length,
+        itemBuilder: (_, i) => ProductTile(pv: list[i], inCartMilli: widget.inCart[list[i].product.id] ?? 0, onTap: () => widget.onTap(list[i])),
+      );
+    }
+    return FadeSwitcher(child: body);
   }
 }
 
@@ -360,7 +392,7 @@ class _CatChip extends StatelessWidget {
 }
 
 class _GridSkeleton extends StatelessWidget {
-  const _GridSkeleton({this.message = false});
+  const _GridSkeleton({super.key, this.message = false});
   final bool message;
 
   @override
@@ -412,7 +444,10 @@ class _CartPane extends ConsumerWidget {
         Padding(
           padding: const EdgeInsets.fromLTRB(18, 16, 10, 8),
           child: Row(children: [
-            Expanded(child: Text(context.tr('Current sale'), style: tt.titleLarge)),
+            Text(context.tr('Current sale'), style: tt.titleLarge),
+            const SizedBox(width: 8),
+            _CountBadge(count: cart.lines.length),
+            const Spacer(),
             IconButton(tooltip: context.tr('Park this sale'), onPressed: cart.isEmpty ? null : () => notifier.hold(), icon: const Icon(Icons.pause_circle_outline_rounded)),
             IconButton(
               tooltip: context.tr('Clear'),
@@ -452,20 +487,17 @@ class _CartPane extends ConsumerWidget {
         ),
         const SizedBox(height: 6),
         Expanded(
-          child: cart.isEmpty
-              ? EmptyState(icon: Icons.qr_code_scanner_rounded, title: context.tr('Ready to sell'), message: context.tr('Scan a barcode or tap an item to start.'), compact: true)
-              : ListView.separated(
-                  padding: const EdgeInsets.fromLTRB(14, 6, 14, 6),
-                  itemCount: cart.lines.length,
-                  separatorBuilder: (_, __) => Divider(color: t.outline.withValues(alpha: 0.6)),
-                  itemBuilder: (_, i) => _CartLineTile(line: cart.lines[i], priced: priced.lines.length > i ? priced.lines[i].net - priced.lines[i].share : 0),
-                ),
+          child: FadeSwitcher(
+            child: cart.isEmpty
+                ? EmptyState(key: const ValueKey('empty'), icon: Icons.qr_code_scanner_rounded, title: context.tr('Ready to sell'), message: context.tr('Scan a barcode or tap an item to start.'), compact: true)
+                : _CartLines(key: const ValueKey('lines'), lines: cart.lines, totals: [for (var i = 0; i < cart.lines.length; i++) priced.lines.length > i ? priced.lines[i].net - priced.lines[i].share : 0]),
+          ),
         ),
         Container(
           padding: const EdgeInsets.fromLTRB(18, 12, 18, 16),
           decoration: BoxDecoration(border: Border(top: BorderSide(color: t.outline))),
           child: Column(children: [
-            _TotalRow(context.tr('Subtotal'), f.money(priced.subtotal, decimals: true)),
+            _TotalRow(context.tr('Subtotal'), f.money(priced.subtotal, decimals: true), amount: priced.subtotal, format: (v) => f.money(v, decimals: true)),
             InkWell(
               onTap: cart.isEmpty || !ctx.can('apply_discount') ? null : () => showDiscountSheet(context, ref),
               borderRadius: BorderRadius.circular(8),
@@ -483,10 +515,14 @@ class _CartPane extends ConsumerWidget {
                   Text(context.tr('Charge'), style: const TextStyle(fontSize: 18)),
                   if (!cart.isEmpty) ...[
                     const SizedBox(width: 10),
-                    Container(padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2), decoration: BoxDecoration(color: t.onAccent.withValues(alpha: 0.2), borderRadius: BorderRadius.circular(10)), child: Text(f.intN(cart.lines.length), style: const TextStyle(fontSize: 13))),
+                    AnimatedSwitcher(
+                      duration: Motion.fast,
+                      transitionBuilder: (c, a) => ScaleTransition(scale: a, child: FadeTransition(opacity: a, child: c)),
+                      child: Container(key: ValueKey(cart.lines.length), padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2), decoration: BoxDecoration(color: t.onAccent.withValues(alpha: 0.2), borderRadius: BorderRadius.circular(10)), child: Text(f.intN(cart.lines.length), style: const TextStyle(fontSize: 13))),
+                    ),
                   ],
                   const Spacer(),
-                  Text(f.money(priced.total, decimals: true), style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w800, fontFeatures: tabular)),
+                  CountUp(value: priced.total, duration: const Duration(milliseconds: 420), format: (v) => f.money(v, decimals: true), builder: (_, text) => Text(text, style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w800, fontFeatures: tabular))),
                 ]),
               ),
             ),
@@ -498,9 +534,13 @@ class _CartPane extends ConsumerWidget {
 }
 
 class _TotalRow extends StatelessWidget {
-  const _TotalRow(this.label, this.value, {this.accent = false});
+  const _TotalRow(this.label, this.value, {this.accent = false, this.amount, this.format});
   final String label, value;
   final bool accent;
+
+  /// When given, the figure glides to each new amount instead of jumping.
+  final int? amount;
+  final String Function(int)? format;
 
   @override
   Widget build(BuildContext context) {
@@ -509,88 +549,282 @@ class _TotalRow extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 3),
       child: Row(children: [
         Expanded(child: Text(label, style: Theme.of(context).textTheme.bodyMedium!.copyWith(color: t.muted))),
-        NumText(value, size: 14, weight: 700, color: accent ? t.accentDeep : t.text),
+        if (amount != null && format != null) CountUp(value: amount!, duration: const Duration(milliseconds: 380), format: format!, builder: (_, text) => NumText(text, size: 14, weight: 700, color: accent ? t.accentDeep : t.text)) else NumText(value, size: 14, weight: 700, color: accent ? t.accentDeep : t.text),
       ]),
     );
   }
 }
 
-class _CartLineTile extends ConsumerWidget {
-  const _CartLineTile({required this.line, required this.priced});
-  final CartLine line;
-  final int priced;
+/// How many lines are in the sale. The number swaps with a small pop so adding an item is visible at the corner too.
+class _CountBadge extends StatelessWidget {
+  const _CountBadge({required this.count});
+  final int count;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
+    final t = context.t;
+    return AnimatedSwitcher(
+      duration: Motion.fast,
+      transitionBuilder: (c, a) => ScaleTransition(scale: CurvedAnimation(parent: a, curve: Curves.easeOutBack), child: FadeTransition(opacity: a, child: c)),
+      child: count == 0
+          ? const SizedBox.shrink(key: ValueKey(0))
+          : Container(
+              key: ValueKey(count),
+              padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 2),
+              decoration: BoxDecoration(color: t.accentSoft, borderRadius: BorderRadius.circular(R.chip)),
+              child: Text(context.fmt.intN(count), style: TextStyle(fontSize: 12.5, fontWeight: FontWeight.w800, color: t.dark ? Color.lerp(t.accent, Colors.white, 0.3) : t.accentDeep)),
+            ),
+    );
+  }
+}
+
+class _CartEntry {
+  const _CartEntry(this.line, this.total);
+  final CartLine line;
+  final int total;
+}
+
+/// The lines of the sale. A line slides and grows in when it is added, shrinks away when it is removed, and a swipe to
+/// the left deletes it. Rows keep their place while quantities change, so the list never jumps under the cashier's finger.
+class _CartLines extends ConsumerStatefulWidget {
+  const _CartLines({super.key, required this.lines, required this.totals});
+  final List<CartLine> lines;
+  final List<int> totals;
+
+  @override
+  ConsumerState<_CartLines> createState() => _CartLinesState();
+}
+
+class _CartLinesState extends ConsumerState<_CartLines> {
+  final _list = GlobalKey<AnimatedListState>();
+  late final List<_CartEntry> _items = [for (final (i, l) in widget.lines.indexed) _CartEntry(l, widget.totals[i])];
+  final _swiped = <String>{}; // a swipe has already animated the row away
+
+  @override
+  void didUpdateWidget(_CartLines old) {
+    super.didUpdateWidget(old);
+    final next = {for (final (i, l) in widget.lines.indexed) l.key: _CartEntry(l, widget.totals[i])};
+    final state = _list.currentState;
+    for (var i = _items.length - 1; i >= 0; i--) {
+      if (next.containsKey(_items[i].line.key)) continue;
+      final gone = _items.removeAt(i);
+      final instant = _swiped.remove(gone.line.key);
+      state?.removeItem(i, (c, a) => instant ? const SizedBox.shrink() : _animated(gone, a), duration: instant || Motion.reduced(context) ? Duration.zero : Motion.base);
+    }
+    for (var i = 0; i < _items.length; i++) {
+      _items[i] = next[_items[i].line.key]!;
+    }
+    for (var i = 0; i < widget.lines.length; i++) {
+      if (i >= _items.length || _items[i].line.key != widget.lines[i].key) {
+        _items.insert(i, next[widget.lines[i].key]!);
+        state?.insertItem(i, duration: Motion.reduced(context) ? Duration.zero : const Duration(milliseconds: 340));
+      }
+    }
+  }
+
+  Widget _animated(_CartEntry e, Animation<double> a) {
+    final curve = CurvedAnimation(parent: a, curve: Curves.easeOutCubic, reverseCurve: Curves.easeInCubic);
+    return SizeTransition(
+      sizeFactor: curve,
+      child: FadeTransition(
+        opacity: curve,
+        child: SlideTransition(position: Tween<Offset>(begin: const Offset(0.16, 0), end: Offset.zero).animate(curve), child: _CartLineTile(line: e.line, total: e.total, onSwiped: () => _swiped.add(e.line.key))),
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) => AnimatedList(
+        key: _list,
+        padding: const EdgeInsets.fromLTRB(14, 4, 14, 8),
+        initialItemCount: _items.length,
+        itemBuilder: (c, i, a) => i < _items.length ? _animated(_items[i], a) : const SizedBox.shrink(),
+      );
+}
+
+class _CartLineTile extends ConsumerStatefulWidget {
+  const _CartLineTile({required this.line, required this.total, required this.onSwiped});
+  final CartLine line;
+  final int total;
+  final VoidCallback onSwiped;
+
+  @override
+  ConsumerState<_CartLineTile> createState() => _CartLineTileState();
+}
+
+class _CartLineTileState extends ConsumerState<_CartLineTile> with SingleTickerProviderStateMixin {
+  // A soft accent wash that fades out whenever the line changes, so the eye finds what just happened.
+  late final AnimationController _flash = AnimationController(vsync: this, duration: const Duration(milliseconds: 900))..value = 1;
+  int _dir = 1; // +1 quantity went up, -1 went down: the number rolls the same way
+
+  bool _announced = false;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (_announced) return;
+    _announced = true;
+    if (!Motion.reduced(context)) _flash.forward(from: 0); // a freshly added line announces itself
+  }
+
+  @override
+  void didUpdateWidget(_CartLineTile old) {
+    super.didUpdateWidget(old);
+    final a = old.line, b = widget.line;
+    if (a.qtyMilli != b.qtyMilli) _dir = b.qtyMilli >= a.qtyMilli ? 1 : -1;
+    if (a.qtyMilli != b.qtyMilli || a.unitPriceP != b.unitPriceP || a.discountP != b.discountP || a.unit != b.unit) {
+      if (!Motion.reduced(context)) _flash.forward(from: 0);
+    }
+  }
+
+  @override
+  void dispose() {
+    _flash.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final t = context.t;
     final tt = Theme.of(context).textTheme;
     final f = context.fmt;
+    final line = widget.line;
     final notifier = ref.read(cartProvider.notifier);
     final step = line.allowFraction ? 500 : 1000;
+    final bn = context.lang == AppLang.bn;
+    final name = line.variantLabel.isEmpty ? line.shownName(bn) : '${line.shownName(bn)} · ${line.variantLabel}';
+    final qtyText = '${f.qty(line.qtyMilli)}${line.allowFraction || line.unit != 'pc' ? ' ${line.unit}' : ''}';
 
     Future<void> editQty() async {
-      final q = await showQtySheet(context, title: line.shownName(context.lang == AppLang.bn), unit: line.unit, initialMilli: line.qtyMilli, allowFraction: line.allowFraction, maxMilli: line.stocked && !ref.read(ctxProvider).allowNegativeStock ? line.maxQtyMilli : null);
+      final q = await showQtySheet(context, title: line.shownName(bn), unit: line.unit, initialMilli: line.qtyMilli, allowFraction: line.allowFraction, maxMilli: line.stocked && !ref.read(ctxProvider).allowNegativeStock ? line.maxQtyMilli : null);
       if (q != null) {
         final r = notifier.setQty(line.key, q);
         if (r != null && context.mounted) toast(context, r.message, error: true);
       }
     }
 
-    return InkWell(
-      onTap: () => showLineEditor(context, ref, line),
-      borderRadius: BorderRadius.circular(10),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 8),
-        child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Expanded(
-            child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Text(line.variantLabel.isEmpty ? line.shownName(context.lang == AppLang.bn) : '${line.shownName(context.lang == AppLang.bn)} · ${line.variantLabel}', style: tt.titleSmall, maxLines: 2, overflow: TextOverflow.ellipsis),
-              const SizedBox(height: 3),
-              Row(children: [
-                NumText('${f.money(line.unitPriceP)}/${line.unit}', size: 12, weight: 600, color: line.overridden ? t.warning : t.muted),
-                if (line.discountP > 0) ...[const SizedBox(width: 6), Pill('−${f.money(line.discountP)}', color: t.success, dense: true)],
-                if (line.overridden) ...[const SizedBox(width: 6), Pill(context.tr('price changed'), color: t.warning, dense: true)],
+    final content = AnimatedBuilder(
+      animation: _flash,
+      builder: (_, child) => DecoratedBox(
+        decoration: BoxDecoration(color: Color.lerp(t.accent.withValues(alpha: t.dark ? 0.18 : 0.12), t.accent.withValues(alpha: 0), Curves.easeOut.transform(_flash.value)), borderRadius: BorderRadius.circular(14)),
+        child: child,
+      ),
+      child: InkWell(
+        onTap: () => showLineEditor(context, ref, line),
+        borderRadius: BorderRadius.circular(14),
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(8, 10, 8, 10),
+          child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            Monogram(line.shownName(bn), size: 42, seed: line.productId),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                  Expanded(child: Text(name, style: tt.titleSmall, maxLines: 2, overflow: TextOverflow.ellipsis)),
+                  const SizedBox(width: 10),
+                  CountUp(value: widget.total, duration: const Duration(milliseconds: 380), format: (v) => f.money(v, decimals: true), builder: (_, text) => NumText(text, size: 15, weight: 800)),
+                ]),
+                const SizedBox(height: 3),
+                Wrap(spacing: 6, runSpacing: 4, crossAxisAlignment: WrapCrossAlignment.center, children: [
+                  NumText('${f.money(line.unitPriceP)} / ${line.unit}', size: 12, weight: 600, color: line.overridden ? t.warning : t.muted),
+                  if (line.discountP > 0) Pill('−${f.money(line.discountP)}', color: t.success, dense: true),
+                  if (line.overridden) Pill(context.tr('price changed'), color: t.warning, dense: true),
+                ]),
+                const SizedBox(height: 10),
+                Row(children: [
+                  _QtyStepper(
+                    text: qtyText,
+                    dir: _dir,
+                    onMinus: () => notifier.step(line.key, -step),
+                    onPlus: () {
+                      final r = notifier.step(line.key, step);
+                      if (r != null) toast(context, r.message, error: true);
+                    },
+                    onEdit: editQty,
+                  ),
+                  const Spacer(),
+                  IconButton(
+                    tooltip: context.tr('Remove'),
+                    visualDensity: VisualDensity.compact,
+                    onPressed: () => notifier.remove(line.key),
+                    icon: Icon(Icons.delete_outline_rounded, size: 20, color: t.muted),
+                  ),
+                ]),
               ]),
-              const SizedBox(height: 8),
-              Row(children: [
-                _Stepper(icon: Icons.remove_rounded, onTap: () => notifier.step(line.key, -step)),
-                InkWell(onTap: editQty, borderRadius: BorderRadius.circular(8), child: Container(constraints: const BoxConstraints(minWidth: 56), padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6), alignment: Alignment.center, child: NumText('${f.qty(line.qtyMilli)}${line.allowFraction || line.unit != 'pc' ? ' ${line.unit}' : ''}', size: 15, weight: 800))),
-                _Stepper(
-                  icon: Icons.add_rounded,
-                  onTap: () {
-                    final r = notifier.step(line.key, step);
-                    if (r != null) toast(context, r.message, error: true);
-                  },
-                ),
-              ]),
-            ]),
-          ),
-          NumText(f.money(priced, decimals: true), size: 15, weight: 800),
-        ]),
+            ),
+          ]),
+        ),
+      ),
+    );
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 2),
+      child: Dismissible(
+        key: ValueKey('line-${line.key}'),
+        direction: DismissDirection.endToStart,
+        onDismissed: (_) {
+          widget.onSwiped();
+          notifier.remove(line.key);
+        },
+        background: Container(
+          alignment: Alignment.centerRight,
+          padding: const EdgeInsets.only(right: 22),
+          decoration: BoxDecoration(color: t.tint(t.danger, 0.14), borderRadius: BorderRadius.circular(14)),
+          child: Icon(Icons.delete_rounded, color: t.danger),
+        ),
+        child: content,
       ),
     );
   }
 }
 
-class _Stepper extends StatelessWidget {
-  const _Stepper({required this.icon, required this.onTap});
-  final IconData icon;
-  final VoidCallback onTap;
+/// − quantity + in one capsule. Tapping the number opens the keypad; the number itself rolls up or down as it changes.
+class _QtyStepper extends StatelessWidget {
+  const _QtyStepper({required this.text, required this.dir, required this.onMinus, required this.onPlus, required this.onEdit});
+  final String text;
+  final int dir;
+  final VoidCallback onMinus, onPlus, onEdit;
 
   @override
   Widget build(BuildContext context) {
     final t = context.t;
-    return Material(
-      color: t.surface2,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10), side: BorderSide(color: t.outline)),
-      child: InkWell(
-        borderRadius: BorderRadius.circular(10),
-        onTap: () {
-          HapticFeedback.selectionClick();
-          onTap();
-        },
-        child: SizedBox(width: 34, height: 34, child: Icon(icon, size: 19)),
-      ),
+    Widget button(IconData icon, VoidCallback onTap) => InkResponse(
+          radius: 22,
+          onTap: () {
+            HapticFeedback.selectionClick();
+            onTap();
+          },
+          child: SizedBox(width: 38, height: 36, child: Icon(icon, size: 19)),
+        );
+    return Container(
+      height: 36,
+      decoration: BoxDecoration(color: t.surface2, borderRadius: BorderRadius.circular(12), border: Border.all(color: t.outline)),
+      child: Row(mainAxisSize: MainAxisSize.min, children: [
+        button(Icons.remove_rounded, onMinus),
+        InkWell(
+          onTap: onEdit,
+          borderRadius: BorderRadius.circular(8),
+          child: Container(
+            constraints: const BoxConstraints(minWidth: 52),
+            height: 36,
+            alignment: Alignment.center,
+            padding: const EdgeInsets.symmetric(horizontal: 6),
+            child: ClipRect(
+              child: AnimatedSwitcher(
+                duration: Motion.fast,
+                transitionBuilder: (c, a) {
+                  final entering = c.key == ValueKey(text);
+                  final from = Offset(0, entering ? 0.7 * dir : -0.7 * dir);
+                  return FadeTransition(opacity: a, child: SlideTransition(position: Tween<Offset>(begin: from, end: Offset.zero).animate(a), child: c));
+                },
+                layoutBuilder: (current, previous) => Stack(alignment: Alignment.center, children: [...previous, if (current != null) current]),
+                child: NumText(text, key: ValueKey(text), size: 15, weight: 800),
+              ),
+            ),
+          ),
+        ),
+        button(Icons.add_rounded, onPlus),
+      ]),
     );
   }
 }

@@ -13,6 +13,8 @@ Future<void> main() async {
   final langName = await store.read('lang');
   final themeName = await store.read('theme');
   runApp(ProviderScope(
+    // A failed request shows its own "Try again"; silent background retries made offline screens flip between error and loading.
+    retry: (_, __) => null,
     overrides: [
       bootstrapProvider.overrideWithValue(Bootstrap(
         serverUrl: server,

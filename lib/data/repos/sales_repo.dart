@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:drift/drift.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -51,6 +52,10 @@ class SalesRepo {
 
   AppDatabase get db => ref.read(dbProvider);
 
+  /// Short code that prefixes every invoice number this install issues, so two tills selling offline can never mint
+  /// the same number. It is made up on first use and kept on the device; the server is never asked to hand it out.
+  Future<String> tillCode() => tillCodeOf(db);
+
   Future<int> _nextSeq() async {
     final cur = int.tryParse(await db.kvGet('invoice_seq') ?? '0') ?? 0;
     final next = cur + 1;
@@ -81,7 +86,8 @@ class SalesRepo {
   Future<SaleBundle> completeSale(SaleDraft draft) async {
     final session = ref.read(sessionProvider);
     final ctx = session.ctx!;
-    final device = session.device!;
+    final branchId = session.branchId!;
+    final tillCode = await this.tillCode();
     final cart = draft.cart;
     final priced = priceCart(
       [for (final l in cart.lines) l.input],
@@ -95,7 +101,7 @@ class SalesRepo {
 
     await db.transaction(() async {
       final seq = await _nextSeq();
-      final invoiceNo = 'INV-${device.code}-${seq.toString().padLeft(6, '0')}';
+      final invoiceNo = 'INV-$tillCode-${seq.toString().padLeft(6, '0')}';
       final shiftId = await openShiftId();
 
       // Apply payments in order, never more than the bill.
@@ -126,7 +132,7 @@ class SalesRepo {
             note: Value(cart.note),
             cashierId: ctx.userId,
             cashierName: Value(ctx.userName),
-            branchId: device.branchId,
+            branchId: branchId,
             shiftId: Value(shiftId),
             createdAt: now,
           ));
@@ -187,7 +193,7 @@ class SalesRepo {
           'id': saleId,
           'invoice_no': invoiceNo,
           'sold_at': now.toUtc().toIso8601String(),
-          'branch_id': device.branchId,
+          'branch_id': branchId,
           if (shiftId != null) 'shift_id': shiftId,
           if (cart.customer != null) 'customer_id': cart.customer!.id,
           'customer_name': cart.customer?.name ?? 'Walk-in',
@@ -320,10 +326,10 @@ class SalesRepo {
     final id = newId();
     final at = DateTime.now();
     await db.transaction(() async {
-      await db.into(db.lExpenses).insert(LExpensesCompanion.insert(id: id, branchId: session.device!.branchId, category: category, amountP: amountP, method: Value(method), note: Value(note), spentAt: at));
+      await db.into(db.lExpenses).insert(LExpensesCompanion.insert(id: id, branchId: session.branchId!, category: category, amountP: amountP, method: Value(method), note: Value(note), spentAt: at));
       await _enqueue(
         'expense.create',
-        {'id': id, 'branch_id': session.device!.branchId, 'category': category, 'amount': paisaToWire(amountP), 'method': method, 'note': note, 'spent_at': at.toUtc().toIso8601String()},
+        {'id': id, 'branch_id': session.branchId!, 'category': category, 'amount': paisaToWire(amountP), 'method': method, 'note': note, 'spent_at': at.toUtc().toIso8601String()},
         summary: 'Expense · $category · ${paisaToWire(amountP)}',
         actorId: ctx.userId,
         id: id,
@@ -341,7 +347,7 @@ class SalesRepo {
       {
         'id': newId(),
         'variant_id': variantId,
-        'branch_id': session.device!.branchId,
+        'branch_id': session.branchId!,
         if (deltaWire != null) 'delta': deltaWire,
         if (countedWire != null) 'counted': countedWire,
         'reason': countedWire != null ? 'count' : reason,
@@ -365,8 +371,8 @@ class SalesRepo {
     final id = newId();
     final at = DateTime.now().toUtc();
     await db.transaction(() async {
-      await db.kvSet('shift', jsonEncode({'id': id, 'opened_at': at.toIso8601String(), 'opening_float': floatP, 'branch_id': session.device!.branchId, 'opened_by': session.ctx!.userName}));
-      await _enqueue('shift.open', {'id': id, 'branch_id': session.device!.branchId, 'opened_at': at.toIso8601String(), 'opening_float': paisaToWire(floatP)},
+      await db.kvSet('shift', jsonEncode({'id': id, 'opened_at': at.toIso8601String(), 'opening_float': floatP, 'branch_id': session.branchId!, 'opened_by': session.ctx!.userName}));
+      await _enqueue('shift.open', {'id': id, 'branch_id': session.branchId!, 'opened_at': at.toIso8601String(), 'opening_float': paisaToWire(floatP)},
           summary: 'Shift opened · float ${paisaToWire(floatP)}', at: at, actorId: session.ctx!.userId);
     });
     ref.read(syncProvider.notifier).kick();
@@ -473,3 +479,22 @@ class SalesRepo {
 }
 
 final salesRepoProvider = Provider<SalesRepo>((ref) => SalesRepo(ref));
+
+const _codeAlphabet = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'; // no 0/O/1/I to misread on a printed receipt
+
+/// This install's invoice prefix. Installs that were already numbering invoices keep the code they had.
+Future<String> tillCodeOf(AppDatabase db) async {
+  final saved = await db.kvGet('till_code');
+  if (saved != null) return saved;
+  String? code;
+  final legacy = await db.kvGet('device'); // written by earlier versions that registered the till with the server
+  if (legacy != null) code = (jsonDecode(legacy) as Map<String, dynamic>)['code'] as String?;
+  if (code == null) {
+    final rnd = Random.secure();
+    code = String.fromCharCodes([for (var i = 0; i < 4; i++) _codeAlphabet.codeUnitAt(rnd.nextInt(_codeAlphabet.length))]);
+  }
+  await db.kvSet('till_code', code);
+  return code;
+}
+
+final tillCodeProvider = FutureProvider<String>((ref) => tillCodeOf(ref.read(dbProvider)));

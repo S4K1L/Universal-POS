@@ -194,7 +194,10 @@ class _SalesScreenState extends ConsumerState<SalesScreen> {
   }
 }
 
-final _localSalesProvider = StreamProvider.autoDispose<List<LSale>>((ref) => ref.watch(salesRepoProvider).watchRecent(limit: 300));
+final _localSalesProvider = StreamProvider.autoDispose<List<LSale>>((ref) {
+  ref.cacheForSession();
+  return ref.watch(salesRepoProvider).watchRecent(limit: 300);
+});
 
 class _SaleTile extends StatelessWidget {
   const _SaleTile({required this.row, required this.onTap});

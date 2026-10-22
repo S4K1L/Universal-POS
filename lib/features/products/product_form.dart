@@ -377,11 +377,13 @@ class _ProductFormState extends ConsumerState<ProductForm> {
 }
 
 final _formCategories = StreamProvider.autoDispose<List<LCategory>>((ref) {
+  ref.cacheForSession();
   final db = ref.watch(dbProvider);
   return (db.select(db.lCategories)..orderBy([(c) => OrderingTerm.asc(c.sortOrder), (c) => OrderingTerm.asc(c.name)])).watch();
 });
 
 final _formTaxes = StreamProvider.autoDispose<List<LTaxClassesData>>((ref) {
+  ref.cacheForSession();
   final db = ref.watch(dbProvider);
   return (db.select(db.lTaxClasses)..orderBy([(c) => OrderingTerm.asc(c.rateBp)])).watch();
 });

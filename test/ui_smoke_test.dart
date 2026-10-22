@@ -26,7 +26,7 @@ void main() {
     testWidgets('dashboard renders on $name', (tester) async {
       await pumpScreen(tester, const DashboardScreen(), size: size, routes: {'GET /reports/dashboard': (_) => fx['dashboard_supershop'], 'GET /orders': (_) => {'items': []}});
       await settle(tester);
-      expect(find.textContaining("Today's sales"), findsOneWidget);
+      expect(find.text("TODAY'S SALES"), findsOneWidget);
       expect(find.text('Best sellers'), findsOneWidget);
       expect(tester.takeException(), isNull);
     });

@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import '../core/theme/tokens.dart';
 import '../core/ui/brand.dart';
+import '../core/ui/motion.dart';
 import '../data/platform_status.dart';
 import '../data/session.dart';
 import '../features/admin/admin_audit_screen.dart';
@@ -14,7 +15,6 @@ import '../features/admin/admin_plans_screen.dart';
 import '../features/admin/admin_settings_screen.dart';
 import '../features/admin/admin_shell.dart';
 import '../features/admin/admin_types_screen.dart';
-import '../features/auth/device_setup_screen.dart';
 import '../features/auth/login_screen.dart';
 import '../features/billing/billing_screen.dart';
 import '../features/customers/customers_screen.dart';
@@ -55,25 +55,15 @@ final routerProvider = Provider<GoRouter>((ref) {
         return loc == '/splash' ? null : '/splash';
       case AuthStatus.signedOut:
         return loc == '/login' ? null : '/login';
-      case AuthStatus.needsDevice:
-        if (maintenance) return loc == '/maintenance' ? null : '/maintenance';
-        return loc == '/setup' ? null : '/setup';
       case AuthStatus.ready:
         if (s.isAdmin) return loc.startsWith('/admin') ? null : '/admin/overview';
         if (maintenance) return loc == '/maintenance' ? null : '/maintenance';
-        if (loc.startsWith('/admin') || const ['/login', '/splash', '/setup', '/maintenance', '/'].contains(loc)) return '/dashboard';
+        if (loc.startsWith('/admin') || const ['/login', '/splash', '/maintenance', '/'].contains(loc)) return '/dashboard';
         return null;
     }
   }
 
-  Page<void> fade(Widget child, GoRouterState s) => CustomTransitionPage<void>(
-        key: s.pageKey,
-        child: child,
-        transitionDuration: const Duration(milliseconds: 160),
-        transitionsBuilder: (_, a, __, c) => FadeTransition(opacity: CurvedAnimation(parent: a, curve: Curves.easeOut), child: c),
-      );
-
-  GoRoute r(String path, Widget Function() w) => GoRoute(path: path, pageBuilder: (c, s) => fade(w(), s));
+  GoRoute r(String path, Widget Function() w) => GoRoute(path: path, pageBuilder: (c, s) => fadeThroughPage(w(), s));
 
   return GoRouter(
     initialLocation: '/splash',
@@ -82,7 +72,6 @@ final routerProvider = Provider<GoRouter>((ref) {
     routes: [
       r('/splash', () => const _Splash()),
       r('/login', () => const LoginScreen()),
-      r('/setup', () => const DeviceSetupScreen()),
       r('/maintenance', () => const MaintenanceScreen()),
       ShellRoute(
         builder: (c, s, child) => TenantShell(child: child),

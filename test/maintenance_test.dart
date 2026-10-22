@@ -14,7 +14,6 @@ import 'package:universal_pos/data/platform_status.dart';
 import 'package:universal_pos/data/providers.dart';
 import 'package:universal_pos/data/session.dart';
 import 'package:universal_pos/data/sync/sync_engine.dart';
-import 'package:universal_pos/features/auth/device_setup_screen.dart';
 import 'package:universal_pos/features/dashboard/dashboard_screen.dart';
 import 'package:universal_pos/features/maintenance/maintenance_screen.dart';
 
@@ -66,6 +65,7 @@ void main() {
     ProviderContainer containerFor(HttpClientAdapter adapter) {
       final client = ApiClient(baseUrl: 'http://fake/api/v1')..adapter = adapter;
       final c = ProviderContainer(overrides: [
+        cacheWindowProvider.overrideWithValue(Duration.zero), // no keep-alive timers left pending when a test ends
         bootstrapProvider.overrideWithValue(const Bootstrap(serverUrl: 'http://fake/api/v1')),
         apiProvider.overrideWithValue(client),
       ]);
@@ -211,6 +211,7 @@ void main() {
           'GET /orders': (_) => {'items': []},
         });
       final c = ProviderContainer(overrides: [
+        cacheWindowProvider.overrideWithValue(Duration.zero), // no keep-alive timers left pending when a test ends
         bootstrapProvider.overrideWithValue(const Bootstrap(serverUrl: 'http://fake/api/v1')),
         apiProvider.overrideWithValue(client),
         sessionProvider.overrideWith(() => FixedSession(session)),
@@ -233,18 +234,12 @@ void main() {
       return c;
     }
 
-    SessionState tenant({bool registered = true}) {
+    SessionState tenant() {
       final ctx = Fixtures.load().context('supershop');
-      return SessionState(status: registered ? AuthStatus.ready : AuthStatus.needsDevice, ctx: ctx, user: (ctx.raw['user'] as Map).cast<String, dynamic>(), device: registered ? testDevice() : null);
+      return SessionState(status: AuthStatus.ready, ctx: ctx, user: (ctx.raw['user'] as Map).cast<String, dynamic>());
     }
 
-    testWidgets('a business user who signs in during maintenance lands on the maintenance page, not the till setup', (tester) async {
-      await pumpApp(tester, tenant(registered: false), _on);
-      expect(find.byType(MaintenanceScreen), findsOneWidget);
-      expect(find.byType(DeviceSetupScreen), findsNothing);
-    });
-
-    testWidgets('a registered till is held on the maintenance page too, then released when maintenance ends', (tester) async {
+    testWidgets('a signed-in business user is held on the maintenance page, then released when maintenance ends', (tester) async {
       final c = await pumpApp(tester, tenant(), _on);
       expect(find.byType(MaintenanceScreen), findsOneWidget);
 
@@ -252,12 +247,6 @@ void main() {
       await settle(tester, frames: 3);
       expect(find.byType(MaintenanceScreen), findsNothing);
       expect(find.byType(DashboardScreen), findsOneWidget);
-    });
-
-    testWidgets('without maintenance a new device sees the normal setup page', (tester) async {
-      await pumpApp(tester, tenant(registered: false), const PlatformStatus());
-      expect(find.byType(DeviceSetupScreen), findsOneWidget);
-      expect(find.byType(MaintenanceScreen), findsNothing);
     });
 
     testWidgets('the platform admin is never shut out, so they can switch maintenance off', (tester) async {

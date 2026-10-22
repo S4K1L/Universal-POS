@@ -11,6 +11,7 @@ Future<T?> showPanel<T>(BuildContext context, {required WidgetBuilder builder, d
       context: context,
       barrierDismissible: dismissible,
       barrierColor: Colors.black.withValues(alpha: 0.5),
+      animationStyle: const AnimationStyle(duration: Duration(milliseconds: 260), reverseDuration: Duration(milliseconds: 180), curve: Curves.easeOutCubic, reverseCurve: Curves.easeInCubic),
       builder: (ctx) => Dialog(
         insetPadding: const EdgeInsets.all(24),
         clipBehavior: Clip.antiAlias,
@@ -25,6 +26,7 @@ Future<T?> showPanel<T>(BuildContext context, {required WidgetBuilder builder, d
     isDismissible: dismissible,
     enableDrag: dismissible,
     barrierColor: Colors.black.withValues(alpha: 0.5),
+    sheetAnimationStyle: const AnimationStyle(duration: Duration(milliseconds: 340), reverseDuration: Duration(milliseconds: 220), curve: Curves.easeOutCubic, reverseCurve: Curves.easeInCubic),
     builder: (ctx) => Padding(
       padding: EdgeInsets.only(bottom: MediaQuery.viewInsetsOf(ctx).bottom),
       child: builder(ctx),

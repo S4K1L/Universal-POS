@@ -11,7 +11,10 @@ import '../../core/ui/kit.dart';
 import '../../core/ui/panel.dart';
 import '../../data/session.dart';
 
-final adminPlansProvider = FutureProvider.autoDispose<Map<String, dynamic>>((ref) async => ref.watch(apiProvider).getMap('/admin/plans'));
+final adminPlansProvider = FutureProvider.autoDispose<Map<String, dynamic>>((ref) async {
+  ref.cacheForSession(revalidate: true);
+  return ref.watch(apiProvider).getMap('/admin/plans');
+});
 
 /// Plans & pricing. **Every number a business pays or is limited by is edited here** — nothing is in code.
 class AdminPlansScreen extends ConsumerWidget {

@@ -88,7 +88,6 @@
   ],
   "limits": {
    "staff": 10,
-   "devices": 6,
    "branches": 3,
    "products": 10000,
    "sales_per_month": -1
@@ -97,7 +96,6 @@
    "products": 34,
    "staff": 4,
    "branches": 2,
-   "devices": 3,
    "sales_per_month": 142
   },
   "modules": [
@@ -452,7 +450,6 @@
     "export_data",
     "manage_branches",
     "manage_customers",
-    "manage_devices",
     "manage_expenses",
     "manage_orders",
     "manage_products",
@@ -1403,7 +1400,6 @@
     "invoice_no": "INV-D01-000407",
     "status": "completed",
     "branch_id": "01a11082-b295-7f78-b49c-7596bb82a4fa",
-    "device_id": "01a11082-b53d-7d79-a4b6-936132d3fe9b",
     "sold_at": "2026-10-06T07:55:00Z",
     "customer_id": "01a11082-b53e-7f9a-8019-292bbf27e992",
     "customer_name": "Farhana Islam",
@@ -1481,7 +1477,6 @@
     "invoice_no": "INV-D01-000403",
     "status": "completed",
     "branch_id": "01a11082-b295-7f78-b49c-7596bb82a4fa",
-    "device_id": "01a11082-b53d-7d79-a4b6-936132d3fe9b",
     "sold_at": "2026-10-06T07:41:00Z",
     "customer_id": null,
     "customer_name": "Walk-in",
@@ -1538,7 +1533,6 @@
     "invoice_no": "INV-D01-000406",
     "status": "completed",
     "branch_id": "01a11082-b295-7f78-b49c-7596bb82a4fa",
-    "device_id": "01a11082-b53d-7d79-a4b6-936132d3fe9b",
     "sold_at": "2026-10-06T06:39:00Z",
     "customer_id": "01a11082-b53e-7f9a-8019-292bbf27e992",
     "customer_name": "Farhana Islam",
@@ -1595,7 +1589,6 @@
     "invoice_no": "INV-D01-000405",
     "status": "completed",
     "branch_id": "01a11082-b295-7f78-b49c-7596bb82a4fa",
-    "device_id": "01a11082-b53d-7d79-a4b6-936132d3fe9b",
     "sold_at": "2026-10-06T05:38:00Z",
     "customer_id": "01a11082-b53e-7f9a-8019-292bbf27e992",
     "customer_name": "Farhana Islam",
@@ -1673,7 +1666,6 @@
     "invoice_no": "INV-D01-000402",
     "status": "completed",
     "branch_id": "01a11082-b53c-7fe6-bf5b-ec19907aaadd",
-    "device_id": null,
     "sold_at": "2026-10-06T05:36:00Z",
     "customer_id": null,
     "customer_name": "Walk-in",
@@ -1751,7 +1743,6 @@
     "invoice_no": "INV-D01-000408",
     "status": "completed",
     "branch_id": "01a11082-b295-7f78-b49c-7596bb82a4fa",
-    "device_id": "01a11082-b53d-7d79-a4b6-936132d3fe9b",
     "sold_at": "2026-10-06T04:31:00Z",
     "customer_id": "01a11082-b53e-7d33-a4ed-63214fb311a3",
     "customer_name": "Shirin Sultana",
@@ -1829,7 +1820,6 @@
     "invoice_no": "INV-D01-000404",
     "status": "completed",
     "branch_id": "01a11082-b53c-7fe6-bf5b-ec19907aaadd",
-    "device_id": null,
     "sold_at": "2026-10-06T03:15:00Z",
     "customer_id": "01a11082-b53e-7f9a-8019-292bbf27e992",
     "customer_name": "Farhana Islam",
@@ -1907,7 +1897,6 @@
     "invoice_no": "INV-D01-000391",
     "status": "completed",
     "branch_id": "01a11082-b295-7f78-b49c-7596bb82a4fa",
-    "device_id": "01a11082-b53d-7d79-a4b6-936132d3fe9b",
     "sold_at": "2026-10-05T15:51:00Z",
     "customer_id": null,
     "customer_name": "Walk-in",
@@ -1975,7 +1964,6 @@
    "trial_days": 14,
    "limits": {
     "staff": 10,
-    "devices": 6,
     "branches": 3,
     "products": 10000,
     "sales_per_month": -1
@@ -2007,7 +1995,6 @@
    "products": 34,
    "staff": 4,
    "branches": 2,
-   "devices": 3,
    "sales_per_month": 142
   },
   "invoices": []
@@ -2024,7 +2011,6 @@
     "trial_days": 14,
     "limits": {
      "staff": 3,
-     "devices": 2,
      "branches": 1,
      "products": 1000,
      "sales_per_month": -1
@@ -2052,7 +2038,6 @@
     "trial_days": 14,
     "limits": {
      "staff": 10,
-     "devices": 6,
      "branches": 3,
      "products": 10000,
      "sales_per_month": -1
@@ -2084,7 +2069,6 @@
     "trial_days": 14,
     "limits": {
      "staff": -1,
-     "devices": -1,
      "branches": -1,
      "products": -1,
      "sales_per_month": -1
@@ -2148,7 +2132,6 @@
     "collect_dues",
     "export_data",
     "manage_customers",
-    "manage_devices",
     "manage_expenses",
     "manage_orders",
     "manage_products",
@@ -2203,7 +2186,6 @@
     "export_data",
     "manage_branches",
     "manage_customers",
-    "manage_devices",
     "manage_expenses",
     "manage_orders",
     "manage_products",
@@ -2238,7 +2220,6 @@
      "export_data",
      "manage_branches",
      "manage_customers",
-     "manage_devices",
      "manage_expenses",
      "manage_orders",
      "manage_products",
@@ -2267,7 +2248,6 @@
      "collect_dues",
      "export_data",
      "manage_customers",
-     "manage_devices",
      "manage_expenses",
      "manage_orders",
      "manage_products",
@@ -2356,7 +2336,6 @@
    "export_data",
    "manage_staff",
    "manage_branches",
-   "manage_devices",
    "manage_settings"
   ]
  },
@@ -2437,7 +2416,6 @@
   ],
   "limits": {
    "staff": 3,
-   "devices": 2,
    "branches": 1,
    "products": 1000,
    "sales_per_month": -1
@@ -2446,7 +2424,6 @@
    "products": 31,
    "staff": 2,
    "branches": 1,
-   "devices": 2,
    "sales_per_month": 110
   },
   "modules": [
@@ -2765,7 +2742,6 @@
     "export_data",
     "manage_branches",
     "manage_customers",
-    "manage_devices",
     "manage_expenses",
     "manage_orders",
     "manage_products",
@@ -2877,7 +2853,6 @@
   ],
   "limits": {
    "staff": 10,
-   "devices": 6,
    "branches": 3,
    "products": 10000,
    "sales_per_month": -1
@@ -2886,7 +2861,6 @@
    "products": 17,
    "staff": 2,
    "branches": 1,
-   "devices": 1,
    "sales_per_month": 46
   },
   "modules": [
@@ -3243,7 +3217,6 @@
     "export_data",
     "manage_branches",
     "manage_customers",
-    "manage_devices",
     "manage_expenses",
     "manage_orders",
     "manage_products",
@@ -3749,7 +3722,6 @@
   ],
   "limits": {
    "staff": 10,
-   "devices": 6,
    "branches": 3,
    "products": 10000,
    "sales_per_month": -1
@@ -3758,7 +3730,6 @@
    "products": 15,
    "staff": 3,
    "branches": 1,
-   "devices": 1,
    "sales_per_month": 12
   },
   "modules": [
@@ -4130,7 +4101,6 @@
     "export_data",
     "manage_branches",
     "manage_customers",
-    "manage_devices",
     "manage_expenses",
     "manage_orders",
     "manage_products",
@@ -4496,7 +4466,6 @@
   ],
   "limits": {
    "staff": 3,
-   "devices": 2,
    "branches": 1,
    "products": 1000,
    "sales_per_month": -1
@@ -4505,7 +4474,6 @@
    "products": 8,
    "staff": 2,
    "branches": 1,
-   "devices": 1,
    "sales_per_month": 114
   },
   "modules": [
@@ -4902,7 +4870,6 @@
     "export_data",
     "manage_branches",
     "manage_customers",
-    "manage_devices",
     "manage_expenses",
     "manage_orders",
     "manage_products",
@@ -4947,7 +4914,6 @@
     "trial_days": 14,
     "limits": {
      "staff": 3,
-     "devices": 2,
      "branches": 1,
      "products": 1000,
      "sales_per_month": -1
@@ -4980,7 +4946,6 @@
     "trial_days": 14,
     "limits": {
      "staff": 10,
-     "devices": 6,
      "branches": 3,
      "products": 10000,
      "sales_per_month": -1
@@ -5017,7 +4982,6 @@
     "trial_days": 14,
     "limits": {
      "staff": -1,
-     "devices": -1,
      "branches": -1,
      "products": -1,
      "sales_per_month": -1
@@ -5063,7 +5027,6 @@
    "products": "Products",
    "staff": "Staff accounts",
    "branches": "Branches",
-   "devices": "Registered devices",
    "sales_per_month": "Sales per month"
   },
   "capabilities": {
@@ -6482,8 +6445,6 @@
     "count": 7
    }
   ],
-  "devices": 10,
-  "devices_not_synced_24h": 9,
   "sales_24h": {
    "count": 54,
    "total": "127283.40"
@@ -6518,7 +6479,6 @@
     "staff_count": 1,
     "branch_count": 1,
     "product_count": 31,
-    "device_count": 1,
     "sales_30d": 3,
     "revenue_30d": "468.00",
     "capability_overrides": {
@@ -6553,7 +6513,6 @@
     "staff_count": 1,
     "branch_count": 1,
     "product_count": 31,
-    "device_count": 1,
     "sales_30d": 0,
     "revenue_30d": "0",
     "capability_overrides": {
@@ -6588,7 +6547,6 @@
     "staff_count": 2,
     "branch_count": 1,
     "product_count": 8,
-    "device_count": 1,
     "sales_30d": 275,
     "revenue_30d": "39178.50",
     "capability_overrides": {
@@ -6623,7 +6581,6 @@
     "staff_count": 3,
     "branch_count": 1,
     "product_count": 15,
-    "device_count": 1,
     "sales_30d": 30,
     "revenue_30d": "2463180.00",
     "capability_overrides": {
@@ -6658,7 +6615,6 @@
     "staff_count": 2,
     "branch_count": 1,
     "product_count": 17,
-    "device_count": 1,
     "sales_30d": 144,
     "revenue_30d": "549360.00",
     "capability_overrides": {
@@ -6693,7 +6649,6 @@
     "staff_count": 4,
     "branch_count": 2,
     "product_count": 34,
-    "device_count": 3,
     "sales_30d": 408,
     "revenue_30d": "272863.00",
     "capability_overrides": {
@@ -6728,7 +6683,6 @@
     "staff_count": 2,
     "branch_count": 1,
     "product_count": 31,
-    "device_count": 2,
     "sales_30d": 314,
     "revenue_30d": "110816.50",
     "capability_overrides": {
@@ -7449,41 +7403,6 @@
   "limit": 20,
   "offset": 0
  },
- "devices": [
-  {
-   "id": "01a11082-b53d-7d79-a4b6-936132d3fe9b",
-   "name": "Counter 1",
-   "device_code": "D01",
-   "branch_id": "01a11082-b295-7f78-b49c-7596bb82a4fa",
-   "platform": "demo",
-   "app_version": "",
-   "last_seen_at": null,
-   "last_sync_at": null,
-   "active": true
-  },
-  {
-   "id": "01a11082-b53e-7cf1-86c7-8e57793ef3f2",
-   "name": "Uttara counter",
-   "device_code": "D02",
-   "branch_id": "01a11082-b53c-7fe6-bf5b-ec19907aaadd",
-   "platform": "demo",
-   "app_version": "",
-   "last_seen_at": null,
-   "last_sync_at": null,
-   "active": true
-  },
-  {
-   "id": "01a11099-0951-7ef1-a994-a256d691e839",
-   "name": "Web till",
-   "device_code": "D03",
-   "branch_id": "01a11082-b295-7f78-b49c-7596bb82a4fa",
-   "platform": "web",
-   "app_version": "1.0.0",
-   "last_seen_at": "2026-10-06T11:06:00.328941+00:00",
-   "last_sync_at": null,
-   "active": true
-  }
- ],
  "report_summary": {
   "from": "2026-10-05T18:00:00+00:00",
   "to": "2026-10-06T18:00:00+00:00",
@@ -8359,7 +8278,6 @@
   "invoice_no": "INV-D01-000407",
   "status": "completed",
   "branch_id": "01a11082-b295-7f78-b49c-7596bb82a4fa",
-  "device_id": "01a11082-b53d-7d79-a4b6-936132d3fe9b",
   "sold_at": "2026-10-06T07:55:00Z",
   "customer_id": "01a11082-b53e-7f9a-8019-292bbf27e992",
   "customer_name": "Farhana Islam",
@@ -8459,7 +8377,6 @@
   "staff_count": 1,
   "branch_count": 1,
   "product_count": 31,
-  "device_count": 1,
   "sales_30d": 3,
   "revenue_30d": "468.00",
   "capability_overrides": {
@@ -8480,7 +8397,6 @@
   ],
   "limits": {
    "staff": -1,
-   "devices": -1,
    "branches": -1,
    "products": -1,
    "sales_per_month": -1
@@ -8489,7 +8405,6 @@
    "products": 31,
    "staff": 1,
    "branches": 1,
-   "devices": 1,
    "sales_per_month": 3
   }
  },

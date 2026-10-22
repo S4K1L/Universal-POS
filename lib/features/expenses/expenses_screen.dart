@@ -14,6 +14,7 @@ import '../../data/repos/sales_repo.dart';
 import '../../data/session.dart';
 
 final _expensesProvider = StreamProvider.autoDispose<List<LExpense>>((ref) {
+  ref.cacheForSession();
   final db = ref.watch(dbProvider);
   return (db.select(db.lExpenses)
         ..orderBy([(e) => OrderingTerm.desc(e.spentAt)])
@@ -35,8 +36,10 @@ class ExpensesScreen extends ConsumerWidget {
     final rows = ref.watch(_expensesProvider);
     return PageBody(
       maxWidth: 820,
-      child: rows.when(
-        loading: () => const SkeletonList(),
+      child: FadeSwitcher(child: rows.when(
+        skipLoadingOnReload: true,
+        skipLoadingOnRefresh: true,
+        loading: () => const Deferred(child: SkeletonList()),
         error: (e, _) => ErrorView(error: e),
         data: (list) {
           final now = DateTime.now();
@@ -81,7 +84,7 @@ class ExpensesScreen extends ConsumerWidget {
             ),
           ]);
         },
-      ),
+      )),
     );
   }
 }

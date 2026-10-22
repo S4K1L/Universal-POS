@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:universal_pos/data/repos/sales_repo.dart';
 import 'package:universal_pos/data/session.dart';
 import 'package:universal_pos/data/sync/sync_engine.dart';
 import 'package:universal_pos/features/pos/pos_screen.dart';
@@ -70,7 +71,9 @@ void main() {
       final outbox = await drive(tester, rig.db.select(rig.db.outbox).get());
       expect(outbox.where((o) => o.type == 'sale.create' && o.status == 'pending'), hasLength(1));
       final payload = jsonDecode(outbox.first.payload) as Map<String, dynamic>;
-      expect(payload['invoice_no'], 'INV-D01-000001');
+      final code = await drive(tester, tillCodeOf(rig.db));
+      expect(payload['invoice_no'], matches(r'^INV-[A-Z2-9]{4}-000001$'));
+      expect(payload['invoice_no'], 'INV-$code-000001');
       expect((payload['lines'] as List).first['variant_id'], (plain['variants'] as List).first['id']);
       final sales = await drive(tester, rig.db.select(rig.db.lSales).get());
       expect(sales, hasLength(1));

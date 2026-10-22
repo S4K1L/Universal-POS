@@ -20,6 +20,7 @@ import '../../data/sync/sync_engine.dart';
 import '../pos/receipt.dart';
 
 final _ordersProvider = FutureProvider.autoDispose.family<Map<String, dynamic>, String>((ref, status) async {
+  ref.cacheForSession(revalidate: true);
   ref.watch(syncProvider.select((s) => s.revision));
   return ref.watch(apiProvider).getMap('/orders', query: {'limit': 100, if (status != 'all') 'status': status});
 });

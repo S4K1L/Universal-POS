@@ -44,6 +44,7 @@ void main() {
     }
     final db = AppDatabase(NativeDatabase.memory());
     final container = ProviderContainer(overrides: [
+      cacheWindowProvider.overrideWithValue(Duration.zero), // no keep-alive timers left pending when a test ends
       dbProvider.overrideWithValue(db),
       bootstrapProvider.overrideWithValue(const Bootstrap(serverUrl: api)),
     ]);
@@ -67,18 +68,14 @@ void main() {
       'sample_data': true,
     });
 
-    // ---- sign in (online) and register this till
+    // ---- sign in (online)
     final session = container.read(sessionProvider.notifier);
     await Future<void>.delayed(const Duration(milliseconds: 50));
     await session.login(phone, 'owner12345');
-    var s = container.read(sessionProvider);
-    expect(s.status, AuthStatus.needsDevice);
-    final ctx = s.ctx!;
-    expect(ctx.typeKey, 'local_shop');
-    await session.registerDevice(name: 'Test till ${DateTime.now().millisecondsSinceEpoch}', branchId: ctx.mainBranch!.id);
-    s = container.read(sessionProvider);
+    final s = container.read(sessionProvider);
     expect(s.status, AuthStatus.ready);
-    final code = s.device!.code;
+    expect(s.ctx!.typeKey, 'local_shop');
+    final code = await container.read(salesRepoProvider).tillCode();
 
     // ---- first sync pulls the catalogue
     final sync = container.read(syncProvider.notifier);
