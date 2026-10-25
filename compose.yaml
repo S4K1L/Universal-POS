@@ -1,0 +1,20 @@
+# Web app only — the API (Universal-POS-Backend) is deployed from its own repository.
+# Terminate TLS in front of both; an https page cannot call an http API.
+services:
+  web:
+    build: .
+    image: universal-pos-web
+    restart: unless-stopped
+    ports:
+      - "0.0.0.0:9001:9001"
+    environment:
+      # e.g. https://api.example.com/api/v1 — read from the shell or ./.env. Empty: the page's host on port 8000.
+      API_BASE: ${API_BASE:-}
+    read_only: true
+    tmpfs:
+      - /tmp                # pid file and nginx temp paths
+      - /etc/nginx/conf.d   # config rendered from the template at start
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true

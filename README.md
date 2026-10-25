@@ -44,6 +44,25 @@ flutter test                                       # no server needed
 
 The sign-in page has a server address (default `http://localhost:8000/api/v1`) — change it for a real deployment.
 
+### Docker (production web build)
+
+One image: Flutter compiles the release bundle, unprivileged nginx serves it on port 9001. The API is deployed from its own repository.
+
+```bash
+docker build -t universal-pos-web .
+docker run -d -p 0.0.0.0:9001:9001 -e API_BASE=https://api.example.com/api/v1 universal-pos-web
+```
+
+or `docker compose up -d --build`, which takes `API_BASE` from the shell or `./.env` and runs the container read-only.
+On Coolify, use the Docker Compose build pack with `compose.yaml` and set `API_BASE` under Environment Variables.
+
+- `API_BASE` is read when the container starts and served as the app's `assets/.env`, so the same image fits every environment.
+  Empty means "the page's host, port 8000". It is only the default: a device that saved a server address keeps it.
+- Serve the page over HTTPS and give `API_BASE` an `https://` URL — browsers block an http API from an https page.
+- `GET /healthz` answers `ok` for load balancers; the image has a `HEALTHCHECK`.
+- CanvasKit is bundled (`--no-web-resources-cdn`), so tills on a shop LAN without internet still load the app.
+- `--build-arg FLUTTER_VERSION=…` changes the SDK (default 3.47.8; it must ship Dart ≥ 3.13.2).
+
 ### Demo accounts (development only)
 
 Password `demo12345` for all shops; the platform admin is `01700000000` / `admin12345`.
