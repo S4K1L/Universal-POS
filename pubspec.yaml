@@ -49,6 +49,7 @@ dependencies:
   pdf: ^3.13.1
   flutter_localizations:
     sdk: flutter
+  flutter_dotenv: ^6.0.1
 
 dev_dependencies:
   flutter_test:
@@ -72,6 +73,7 @@ flutter:
 
   assets:
     - assets/brand/
+    - .env
 
   fonts:
     - family: PJS

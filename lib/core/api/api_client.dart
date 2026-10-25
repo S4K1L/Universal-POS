@@ -2,15 +2,19 @@ import 'dart:async';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 /// Where the API lives. The web build talks to the host it was served from (so a till on the shop's LAN works
 /// without configuration); a different server can be chosen in Settings and is remembered.
+/// The default comes from `API_BASE` in `.env`, then a `--dart-define=API_BASE=…`, then a per-platform guess.
 class ServerConfig {
-  static const _fromEnv = String.fromEnvironment('API_BASE');
+  static const _fromDefine = String.fromEnvironment('API_BASE');
 
   static String get fallback {
-    if (_fromEnv.isNotEmpty) return _fromEnv;
+    final fromEnv = dotenv.isInitialized ? dotenv.maybeGet('API_BASE')?.trim() : null;
+    if (fromEnv != null && fromEnv.isNotEmpty) return fromEnv;
+    if (_fromDefine.isNotEmpty) return _fromDefine;
     if (kIsWeb) return 'http://${Uri.base.host.isEmpty ? 'localhost' : Uri.base.host}:8000/api/v1';
     if (defaultTargetPlatform == TargetPlatform.android) return 'http://10.0.2.2:8000/api/v1';
     return 'http://localhost:8000/api/v1';
