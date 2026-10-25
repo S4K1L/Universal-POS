@@ -1,8 +1,9 @@
-# Allow-list: only what `flutter build web` needs. A local .env (dev API address) never enters the image.
+# Allow-list: only what `flutter build web` and the nginx stage need. A local .env (dev API address) never enters the image.
 *
 !lib/
 !web/
 !assets/
+!docker/
 !pubspec.yaml
 !pubspec.lock
 !analysis_options.yaml
