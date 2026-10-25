@@ -6,7 +6,7 @@ services:
     image: universal-pos-web
     restart: unless-stopped
     ports:
-      - "0.0.0.0:9001:9001"   # nginx listens on 9001 inside the container (docker/nginx/default.conf.template)
+      - "0.0.0.0:9001:8000"
     environment:
       # e.g. https://api.example.com/api/v1 — read from the shell or ./.env. Empty: the page's host on port 8000.
       API_BASE: ${API_BASE:-}
