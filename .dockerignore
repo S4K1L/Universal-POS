@@ -3,6 +3,7 @@
 !lib/
 !web/
 !assets/
+!docker/
 !pubspec.yaml
 !pubspec.lock
 !analysis_options.yaml
