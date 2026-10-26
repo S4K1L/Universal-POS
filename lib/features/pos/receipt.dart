@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 import 'dart:ui' as ui;
 
+import 'package:barcode_widget/barcode_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:pdf/pdf.dart';
@@ -201,6 +202,15 @@ class ReceiptView extends StatelessWidget {
         if (data.pointsEarned > 0) Padding(padding: const EdgeInsets.only(top: 6), child: Text('${context.tr('Points earned')}: ${f.digits('${data.pointsEarned}')}', textAlign: TextAlign.center, style: s(12, c: faint))),
         dash(),
         if (data.footer.isNotEmpty) Text(data.footer, textAlign: TextAlign.center, style: s(12.5, w: 600)),
+        // Scanned on the Sales screen to pull this sale up: a QR for phone cameras, Code 128 for laser scanners.
+        if (data.invoiceNo.isNotEmpty) ...[
+          const SizedBox(height: 12),
+          Center(child: BarcodeWidget(barcode: Barcode.qrCode(), data: data.invoiceNo, width: 92, height: 92, color: ink, drawText: false)),
+          const SizedBox(height: 8),
+          BarcodeWidget(barcode: Barcode.code128(), data: data.invoiceNo, height: 40, color: ink, drawText: false),
+          const SizedBox(height: 4),
+          Text(data.invoiceNo, textAlign: TextAlign.center, style: s(10.5, c: faint)),
+        ],
         if (data.syncState == 'pending')
           Padding(
             padding: const EdgeInsets.only(top: 8),

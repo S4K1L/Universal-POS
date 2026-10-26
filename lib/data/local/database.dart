@@ -96,12 +96,14 @@ class LCustomers extends Table {
   Set<Column> get primaryKey => {id};
 }
 
-/// What this branch held at the last pull. What is *available* also subtracts sales still waiting to sync.
+/// What each branch held at the last pull — one row per branch and item, because the server keeps them apart. What is
+/// *available* on this till also subtracts its own sales still waiting to sync.
 class LStock extends Table {
+  TextColumn get branchId => text()();
   TextColumn get variantId => text()();
   IntColumn get onHandMilli => integer()();
   @override
-  Set<Column> get primaryKey => {variantId};
+  Set<Column> get primaryKey => {branchId, variantId};
 }
 
 class LSales extends Table {
@@ -220,10 +222,18 @@ class AppDatabase extends _$AppDatabase {
             ));
 
   @override
-  int get schemaVersion => 1;
+  int get schemaVersion => 2;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
+        onUpgrade: (m, from, to) async {
+          if (from < 2) {
+            // Stock is now kept per branch. It is downloaded data, so drop it and fetch everything again.
+            await m.deleteTable('l_stock');
+            await m.createTable(lStock);
+            await (delete(kv)..where((t) => t.key.isIn(['sync_cursor', 'bootstrapped']))).go();
+          }
+        },
         beforeOpen: (details) async {
           await customStatement('PRAGMA foreign_keys = OFF');
           await customStatement('CREATE INDEX IF NOT EXISTS ix_products_search ON l_products(search)');
@@ -243,6 +253,22 @@ class AppDatabase extends _$AppDatabase {
   Future<void> kvSet(String key, String value) => into(kv).insertOnConflictUpdate(KvData(key: key, value: value));
 
   Future<void> kvDelete(String key) => (delete(kv)..where((t) => t.key.equals(key))).go();
+
+  /// Throw away the downloaded catalogue and its sync position so the next sync fetches it afresh. Sales, the outbox
+  /// and everything this till made are left alone.
+  Future<void> resetCatalogue() async {
+    await transaction(() async {
+      await delete(lCategories).go();
+      await delete(lTaxClasses).go();
+      await delete(lProducts).go();
+      await delete(lVariants).go();
+      await delete(lBarcodes).go();
+      await delete(lCustomers).go();
+      await delete(lStock).go();
+      await kvDelete('sync_cursor');
+      await kvDelete('bootstrapped');
+    });
+  }
 
   /// Forget a business's data — used when a different business signs in on this device.
   Future<void> wipeBusinessData() async {

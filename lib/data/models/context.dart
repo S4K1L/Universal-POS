@@ -26,6 +26,7 @@ class TenantContext {
   String get businessName => _tenant['name'] as String;
   String get businessAddress => (_tenant['address'] as String?) ?? '';
   String get businessPhone => (_tenant['phone'] as String?) ?? '';
+  String get businessCity => (_tenant['city'] as String?) ?? '';
 
   String get typeKey => _bt['key'] as String;
   String get typeLabel => _bt['label'] as String;

@@ -126,8 +126,22 @@ class SessionController extends Notifier<SessionState> {
       return;
     }
     final ctx = TenantContext.fromJson(ctxJson!);
+    if (await _catalogueScopeChanged(ctx)) await _db.resetCatalogue();
     state = SessionState(status: AuthStatus.ready, ctx: ctx, user: user);
     ref.read(syncProvider.notifier).start();
+  }
+
+  // ------------------------------------------------------------------------------------ catalogue scope
+
+  /// Cost prices only travel to people allowed to see them, so a catalogue downloaded by a cashier has none. If the
+  /// right to see them differs from what this device last downloaded with — another person signed in, or the owner
+  /// granted it — the catalogue has to be downloaded again, or every cost (and so the stock value) reads zero.
+  Future<bool> _catalogueScopeChanged(TenantContext ctx) async {
+    final key = ctx.can('view_cost') ? 'cost' : 'plain';
+    final previous = await _db.kvGet('catalogue_scope');
+    await _db.kvSet('catalogue_scope', key);
+    // Nothing recorded yet means an older install: a "plain" catalogue is still right, a "cost" one may be missing costs.
+    return previous != key && !(previous == null && key == 'plain');
   }
 
   // ------------------------------------------------------------------------------------ context
@@ -141,6 +155,8 @@ class SessionController extends Notifier<SessionState> {
       await _db.kvSet('ctx', jsonEncode(j));
       await _db.kvSet('user', jsonEncode(j['user']));
       state = state.copyWith(ctx: ctx, user: (j['user'] as Map).cast<String, dynamic>());
+      // Run after the sync cycle that may be calling us has finished, never inside it.
+      if (await _catalogueScopeChanged(ctx)) unawaited(Future<void>.microtask(() => ref.read(syncProvider.notifier).fullResync()));
     } on ApiError catch (e) {
       if (e.unauthorized) await expire();
     }

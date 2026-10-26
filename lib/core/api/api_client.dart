@@ -214,7 +214,9 @@ class ApiClient {
   Future<bool> ping() async {
     if (forceOffline) return false;
     try {
-      final uri = Uri.parse(baseUrl).replace(path: '/health');
+      // /health sits beside the versioned API, wherever that is mounted (a reverse proxy may serve it under a prefix).
+      final root = baseUrl.replaceFirst(RegExp(r'/api/v\d+/*$'), '').replaceFirst(RegExp(r'/+$'), '');
+      final uri = Uri.parse('$root/health');
       final r = await _bare.getUri(uri, options: Options(receiveTimeout: const Duration(seconds: 4), sendTimeout: kIsWeb ? null : const Duration(seconds: 4)));
       return r.statusCode == 200;
     } catch (_) {

@@ -45,7 +45,7 @@ String moduleLabel(TenantContext ctx, String id, String fallback) {
     case 'products':
       return '${ctx.term('product', 'Product')}s';
     case 'pos':
-      return 'Sell';
+      return 'POS';
   }
   return fallback;
 }

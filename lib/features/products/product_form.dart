@@ -6,6 +6,7 @@ import '../../core/api/api_client.dart';
 import '../../core/i18n/lang.dart';
 import '../../core/money/money.dart';
 import '../../core/theme/tokens.dart';
+import '../../core/ui/barcode_scanner.dart';
 import '../../core/ui/forms.dart';
 import '../../core/ui/kit.dart';
 import '../../core/ui/panel.dart';
@@ -347,7 +348,24 @@ class _ProductFormState extends ConsumerState<ProductForm> {
                     SizedBox(width: 150, child: MoneyField(controller: v.price, label: context.tr('Selling price'), symbol: ctx.currencySymbol)),
                     SizedBox(width: 150, child: MoneyField(controller: v.mrp, label: context.tr('MRP (optional)'), symbol: ctx.currencySymbol)),
                     if (canCost) SizedBox(width: 150, child: MoneyField(controller: v.cost, label: context.tr('Cost price'), symbol: ctx.currencySymbol)),
-                    SizedBox(width: 190, child: TextField(controller: v.barcode, decoration: InputDecoration(labelText: context.tr('Barcode'), prefixIcon: const Icon(Icons.qr_code_rounded, size: 19)))),
+                    SizedBox(
+                        width: cameraScanSupported ? 230 : 190,
+                        child: TextField(
+                            controller: v.barcode,
+                            decoration: InputDecoration(
+                              labelText: context.tr('Barcode'),
+                              prefixIcon: const Icon(Icons.qr_code_rounded, size: 19),
+                              suffixIcon: cameraScanSupported
+                                  ? IconButton(
+                                      tooltip: context.tr('Scan with camera'),
+                                      icon: const Icon(Icons.qr_code_scanner_rounded, size: 21),
+                                      onPressed: () async {
+                                        final code = await scanBarcode(context);
+                                        if (code != null) setState(() => v.barcode.text = code);
+                                      },
+                                    )
+                                  : null,
+                            ))),
                     SizedBox(width: 150, child: TextField(controller: v.sku, decoration: InputDecoration(labelText: context.tr('SKU'), hintText: context.tr('auto')))),
                     if (ctx.cap('scale_barcode') && _fraction) SizedBox(width: 150, child: TextField(controller: v.plu, keyboardType: TextInputType.number, decoration: InputDecoration(labelText: context.tr('Scale code (PLU)')))),
                   ]),

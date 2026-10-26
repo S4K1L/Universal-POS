@@ -8,6 +8,7 @@ import '../../core/i18n/lang.dart';
 import '../../core/money/money.dart';
 import '../../core/theme/tokens.dart';
 import '../../core/ui/async_body.dart';
+import '../../core/ui/barcode_scanner.dart';
 import '../../core/ui/forms.dart';
 import '../../core/ui/kit.dart';
 import '../../core/ui/panel.dart';
@@ -60,6 +61,36 @@ class _SalesScreenState extends ConsumerState<SalesScreen> {
   }
 
   String _d(DateTime d) => '${d.year}-${d.month.toString().padLeft(2, '0')}-${d.day.toString().padLeft(2, '0')}';
+
+  /// A receipt's code (camera, or a USB scanner typing into the box): look the invoice up across all dates and open it.
+  Future<void> _findInvoice(String raw) async {
+    final code = raw.trim();
+    if (code.isEmpty) return;
+    _debounce?.cancel();
+    _q.text = code;
+    setState(() {
+      _range = 'all';
+      _owing = false;
+    });
+    await _load(reset: true);
+    if (!mounted) return;
+    bool same(String invoiceNo) => invoiceNo.toLowerCase() == code.toLowerCase();
+    final local = ref.read(_localSalesProvider).value ?? const <LSale>[];
+    final server = _server.where((r) => same(r.invoiceNo)).firstOrNull;
+    final mine = local.where((s) => same(s.invoiceNo)).firstOrNull;
+    if (server != null) {
+      await showSaleDetail(context, ref, server.id, server.server);
+    } else if (mine != null) {
+      await showSaleDetail(context, ref, mine.id, null);
+    } else {
+      toast(context, '${context.tr('No sale matches')} $code', error: true);
+    }
+  }
+
+  Future<void> _scanReceipt() async {
+    final code = await scanBarcode(context, title: context.tr('Scan a receipt'));
+    if (code != null && mounted) await _findInvoice(code);
+  }
 
   Future<void> _load({bool reset = false}) async {
     if (reset) {
@@ -138,7 +169,7 @@ class _SalesScreenState extends ConsumerState<SalesScreen> {
       maxWidth: 1000,
       child: Column(children: [
         Row(children: [
-          Expanded(child: AppSearchField(controller: _q, hint: context.tr('Search invoice or customer'), onChanged: (_) {
+          Expanded(child: AppSearchField(controller: _q, hint: context.tr('Search invoice or customer'), onScan: _scanReceipt, onSubmitted: _findInvoice, onChanged: (_) {
             _debounce?.cancel();
             _debounce = Timer(const Duration(milliseconds: 350), () => _load(reset: true));
           })),

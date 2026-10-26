@@ -7,6 +7,7 @@ import '../theme/theme.dart';
 import '../theme/tokens.dart';
 import '../i18n/lang.dart';
 import '../util/responsive.dart';
+import 'barcode_scanner.dart';
 import 'motion.dart';
 
 export 'motion.dart';
@@ -611,13 +612,27 @@ class SegTabs<T> extends StatelessWidget {
 }
 
 class AppSearchField extends StatelessWidget {
-  const AppSearchField({super.key, required this.controller, required this.hint, this.onChanged, this.onSubmitted, this.focusNode, this.autofocus = false, this.trailing});
+  const AppSearchField({super.key, required this.controller, required this.hint, this.onChanged, this.onSubmitted, this.focusNode, this.autofocus = false, this.trailing, this.scannable = false, this.onScan});
   final TextEditingController controller;
   final String hint;
   final ValueChanged<String>? onChanged, onSubmitted;
   final FocusNode? focusNode;
   final bool autofocus;
   final Widget? trailing;
+
+  /// Shows a camera button that reads one barcode into the box and searches for it.
+  final bool scannable;
+
+  /// Replaces the default camera behaviour (the till keeps the camera open and rings items up as they are read).
+  final VoidCallback? onScan;
+
+  Future<void> _scanIntoBox(BuildContext context) async {
+    final code = await scanBarcode(context);
+    if (code == null) return;
+    controller.text = code;
+    onChanged?.call(code);
+    onSubmitted?.call(code);
+  }
 
   @override
   Widget build(BuildContext context) => TextField(
@@ -633,15 +648,22 @@ class AppSearchField extends StatelessWidget {
           suffixIcon: trailing ??
               ValueListenableBuilder<TextEditingValue>(
                 valueListenable: controller,
-                builder: (_, v, __) => v.text.isEmpty
-                    ? const SizedBox.shrink()
-                    : IconButton(
-                        icon: const Icon(Icons.close_rounded, size: 19),
-                        onPressed: () {
-                          controller.clear();
-                          onChanged?.call('');
-                        },
-                      ),
+                builder: (_, v, __) => Row(mainAxisSize: MainAxisSize.min, children: [
+                  if (v.text.isNotEmpty)
+                    IconButton(
+                      icon: const Icon(Icons.close_rounded, size: 19),
+                      onPressed: () {
+                        controller.clear();
+                        onChanged?.call('');
+                      },
+                    ),
+                  if ((scannable || onScan != null) && cameraScanSupported)
+                    IconButton(
+                      tooltip: context.tr('Scan with camera'),
+                      icon: const Icon(Icons.qr_code_scanner_rounded, size: 22),
+                      onPressed: onScan ?? () => _scanIntoBox(context),
+                    ),
+                ]),
               ),
         ),
       );

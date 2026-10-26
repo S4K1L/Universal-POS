@@ -17,7 +17,8 @@ import '../../data/sync/sync_engine.dart';
 
 final _stockProvider = StreamProvider.autoDispose<List<ProductView>>((ref) {
   ref.cacheForSession(revalidate: true);
-  return ref.watch(catalogueRepoProvider).watchProducts(limit: 600, stockedOnly: true);
+  // No practical cap: the totals above the list have to cover every item, not the first few hundred.
+  return ref.watch(catalogueRepoProvider).watchProducts(limit: 100000, stockedOnly: true);
 });
 
 final _expiringProvider = FutureProvider.autoDispose<List<Map<String, dynamic>>>((ref) async {
@@ -89,7 +90,7 @@ class _StockScreenState extends ConsumerState<StockScreen> {
             if (_tab == 'expiry')
               Expanded(child: _ExpiryList(ctx: ctx))
             else ...[
-              AppSearchField(controller: _q, hint: context.tr('Search stock'), onChanged: (_) => setState(() {})),
+              AppSearchField(controller: _q, scannable: true, hint: context.tr('Search stock'), onChanged: (_) => setState(() {})),
               const SizedBox(height: 12),
               Align(alignment: Alignment.centerLeft, child: IntrinsicWidth(child: SegTabs<String>(items: [('all', context.tr('All')), ('low', context.tr('Low')), ('out', context.tr('Out'))], value: _filter, onChanged: (v) => setState(() => _filter = v)))),
               const SizedBox(height: 12),

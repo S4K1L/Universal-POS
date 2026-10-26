@@ -21,7 +21,7 @@ Map<String, Handler> _routes(Fixtures fx) {
           'has_more': false,
           'changes': [
             for (final (i, p) in products.indexed) {'seq': i + 1, 'entity': 'product', 'id': p['id'], 'op': 'upsert', 'data': p},
-            for (final (i, p) in products.indexed) {'seq': 100 + i, 'entity': 'stock', 'id': 'stk-$i', 'op': 'upsert', 'data': {'id': 'stk-$i', 'variant_id': (p['variants'] as List).first['id'], 'branch_id': 'branch-1', 'on_hand': '40.000'}},
+            for (final (i, p) in products.indexed) {'seq': 100 + i, 'entity': 'stock', 'id': 'stk-$i', 'op': 'upsert', 'data': {'id': 'stk-$i', 'variant_id': (p['variants'] as List).first['id'], 'branch_id': fx.context('supershop').mainBranch!.id, 'on_hand': '40.000'}},
           ],
         },
     'GET /tenants/me/context': (_) => fx['context_supershop'],

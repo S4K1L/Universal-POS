@@ -3322,6 +3322,17 @@ class $LStockTable extends LStock with TableInfo<$LStockTable, LStockData> {
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
   $LStockTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _branchIdMeta = const VerificationMeta(
+    'branchId',
+  );
+  @override
+  late final GeneratedColumn<String> branchId = GeneratedColumn<String>(
+    'branch_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
   static const VerificationMeta _variantIdMeta = const VerificationMeta(
     'variantId',
   );
@@ -3345,7 +3356,7 @@ class $LStockTable extends LStock with TableInfo<$LStockTable, LStockData> {
     requiredDuringInsert: true,
   );
   @override
-  List<GeneratedColumn> get $columns => [variantId, onHandMilli];
+  List<GeneratedColumn> get $columns => [branchId, variantId, onHandMilli];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -3358,6 +3369,14 @@ class $LStockTable extends LStock with TableInfo<$LStockTable, LStockData> {
   }) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
+    if (data.containsKey('branch_id')) {
+      context.handle(
+        _branchIdMeta,
+        branchId.isAcceptableOrUnknown(data['branch_id']!, _branchIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_branchIdMeta);
+    }
     if (data.containsKey('variant_id')) {
       context.handle(
         _variantIdMeta,
@@ -3381,11 +3400,15 @@ class $LStockTable extends LStock with TableInfo<$LStockTable, LStockData> {
   }
 
   @override
-  Set<GeneratedColumn> get $primaryKey => {variantId};
+  Set<GeneratedColumn> get $primaryKey => {branchId, variantId};
   @override
   LStockData map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return LStockData(
+      branchId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}branch_id'],
+      )!,
       variantId: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}variant_id'],
@@ -3404,12 +3427,18 @@ class $LStockTable extends LStock with TableInfo<$LStockTable, LStockData> {
 }
 
 class LStockData extends DataClass implements Insertable<LStockData> {
+  final String branchId;
   final String variantId;
   final int onHandMilli;
-  const LStockData({required this.variantId, required this.onHandMilli});
+  const LStockData({
+    required this.branchId,
+    required this.variantId,
+    required this.onHandMilli,
+  });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
+    map['branch_id'] = Variable<String>(branchId);
     map['variant_id'] = Variable<String>(variantId);
     map['on_hand_milli'] = Variable<int>(onHandMilli);
     return map;
@@ -3417,6 +3446,7 @@ class LStockData extends DataClass implements Insertable<LStockData> {
 
   LStockCompanion toCompanion(bool nullToAbsent) {
     return LStockCompanion(
+      branchId: Value(branchId),
       variantId: Value(variantId),
       onHandMilli: Value(onHandMilli),
     );
@@ -3428,6 +3458,7 @@ class LStockData extends DataClass implements Insertable<LStockData> {
   }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return LStockData(
+      branchId: serializer.fromJson<String>(json['branchId']),
       variantId: serializer.fromJson<String>(json['variantId']),
       onHandMilli: serializer.fromJson<int>(json['onHandMilli']),
     );
@@ -3436,17 +3467,24 @@ class LStockData extends DataClass implements Insertable<LStockData> {
   Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
+      'branchId': serializer.toJson<String>(branchId),
       'variantId': serializer.toJson<String>(variantId),
       'onHandMilli': serializer.toJson<int>(onHandMilli),
     };
   }
 
-  LStockData copyWith({String? variantId, int? onHandMilli}) => LStockData(
+  LStockData copyWith({
+    String? branchId,
+    String? variantId,
+    int? onHandMilli,
+  }) => LStockData(
+    branchId: branchId ?? this.branchId,
     variantId: variantId ?? this.variantId,
     onHandMilli: onHandMilli ?? this.onHandMilli,
   );
   LStockData copyWithCompanion(LStockCompanion data) {
     return LStockData(
+      branchId: data.branchId.present ? data.branchId.value : this.branchId,
       variantId: data.variantId.present ? data.variantId.value : this.variantId,
       onHandMilli: data.onHandMilli.present
           ? data.onHandMilli.value
@@ -3457,6 +3495,7 @@ class LStockData extends DataClass implements Insertable<LStockData> {
   @override
   String toString() {
     return (StringBuffer('LStockData(')
+          ..write('branchId: $branchId, ')
           ..write('variantId: $variantId, ')
           ..write('onHandMilli: $onHandMilli')
           ..write(')'))
@@ -3464,36 +3503,43 @@ class LStockData extends DataClass implements Insertable<LStockData> {
   }
 
   @override
-  int get hashCode => Object.hash(variantId, onHandMilli);
+  int get hashCode => Object.hash(branchId, variantId, onHandMilli);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is LStockData &&
+          other.branchId == this.branchId &&
           other.variantId == this.variantId &&
           other.onHandMilli == this.onHandMilli);
 }
 
 class LStockCompanion extends UpdateCompanion<LStockData> {
+  final Value<String> branchId;
   final Value<String> variantId;
   final Value<int> onHandMilli;
   final Value<int> rowid;
   const LStockCompanion({
+    this.branchId = const Value.absent(),
     this.variantId = const Value.absent(),
     this.onHandMilli = const Value.absent(),
     this.rowid = const Value.absent(),
   });
   LStockCompanion.insert({
+    required String branchId,
     required String variantId,
     required int onHandMilli,
     this.rowid = const Value.absent(),
-  }) : variantId = Value(variantId),
+  }) : branchId = Value(branchId),
+       variantId = Value(variantId),
        onHandMilli = Value(onHandMilli);
   static Insertable<LStockData> custom({
+    Expression<String>? branchId,
     Expression<String>? variantId,
     Expression<int>? onHandMilli,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
+      if (branchId != null) 'branch_id': branchId,
       if (variantId != null) 'variant_id': variantId,
       if (onHandMilli != null) 'on_hand_milli': onHandMilli,
       if (rowid != null) 'rowid': rowid,
@@ -3501,11 +3547,13 @@ class LStockCompanion extends UpdateCompanion<LStockData> {
   }
 
   LStockCompanion copyWith({
+    Value<String>? branchId,
     Value<String>? variantId,
     Value<int>? onHandMilli,
     Value<int>? rowid,
   }) {
     return LStockCompanion(
+      branchId: branchId ?? this.branchId,
       variantId: variantId ?? this.variantId,
       onHandMilli: onHandMilli ?? this.onHandMilli,
       rowid: rowid ?? this.rowid,
@@ -3515,6 +3563,9 @@ class LStockCompanion extends UpdateCompanion<LStockData> {
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
+    if (branchId.present) {
+      map['branch_id'] = Variable<String>(branchId.value);
+    }
     if (variantId.present) {
       map['variant_id'] = Variable<String>(variantId.value);
     }
@@ -3530,6 +3581,7 @@ class LStockCompanion extends UpdateCompanion<LStockData> {
   @override
   String toString() {
     return (StringBuffer('LStockCompanion(')
+          ..write('branchId: $branchId, ')
           ..write('variantId: $variantId, ')
           ..write('onHandMilli: $onHandMilli, ')
           ..write('rowid: $rowid')
@@ -9582,11 +9634,13 @@ typedef $$LCustomersTableProcessedTableManager =
       PrefetchHooks Function()
     >;
 typedef $$LStockTableCreateCompanionBuilder = LStockCompanion Function({
+  required String branchId,
   required String variantId,
   required int onHandMilli,
   Value<int> rowid,
 });
 typedef $$LStockTableUpdateCompanionBuilder = LStockCompanion Function({
+  Value<String> branchId,
   Value<String> variantId,
   Value<int> onHandMilli,
   Value<int> rowid,
@@ -9601,6 +9655,11 @@ class $$LStockTableFilterComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
+  ColumnFilters<String> get branchId => $composableBuilder(
+    column: $table.branchId,
+    builder: (column) => ColumnFilters(column),
+  );
+
   ColumnFilters<String> get variantId => $composableBuilder(
     column: $table.variantId,
     builder: (column) => ColumnFilters(column),
@@ -9621,6 +9680,11 @@ class $$LStockTableOrderingComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
+  ColumnOrderings<String> get branchId => $composableBuilder(
+    column: $table.branchId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<String> get variantId => $composableBuilder(
     column: $table.variantId,
     builder: (column) => ColumnOrderings(column),
@@ -9641,6 +9705,9 @@ class $$LStockTableAnnotationComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
+  GeneratedColumn<String> get branchId =>
+      $composableBuilder(column: $table.branchId, builder: (column) => column);
+
   GeneratedColumn<String> get variantId =>
       $composableBuilder(column: $table.variantId, builder: (column) => column);
 
@@ -9678,20 +9745,24 @@ class $$LStockTableTableManager
               $$LStockTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback:
               ({
+                Value<String> branchId = const Value.absent(),
                 Value<String> variantId = const Value.absent(),
                 Value<int> onHandMilli = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => LStockCompanion(
+                branchId: branchId,
                 variantId: variantId,
                 onHandMilli: onHandMilli,
                 rowid: rowid,
               ),
           createCompanionCallback:
               ({
+                required String branchId,
                 required String variantId,
                 required int onHandMilli,
                 Value<int> rowid = const Value.absent(),
               }) => LStockCompanion.insert(
+                branchId: branchId,
                 variantId: variantId,
                 onHandMilli: onHandMilli,
                 rowid: rowid,
