@@ -8,6 +8,7 @@ import 'package:go_router/go_router.dart';
 import '../../core/i18n/lang.dart';
 import '../../core/theme/theme.dart';
 import '../../core/theme/tokens.dart';
+import '../../core/ui/barcode_scanner.dart';
 import '../../core/ui/kit.dart';
 import '../../core/util/responsive.dart';
 import '../../data/local/database.dart';
@@ -87,22 +88,30 @@ class _PosScreenState extends ConsumerState<PosScreen> {
     return false;
   }
 
-  Future<void> _scan(String code) async {
+  /// Look [code] up and put the item in the basket. Returns what to tell the cashier, or null if nothing happened.
+  Future<ScanFeedback?> _addByCode(String code) async {
     final ctx = ref.read(ctxProvider);
     final repo = ref.read(catalogueRepoProvider);
     final hit = await repo.lookup(code, scalePrefix: (ctx.scale['prefix'] as String?) ?? '20', scaleMode: (ctx.scale['mode'] as String?) ?? 'weight', scaleEnabled: ctx.cap('scale_barcode'));
-    if (!mounted) return;
-    if (hit == null) {
-      toast(context, '${context.tr('No item matches')} $code', error: true);
-      return;
-    }
+    if (!mounted) return null;
+    if (hit == null) return ScanFeedback('${context.tr('No item matches')} $code', ok: false);
     final pv = await repo.byId(hit.productId);
     final v = pv?.variants.where((x) => x.id == hit.variantId).firstOrNull;
-    if (pv == null || v == null) return;
+    if (pv == null || v == null) return null;
     final r = await ref.read(cartProvider.notifier).add(pv, v, qtyMilli: hit.qtyMilli, unit: hit.unit);
-    if (mounted && r != null) toast(context, '${pv.product.name}: ${context.tr(r.message)}', error: true);
+    if (!mounted) return null;
+    if (r != null) return ScanFeedback('${pv.product.name}: ${context.tr(r.message)}', ok: false);
     HapticFeedback.mediumImpact();
+    return ScanFeedback(pv.product.name);
   }
+
+  Future<void> _scan(String code) async {
+    final fb = await _addByCode(code);
+    if (mounted && fb != null && !fb.ok) toast(context, fb.text, error: true);
+  }
+
+  /// The camera button: stays open so a whole basket can be scanned without reopening it.
+  Future<void> _scanWithCamera() => scanBarcodes(context, onCode: _addByCode, title: context.tr('Scan items'));
 
   void _submit(String v) async {
     final ctx = ref.read(ctxProvider);
@@ -173,6 +182,7 @@ class _PosScreenState extends ConsumerState<PosScreen> {
       },
       onCat: (c) => setState(() => _cat = c),
       onSubmit: _submit,
+      onScan: _scanWithCamera,
       onTap: _tap,
       loading: !sync.bootstrapped,
     );
@@ -265,12 +275,13 @@ class _Locked extends ConsumerWidget {
 // ------------------------------------------------------------------------------------------ catalogue
 
 class _Catalogue extends ConsumerWidget {
-  const _Catalogue({required this.search, required this.focus, required this.q, required this.cat, required this.onQuery, required this.onCat, required this.onSubmit, required this.onTap, required this.loading});
+  const _Catalogue({required this.search, required this.focus, required this.q, required this.cat, required this.onQuery, required this.onCat, required this.onSubmit, required this.onScan, required this.onTap, required this.loading});
   final TextEditingController search;
   final FocusNode focus;
   final String q;
   final String? cat;
   final ValueChanged<String> onQuery, onSubmit;
+  final VoidCallback onScan;
   final ValueChanged<String?> onCat;
   final void Function(ProductView) onTap;
   final bool loading;
@@ -288,7 +299,7 @@ class _Catalogue extends ConsumerWidget {
     }
     return Column(children: [
       Row(children: [
-        Expanded(child: AppSearchField(controller: search, focusNode: focus, hint: context.tr('Search items or scan a barcode'), onChanged: onQuery, onSubmitted: onSubmit, autofocus: context.width > 700)),
+        Expanded(child: AppSearchField(controller: search, focusNode: focus, hint: context.tr('Search items or scan a barcode'), onChanged: onQuery, onSubmitted: onSubmit, onScan: onScan, autofocus: context.width > 700)),
         const SizedBox(width: 10),
         Badge(
           isLabelVisible: held.isNotEmpty,

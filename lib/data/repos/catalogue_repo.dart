@@ -7,6 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../core/money/money.dart';
 import '../local/database.dart';
 import '../providers.dart';
+import '../session.dart';
 
 class AltUnit {
   const AltUnit(this.unit, this.factorMilli);
@@ -50,8 +51,19 @@ class LookupHit {
 }
 
 class CatalogueRepo {
-  CatalogueRepo(this.db);
+  CatalogueRepo(this.db, {this.branchId});
   final AppDatabase db;
+
+  /// The branch this till sells for. Stock is counted for that branch only; null (no branch) counts them all.
+  final String? Function()? branchId;
+  String? get _branch => branchId?.call();
+
+  /// SQLite caps how many values one `IN (…)` may carry, and a big catalogue exceeds it.
+  static Iterable<List<T>> _chunks<T>(List<T> all, [int size = 400]) sync* {
+    for (var i = 0; i < all.length; i += size) {
+      yield all.sublist(i, i + size > all.length ? all.length : i + size);
+    }
+  }
 
   /// A stream that ticks whenever anything the catalogue view depends on changes.
   Stream<void> get _changes => db
@@ -101,10 +113,20 @@ class CatalogueRepo {
   Future<List<ProductView>> _hydrate(List<LProduct> rows) async {
     if (rows.isEmpty) return const [];
     final ids = rows.map((r) => r.id).toList();
-    final variants = await (db.select(db.lVariants)
-          ..where((v) => v.productId.isIn(ids) & v.active.equals(true))
-          ..orderBy([(v) => OrderingTerm.asc(v.label)]))
-        .get();
+    final variants = <LVariant>[];
+    for (final chunk in _chunks(ids)) {
+      variants.addAll(await _variantsOf(chunk));
+    }
+    variants.sort((a, b) => a.label.compareTo(b.label));
+    return _viewsOf(rows, variants);
+  }
+
+  Future<List<LVariant>> _variantsOf(List<String> ids) => (db.select(db.lVariants)
+        ..where((v) => v.productId.isIn(ids) & v.active.equals(true))
+        ..orderBy([(v) => OrderingTerm.asc(v.label)]))
+      .get();
+
+  Future<List<ProductView>> _viewsOf(List<LProduct> rows, List<LVariant> variants) async {
     final byProduct = <String, List<LVariant>>{};
     for (final v in variants) {
       byProduct.putIfAbsent(v.productId, () => []).add(v);
@@ -113,30 +135,43 @@ class CatalogueRepo {
     return [for (final r in rows) if (byProduct[r.id]?.isNotEmpty ?? false) ProductView(r, byProduct[r.id]!, avail)];
   }
 
-  /// Server stock at the last pull, adjusted for everything this till has done since that hasn't synced yet.
+  /// This branch's stock at the last pull, adjusted for everything this till has done since that hasn't synced yet.
   Future<Map<String, int>> availableFor(Iterable<String> variantIds) async {
     final ids = variantIds.toList();
     if (ids.isEmpty) return {};
-    final stock = {for (final s in await (db.select(db.lStock)..where((s) => s.variantId.isIn(ids))).get()) s.variantId: s.onHandMilli};
+    final branch = _branch;
+    final stock = <String, int>{};
+    for (final chunk in _chunks(ids)) {
+      final query = db.select(db.lStock)..where((s) => s.variantId.isIn(chunk));
+      if (branch != null) query.where((s) => s.branchId.equals(branch));
+      for (final row in await query.get()) {
+        stock[row.variantId] = (stock[row.variantId] ?? 0) + row.onHandMilli;
+      }
+    }
     final pending = await pendingStockDeltas();
     return {for (final id in ids) id: (stock[id] ?? 0) + (pending[id] ?? 0)};
   }
 
   Future<Map<String, int>> pendingStockDeltas() async {
+    final branch = _branch;
     final rows = await (db.select(db.outbox)..where((o) => o.status.isNotValue('done'))).get();
     final out = <String, int>{};
     void add(String variant, int milli) => out[variant] = (out[variant] ?? 0) + milli;
+    bool mine(Object? eventBranch) => branch == null || eventBranch == null || eventBranch == branch; // another branch's stock is not ours to adjust
     for (final r in rows) {
       final p = jsonDecode(r.payload) as Map<String, dynamic>;
       switch (r.type) {
         case 'sale.create':
+          if (!mine(p['branch_id'])) break;
           for (final l in (p['lines'] as List).cast<Map<String, dynamic>>()) {
             add(l['variant_id'] as String, -(parseMilli(l['qty']) * parseMilli(l['unit_factor'] ?? '1') ~/ 1000));
           }
         case 'stock.adjust':
-          if (p['delta'] != null) add(p['variant_id'] as String, parseMilli(p['delta']));
+          if (p['delta'] != null && mine(p['branch_id'])) add(p['variant_id'] as String, parseMilli(p['delta']));
         case 'sale.return':
           if (p['restock'] == false) break;
+          final sale = await (db.select(db.lSales)..where((x) => x.id.equals(p['sale_id'] as String))).getSingleOrNull();
+          if (!mine(sale?.branchId)) break;
           for (final l in (p['lines'] as List).cast<Map<String, dynamic>>()) {
             final line = await (db.select(db.lSaleLines)..where((x) => x.id.equals(l['sale_line_id'] as String))).getSingleOrNull();
             if (line != null) add(line.variantId, parseMilli(l['qty']) * line.unitFactorMilli ~/ 1000);
@@ -190,4 +225,4 @@ StreamTransformer<T, T> _debounce<T>(Duration d) {
   });
 }
 
-final catalogueRepoProvider = Provider<CatalogueRepo>((ref) => CatalogueRepo(ref.watch(dbProvider)));
+final catalogueRepoProvider = Provider<CatalogueRepo>((ref) => CatalogueRepo(ref.watch(dbProvider), branchId: () => ref.read(sessionProvider).branchId));

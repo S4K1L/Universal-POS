@@ -87,7 +87,7 @@ class _ProductsScreenState extends ConsumerState<ProductsScreen> {
       maxWidth: 1100,
       child: Column(children: [
         Row(children: [
-          Expanded(child: AppSearchField(controller: _q, hint: context.trf('Search {word}, SKU or barcode', {'word': context.plural(word.toLowerCase())}), onChanged: (_) {
+          Expanded(child: AppSearchField(controller: _q, scannable: true, hint: context.trf('Search {word}, SKU or barcode', {'word': context.plural(word.toLowerCase())}), onChanged: (_) {
             _debounce?.cancel();
             _debounce = Timer(const Duration(milliseconds: 350), () => _load(reset: true));
           })),

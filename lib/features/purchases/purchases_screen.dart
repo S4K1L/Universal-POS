@@ -394,7 +394,7 @@ class _PurchaseFormState extends ConsumerState<_PurchaseForm> {
           Expanded(flex: 2, child: TextField(controller: _invoice, decoration: InputDecoration(labelText: context.tr('Supplier invoice no.')))),
         ]),
         const FormHeading('Items received'),
-        AppSearchField(controller: _search, hint: context.tr('Search an item to add'), onChanged: _find),
+        AppSearchField(controller: _search, scannable: true, hint: context.tr('Search an item to add'), onChanged: _find),
         for (final p in _results)
           for (final v in (p['variants'] as List).cast<Map<String, dynamic>>().where((v) => v['active'] != false))
             Padding(padding: const EdgeInsets.only(top: 6), child: Surface(onTap: () => _add(p, v), padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10), child: Row(children: [Monogram(p['name'] as String, size: 32), const SizedBox(width: 10), Expanded(child: Text((v['label'] as String).isEmpty ? p['name'] as String : '${p['name']} · ${v['label']}', style: tt.titleSmall)), const Icon(Icons.add_circle_rounded, size: 22)]))),

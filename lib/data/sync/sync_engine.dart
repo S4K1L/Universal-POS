@@ -173,13 +173,17 @@ class SyncController extends Notifier<SyncState> {
 
   // ----------------------------------------------------------------------------------------- push
 
+  /// Statuses that say "try again later" rather than "this event is wrong".
+  static bool _transient(ApiError e) => e.offline || e.status >= 500 || e.unauthorized || e.status == 408 || e.status == 425 || e.status == 429;
+
   Future<int> _push() async {
     var count = 0;
+    var batchSize = 50;
     while (true) {
       final rows = await (_db.select(_db.outbox)
             ..where((t) => t.status.isIn(['pending', 'sending']))
             ..orderBy([(t) => OrderingTerm.asc(t.seq)])
-            ..limit(50))
+            ..limit(batchSize))
           .get();
       if (rows.isEmpty) return count;
       count += rows.length;
@@ -204,14 +208,22 @@ class SyncController extends Notifier<SyncState> {
           ],
         });
       } on ApiError catch (e) {
-        if (e.offline || e.status >= 500 || e.unauthorized) {
+        if (_transient(e)) {
           await (_db.update(_db.outbox)..where((t) => t.id.isIn(ids))).write(const OutboxCompanion(status: Value('pending')));
           rethrow;
         }
-        // The whole batch was refused (bad device, malformed…): park it for a human instead of looping forever.
-        await (_db.update(_db.outbox)..where((t) => t.id.isIn(ids))).write(OutboxCompanion(status: const Value('failed'), errorCode: Value(e.code), lastError: Value(e.message)));
+        await (_db.update(_db.outbox)..where((t) => t.id.isIn(ids))).write(const OutboxCompanion(status: Value('pending')));
+        if (rows.length > 1) {
+          // The server refused the batch as a whole, which says nothing about which event is wrong. Send them one at a
+          // time so only the guilty event is parked and the rest still reach the books.
+          batchSize = 1;
+          count -= rows.length;
+          continue;
+        }
+        // A single event the server refuses outright: park it for a human instead of looping forever.
+        await (_db.update(_db.outbox)..where((t) => t.id.equals(rows.single.id))).write(OutboxCompanion(status: const Value('failed'), errorCode: Value(e.code), lastError: Value(e.message)));
         await _markSalesFailed(rows);
-        rethrow;
+        continue;
       }
 
       final results = {for (final r in (res['results'] as List)) (r as Map<String, dynamic>)['id'] as String: r};
@@ -352,7 +364,7 @@ class SyncController extends Notifier<SyncState> {
         }
       case 'stock':
         if (data != null && !isDelete) {
-          await _db.into(_db.lStock).insertOnConflictUpdate(LStockCompanion.insert(variantId: data['variant_id'] as String, onHandMilli: parseMilli(data['on_hand'])));
+          await _db.into(_db.lStock).insertOnConflictUpdate(LStockCompanion.insert(branchId: data['branch_id'] as String, variantId: data['variant_id'] as String, onHandMilli: parseMilli(data['on_hand'])));
         }
       case 'product':
         await _applyProduct(id, isDelete ? null : data);
@@ -418,17 +430,7 @@ class SyncController extends Notifier<SyncState> {
 
   /// Throw away the cursor and pull everything again (the Sync Center's "Resync" button).
   Future<void> fullResync() async {
-    await _db.kvDelete('sync_cursor');
-    await _db.transaction(() async {
-      await _db.delete(_db.lCategories).go();
-      await _db.delete(_db.lTaxClasses).go();
-      await _db.delete(_db.lProducts).go();
-      await _db.delete(_db.lVariants).go();
-      await _db.delete(_db.lBarcodes).go();
-      await _db.delete(_db.lCustomers).go();
-      await _db.delete(_db.lStock).go();
-    });
-    await _db.kvDelete('bootstrapped');
+    await _db.resetCatalogue();
     state = state.copyWith(bootstrapped: false);
     await syncNow();
   }

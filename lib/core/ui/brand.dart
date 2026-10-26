@@ -1,3 +1,6 @@
+import 'dart:typed_data';
+import 'dart:ui' as ui;
+
 import 'package:flutter/material.dart';
 
 import '../theme/tokens.dart';
@@ -66,4 +69,13 @@ class BrandWordmark extends StatelessWidget {
       style: TextStyle(fontSize: size, letterSpacing: -0.4, fontVariations: const [FontVariation('wght', 600)]),
     );
   }
+}
+
+/// The mark rendered to PNG bytes, for places that cannot draw a widget (the PDF report).
+Future<Uint8List> brandMarkPng(Color tile, Color glyph, {int px = 256}) async {
+  final recorder = ui.PictureRecorder();
+  _MarkPainter(tile, glyph).paint(Canvas(recorder), Size(px.toDouble(), px.toDouble()));
+  final image = await recorder.endRecording().toImage(px, px);
+  final data = await image.toByteData(format: ui.ImageByteFormat.png);
+  return data!.buffer.asUint8List();
 }
