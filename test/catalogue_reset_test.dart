@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:drift/native.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:universal_pos/data/local/database.dart';
+import 'package:orbin/data/local/database.dart';
 
 void main() {
   test('resetting the catalogue forgets what was downloaded but never what this till did', () async {

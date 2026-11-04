@@ -1,4 +1,4 @@
-package com.universalpos.universal_pos
+package com.orbin.orbin
 
 import io.flutter.embedding.android.FlutterActivity
 

@@ -1,5 +1,5 @@
-name: universal_pos
-description: "Universal POS — offline-first point of sale for any kind of shop"
+name: orbin
+description: "Orbin — offline-first management and point of sale for any kind of shop"
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev

@@ -14,7 +14,7 @@ import 'report_doc.dart';
 /// Who the report is from. One place, so a rename touches one line.
 class ReportBrand {
   ReportBrand._();
-  static const product = 'Universal POS';
+  static const product = 'Orbin';
   static const tagline = 'Point of sale for every shop';
 }
 
@@ -121,8 +121,8 @@ Future<Uint8List> buildReportPdf(ReportDoc doc, {Uint8List? logo, pw.Font? fallb
   return pdf.save();
 }
 
-/// `UniversalPOS-Report-2026-10-26.pdf`
-String reportFileName(DateTime when) => 'UniversalPOS-Report-${DateFormat('yyyy-MM-dd').format(when)}.pdf';
+/// `Orbin-Report-2026-10-26.pdf`
+String reportFileName(DateTime when) => 'Orbin-Report-${DateFormat('yyyy-MM-dd').format(when)}.pdf';
 
 /// Builds the report and hands it to the platform: a browser download on the web, the share sheet on a phone.
 Future<void> downloadReportPdf(ReportDoc doc) async {

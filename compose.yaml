@@ -3,7 +3,7 @@
 services:
   web:
     build: .
-    image: universal-pos-web
+    image: orbin-web
     restart: unless-stopped
     ports:
       - "0.0.0.0:9001:9001"

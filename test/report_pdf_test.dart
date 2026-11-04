@@ -5,9 +5,9 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:pdf/widgets.dart' as pw;
-import 'package:universal_pos/core/ui/brand.dart';
-import 'package:universal_pos/features/reports/report_doc.dart';
-import 'package:universal_pos/features/reports/report_pdf.dart';
+import 'package:orbin/core/ui/brand.dart';
+import 'package:orbin/features/reports/report_doc.dart';
+import 'package:orbin/features/reports/report_pdf.dart';
 
 import 'support/harness.dart' show Fixtures;
 

@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:universal_pos/features/shell/shell.dart';
+import 'package:orbin/features/shell/shell.dart';
 
 import 'support/harness.dart';
 

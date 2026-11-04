@@ -89,13 +89,13 @@ BEGIN
     BEGIN
         BLOCK "040904e4"
         BEGIN
-            VALUE "CompanyName", "com.universalpos" "\0"
-            VALUE "FileDescription", "universal_pos" "\0"
+            VALUE "CompanyName", "Orbin" "\0"
+            VALUE "FileDescription", "Orbin" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
-            VALUE "InternalName", "universal_pos" "\0"
-            VALUE "LegalCopyright", "Copyright (C) 2026 com.universalpos. All rights reserved." "\0"
-            VALUE "OriginalFilename", "universal_pos.exe" "\0"
-            VALUE "ProductName", "universal_pos" "\0"
+            VALUE "InternalName", "orbin" "\0"
+            VALUE "LegalCopyright", "Copyright (C) 2026 Orbin. All rights reserved." "\0"
+            VALUE "OriginalFilename", "orbin.exe" "\0"
+            VALUE "ProductName", "Orbin" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END

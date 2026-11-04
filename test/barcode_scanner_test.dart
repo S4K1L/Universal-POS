@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:universal_pos/core/ui/barcode_scanner.dart';
-import 'package:universal_pos/core/ui/kit.dart';
+import 'package:orbin/core/ui/barcode_scanner.dart';
+import 'package:orbin/core/ui/kit.dart';
 
 import 'support/harness.dart';
 

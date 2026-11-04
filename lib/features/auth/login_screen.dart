@@ -198,7 +198,7 @@ class _BrandPanel extends StatelessWidget {
                 ),
                 const Spacer(),
                 Text(
-                  context.tr('One POS.\nEvery kind of shop.'),
+                  context.tr('One Management.\nEvery kind of shop.'),
                   style: tt.displayLarge!.copyWith(
                     color: t.onInk,
                     height: 1.05,
@@ -443,7 +443,7 @@ class _Form extends ConsumerWidget {
       maxWidth: 460,
       builder: (ctx) => PanelScaffold(
         title: context.tr('Server address'),
-        subtitle: context.tr('Where this app finds your Universal POS server.'),
+        subtitle: context.tr('Where this app finds your Orbin server.'),
         footer: Row(
           children: [
             TextButton(

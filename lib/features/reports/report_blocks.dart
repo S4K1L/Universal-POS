@@ -46,7 +46,7 @@ class ReportBanner extends StatelessWidget {
       const SizedBox(width: 14),
       Expanded(
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Text('Universal POS', maxLines: 1, overflow: TextOverflow.ellipsis, style: TextStyle(color: onBanner, fontWeight: FontWeight.w800, fontSize: stacked ? 21 : 25, letterSpacing: -0.3)),
+          Text('Orbin', maxLines: 1, overflow: TextOverflow.ellipsis, style: TextStyle(color: onBanner, fontWeight: FontWeight.w800, fontSize: stacked ? 21 : 25, letterSpacing: -0.3)),
           Text(context.tr('Point of sale for every shop'), maxLines: 1, overflow: TextOverflow.ellipsis, style: TextStyle(color: soft, fontSize: 12)),
         ]),
       ),
@@ -571,7 +571,7 @@ class ReportFooter extends StatelessWidget {
   Widget build(BuildContext context) => Column(children: [
         Divider(height: 1, color: context.t.outline),
         const SizedBox(height: 12),
-        Text('Universal POS  |  ${doc.shopName}', textAlign: TextAlign.center, style: TextStyle(color: context.t.accent, fontWeight: FontWeight.w700, fontSize: 12)),
+        Text('Orbin  |  ${doc.shopName}', textAlign: TextAlign.center, style: TextStyle(color: context.t.accent, fontWeight: FontWeight.w700, fontSize: 12)),
         const SizedBox(height: 3),
         Text(context.tr('Amounts in Bangladeshi Taka (৳)'), textAlign: TextAlign.center, style: Theme.of(context).textTheme.bodySmall?.copyWith(fontSize: 11.5)),
       ]);

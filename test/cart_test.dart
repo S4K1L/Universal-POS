@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:universal_pos/data/models/cart.dart';
-import 'package:universal_pos/data/sync/sync_engine.dart';
-import 'package:universal_pos/features/pos/cart_controller.dart';
-import 'package:universal_pos/features/pos/pos_screen.dart';
+import 'package:orbin/data/models/cart.dart';
+import 'package:orbin/data/sync/sync_engine.dart';
+import 'package:orbin/features/pos/cart_controller.dart';
+import 'package:orbin/features/pos/pos_screen.dart';
 
 import 'support/harness.dart';
 

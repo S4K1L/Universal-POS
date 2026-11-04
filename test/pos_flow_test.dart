@@ -2,10 +2,10 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:universal_pos/data/repos/sales_repo.dart';
-import 'package:universal_pos/data/session.dart';
-import 'package:universal_pos/data/sync/sync_engine.dart';
-import 'package:universal_pos/features/pos/pos_screen.dart';
+import 'package:orbin/data/repos/sales_repo.dart';
+import 'package:orbin/data/session.dart';
+import 'package:orbin/data/sync/sync_engine.dart';
+import 'package:orbin/features/pos/pos_screen.dart';
 
 import 'support/harness.dart';
 

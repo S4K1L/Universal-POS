@@ -6,13 +6,13 @@ import 'package:drift/drift.dart' show Value;
 import 'package:drift/native.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:universal_pos/core/api/api_client.dart';
-import 'package:universal_pos/data/local/database.dart';
-import 'package:universal_pos/data/providers.dart';
-import 'package:universal_pos/data/sync/sync_engine.dart';
+import 'package:orbin/core/api/api_client.dart';
+import 'package:orbin/data/local/database.dart';
+import 'package:orbin/data/providers.dart';
+import 'package:orbin/data/sync/sync_engine.dart';
 
 import 'support/harness.dart' show FixedSession;
-import 'package:universal_pos/data/session.dart';
+import 'package:orbin/data/session.dart';
 
 /// A server stand-in that can refuse a push the way a real one (or the proxy in front of it) would.
 class _PushServer implements HttpClientAdapter {

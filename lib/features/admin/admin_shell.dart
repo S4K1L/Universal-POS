@@ -25,7 +25,7 @@ class AdminShell extends StatelessWidget {
     return ShellFrame(
       entries: _adminNav,
       title: context.tr(current?.label ?? 'Platform console'),
-      subtitle: context.tr('Universal POS · platform console'),
+      subtitle: context.tr('Orbin · platform console'),
       showBeacon: false,
       primaryIds: const ['overview', 'businesses', 'plans', 'payments'],
       child: child,

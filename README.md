@@ -1,4 +1,4 @@
-# Universal POS
+# Orbin
 
 One point-of-sale for every kind of shop in Bangladesh â€” supershop, local grocery, cosmetics, furniture showroom, pharmacy.
 It works with **no internet** and syncs on its own when the connection returns. The platform owner sets the
@@ -49,8 +49,8 @@ The sign-in page has a server address (default `http://localhost:8000/api/v1`) â
 One image: Flutter compiles the release bundle, unprivileged nginx serves it on port 9001. The API is deployed from its own repository.
 
 ```bash
-docker build -t universal-pos-web .
-docker run -d -p 0.0.0.0:9001:9001 -e API_BASE=https://api.example.com/api/v1 universal-pos-web
+docker build -t orbin-web .
+docker run -d -p 0.0.0.0:9001:9001 -e API_BASE=https://api.example.com/api/v1 orbin-web
 ```
 
 or `docker compose up -d --build`, which takes `API_BASE` from the shell or `./.env` and runs the container read-only.

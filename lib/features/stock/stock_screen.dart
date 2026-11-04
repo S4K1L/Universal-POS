@@ -70,6 +70,8 @@ class _StockScreenState extends ConsumerState<StockScreen> {
           final out = rows.where((r) => availOf(r.$1, r.$2) <= 0).length;
           final low = rows.where((r) => availOf(r.$1, r.$2) > 0 && availOf(r.$1, r.$2) <= r.$1.product.reorderMilli).length;
           final value = showCost ? rows.fold<int>(0, (a, r) => a + (((r.$2.costP ?? 0) as int) * availOf(r.$1, r.$2).clamp(0, 1 << 40).toInt() ~/ 1000)) : 0;
+          // Items on the shelf with no cost price are worth nothing on paper; say so rather than show a quiet zero.
+          final noCost = showCost ? rows.where((r) => availOf(r.$1, r.$2) > 0 && ((r.$2.costP ?? 0) as int) <= 0).length : 0;
           final q = _q.text.trim().toLowerCase();
           final shown = rows.where((r) {
             final a = availOf(r.$1, r.$2);
@@ -82,7 +84,7 @@ class _StockScreenState extends ConsumerState<StockScreen> {
             CardGrid(minWidth: 150, maxColumns: 3, gap: 12, fillLast: true, children: [
               StatTile(label: context.tr('Items in stock'), value: f.intN(rows.length - out), icon: Icons.inventory_2_rounded, hint: '${f.intN(rows.length)} ${context.tr('tracked')}'),
               StatTile(label: context.tr('Running low'), value: f.intN(low), icon: Icons.warning_amber_rounded, color: t.warning, hint: '${f.intN(out)} ${context.tr('out of stock')}'),
-              if (showCost) StatTile(label: context.tr('Stock value (cost)'), value: f.moneyCompact(value), icon: Icons.account_balance_rounded, color: t.info),
+              if (showCost) StatTile(label: context.tr('Stock value (cost)'), value: f.moneyCompact(value), icon: Icons.account_balance_rounded, color: noCost > 0 ? t.warning : t.info, hint: noCost > 0 ? context.trf('{n} items have no cost price', {'n': f.intN(noCost)}) : null),
             ]),
             const SizedBox(height: 12),
             if (expiry) Align(alignment: Alignment.centerLeft, child: IntrinsicWidth(child: SegTabs<String>(items: [('stock', context.tr('Stock')), ('expiry', context.tr('Batches & expiry'))], value: _tab, onChanged: (v) => setState(() => _tab = v)))),
@@ -155,7 +157,8 @@ class _StockTile extends StatelessWidget {
     final v = variant;
     final a = available;
     final status = a <= 0 ? (t.danger, context.tr('Out')) : (a <= p.reorderMilli ? (t.warning, context.tr('Low')) : (t.success, context.tr('OK')));
-    final cost = showCost && v.costP != null ? f.money((v.costP as int) * a.clamp(0, 1 << 40) ~/ 1000) : null;
+    final hasCost = ((v.costP ?? 0) as int) > 0;
+    final cost = showCost && hasCost ? f.money((v.costP as int) * a.clamp(0, 1 << 40) ~/ 1000) : null;
     final qty = Column(crossAxisAlignment: CrossAxisAlignment.end, mainAxisSize: MainAxisSize.min, children: [
       NumText('${f.qty(a)} ${p.baseUnit}', size: 15, weight: 800, color: a <= 0 ? t.danger : t.text),
       const SizedBox(height: 3),
@@ -177,7 +180,7 @@ class _StockTile extends StatelessWidget {
             ]),
           ),
           const SizedBox(width: 10),
-          if (!compact && showCost) SizedBox(width: _costColW, child: Text(cost ?? '—', style: tt.bodyMedium!.copyWith(color: t.muted, fontFeatures: tabular), textAlign: TextAlign.end, maxLines: 1)),
+          if (!compact && showCost) SizedBox(width: _costColW, child: Text(cost ?? (a > 0 ? context.tr('No cost price') : '—'), style: tt.bodyMedium!.copyWith(color: cost == null && a > 0 ? t.warning : t.muted, fontFeatures: tabular), textAlign: TextAlign.end, maxLines: 1)),
           if (compact) qty else SizedBox(width: _qtyColW, child: Align(alignment: Alignment.centerRight, child: qty)),
         ]),
       ),

@@ -195,7 +195,7 @@ class _Dock extends ConsumerWidget {
       ),
       padding: const EdgeInsets.symmetric(vertical: 14),
       child: Column(children: [
-        Tooltip(message: ctx?.businessName ?? 'Universal POS', child: BrandMark(size: 42, color: ctx?.accent)),
+        Tooltip(message: ctx?.businessName ?? 'Orbin', child: BrandMark(size: 42, color: ctx?.accent)),
         const SizedBox(height: 14),
         Container(height: 1, margin: const EdgeInsets.symmetric(horizontal: 22), color: Colors.white.withValues(alpha: 0.08)),
         const SizedBox(height: 8),

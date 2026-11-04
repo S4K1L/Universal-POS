@@ -4,8 +4,8 @@ import 'dart:io';
 import 'package:drift/drift.dart' show Value;
 import 'package:drift/native.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:universal_pos/data/local/database.dart';
-import 'package:universal_pos/data/repos/catalogue_repo.dart';
+import 'package:orbin/data/local/database.dart';
+import 'package:orbin/data/repos/catalogue_repo.dart';
 
 Future<void> addItem(AppDatabase db, String n, {required Map<String, int> stock, int costP = 5000}) async {
   await db.into(db.lProducts).insert(LProductsCompanion.insert(id: 'p$n', name: 'Item $n'));

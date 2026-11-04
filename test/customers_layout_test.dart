@@ -1,9 +1,9 @@
 import 'package:drift/drift.dart' show Value;
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:universal_pos/core/ui/kit.dart';
-import 'package:universal_pos/data/local/database.dart';
-import 'package:universal_pos/features/customers/customers_screen.dart';
+import 'package:orbin/core/ui/kit.dart';
+import 'package:orbin/data/local/database.dart';
+import 'package:orbin/features/customers/customers_screen.dart';
 
 import 'support/harness.dart';
 

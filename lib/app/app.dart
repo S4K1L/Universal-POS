@@ -8,8 +8,8 @@ import '../data/providers.dart';
 import '../data/session.dart';
 import 'router.dart';
 
-class UniversalPosApp extends ConsumerWidget {
-  const UniversalPosApp({super.key});
+class OrbinApp extends ConsumerWidget {
+  const OrbinApp({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -21,7 +21,7 @@ class UniversalPosApp extends ConsumerWidget {
     return LangScope(
       lang: lang,
       child: MaterialApp.router(
-        title: 'Universal POS',
+        title: 'Orbin',
         debugShowCheckedModeBanner: false,
         routerConfig: router,
         themeMode: mode,

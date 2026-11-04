@@ -4,15 +4,15 @@ import 'package:drift/drift.dart' show Value;
 import 'package:drift/native.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:universal_pos/core/api/api_client.dart';
-import 'package:universal_pos/core/money/money.dart';
-import 'package:universal_pos/data/local/database.dart';
-import 'package:universal_pos/data/providers.dart';
-import 'package:universal_pos/data/repos/catalogue_repo.dart';
-import 'package:universal_pos/data/repos/sales_repo.dart';
-import 'package:universal_pos/data/session.dart';
-import 'package:universal_pos/data/sync/sync_engine.dart';
-import 'package:universal_pos/features/pos/cart_controller.dart';
+import 'package:orbin/core/api/api_client.dart';
+import 'package:orbin/core/money/money.dart';
+import 'package:orbin/data/local/database.dart';
+import 'package:orbin/data/providers.dart';
+import 'package:orbin/data/repos/catalogue_repo.dart';
+import 'package:orbin/data/repos/sales_repo.dart';
+import 'package:orbin/data/session.dart';
+import 'package:orbin/data/sync/sync_engine.dart';
+import 'package:orbin/features/pos/cart_controller.dart';
 
 /// End-to-end: a till signs in, loads the catalogue, sells with NO connection, and the sales reach the server by
 /// themselves once the connection returns. Runs against the real API on localhost:8000 (skipped if it isn't up).

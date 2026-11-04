@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:universal_pos/core/ui/dash.dart';
-import 'package:universal_pos/features/admin/admin_overview_screen.dart';
+import 'package:orbin/core/ui/dash.dart';
+import 'package:orbin/features/admin/admin_overview_screen.dart';
 
 import 'support/harness.dart';
 

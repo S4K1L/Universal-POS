@@ -2,8 +2,8 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:universal_pos/core/money/money.dart';
-import 'package:universal_pos/core/money/pricing.dart';
+import 'package:orbin/core/money/money.dart';
+import 'package:orbin/core/money/pricing.dart';
 
 /// Replays the golden cases generated from the Python implementation
 /// (`scripts/gen_pricing_vectors.py` in the backend repo). The till and the server must agree to the last paisa.

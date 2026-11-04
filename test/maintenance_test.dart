@@ -6,16 +6,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:universal_pos/app/router.dart';
-import 'package:universal_pos/core/api/api_client.dart';
-import 'package:universal_pos/core/i18n/lang.dart';
-import 'package:universal_pos/core/theme/theme.dart';
-import 'package:universal_pos/data/platform_status.dart';
-import 'package:universal_pos/data/providers.dart';
-import 'package:universal_pos/data/session.dart';
-import 'package:universal_pos/data/sync/sync_engine.dart';
-import 'package:universal_pos/features/dashboard/dashboard_screen.dart';
-import 'package:universal_pos/features/maintenance/maintenance_screen.dart';
+import 'package:orbin/app/router.dart';
+import 'package:orbin/core/api/api_client.dart';
+import 'package:orbin/core/i18n/lang.dart';
+import 'package:orbin/core/theme/theme.dart';
+import 'package:orbin/data/platform_status.dart';
+import 'package:orbin/data/providers.dart';
+import 'package:orbin/data/session.dart';
+import 'package:orbin/data/sync/sync_engine.dart';
+import 'package:orbin/features/dashboard/dashboard_screen.dart';
+import 'package:orbin/features/maintenance/maintenance_screen.dart';
 
 import 'support/harness.dart';
 

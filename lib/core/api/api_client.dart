@@ -24,6 +24,7 @@ class ServerConfig {
 class SecureStore {
   SecureStore._();
   static final instance = SecureStore._();
+  // Storage names predate the Orbin rename and stay as they are, so signed-in tills are not logged out by an update.
   final _store = const FlutterSecureStorage(webOptions: WebOptions(dbName: 'universal_pos', publicKey: 'universal_pos'));
   final _mem = <String, String>{};
 

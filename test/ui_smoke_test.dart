@@ -1,9 +1,9 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:universal_pos/features/auth/login_screen.dart';
-import 'package:universal_pos/features/billing/billing_screen.dart';
-import 'package:universal_pos/features/dashboard/dashboard_screen.dart';
-import 'package:universal_pos/features/admin/admin_overview_screen.dart';
-import 'package:universal_pos/features/admin/admin_plans_screen.dart';
+import 'package:orbin/features/auth/login_screen.dart';
+import 'package:orbin/features/billing/billing_screen.dart';
+import 'package:orbin/features/dashboard/dashboard_screen.dart';
+import 'package:orbin/features/admin/admin_overview_screen.dart';
+import 'package:orbin/features/admin/admin_plans_screen.dart';
 
 import 'support/harness.dart';
 

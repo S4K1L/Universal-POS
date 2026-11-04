@@ -1,8 +1,8 @@
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:universal_pos/core/i18n/bn.dart';
-import 'package:universal_pos/core/i18n/lang.dart';
+import 'package:orbin/core/i18n/bn.dart';
+import 'package:orbin/core/i18n/lang.dart';
 
 /// Every literal passed to `tr('…')` / `trf('…', …)` has a Bangla entry, and each entry keeps the same {placeholders}.
 void main() {

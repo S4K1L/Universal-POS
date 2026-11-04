@@ -26,6 +26,6 @@ Future<void> main() async {
         themeMode: ThemeMode.values.firstWhere((m) => m.name == themeName, orElse: () => ThemeMode.system),
       )),
     ],
-    child: const UniversalPosApp(),
+    child: const OrbinApp(),
   ));
 }

@@ -1,11 +1,11 @@
 {
-    "name": "universal_pos",
-    "short_name": "universal_pos",
+    "name": "Orbin",
+    "short_name": "Orbin",
     "start_url": ".",
     "display": "standalone",
-    "background_color": "#0175C2",
-    "theme_color": "#0175C2",
-    "description": "Universal POS — offline-first point of sale for any kind of shop",
+    "background_color": "#0B110F",
+    "theme_color": "#0E9F6E",
+    "description": "Orbin — offline-first management and point of sale for any kind of shop",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [

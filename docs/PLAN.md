@@ -1,8 +1,8 @@
-# Universal POS — Product & Technical Plan
+# Orbin — Product & Technical Plan
 
 **Version** 0.1 (draft for review) · **Date** 2026-10-06
 **Basis** Line-by-line audit of `S4K1L/PharmaCare` (Flutter) and `S4K1L/PharmaCare-Backend` (FastAPI)
-**Working title** "Universal POS" (see open question on branding, §16)
+**Name** "Orbin" (working title was "Universal POS")
 
 ---
 
@@ -17,7 +17,7 @@ pharmacy logic baked into the schema and UI, and cannot simply be renamed.
 
 **Recommendation**
 
-1. **Build Universal POS as a new codebase**, porting the platform layer and rebuilding the
+1. **Build Orbin as a new codebase**, porting the platform layer and rebuilding the
    catalogue / inventory / sales core. Don't refactor PharmaCare in place: 66 of 101 Flutter
    files (480 lines) and 256 backend lines mention pharmacy vocabulary (pharma / medicine /
    patient / prescription / generic / Rx / expiry — a rough grep, so an upper bound), and the
@@ -30,7 +30,7 @@ pharmacy logic baked into the schema and UI, and cannot simply be renamed.
    the platform provisions the tenant from that template. Inventory, add-product, POS and
    reports then adapt automatically.
 3. **Evolve PharmaCare's best idea.** Its invariant is "two independent gates — plan and role —
-   must both pass". Universal POS has **three**: *Plan* (what they paid for) × *Capability*
+   must both pass". Orbin has **three**: *Plan* (what they paid for) × *Capability*
    (what their business type enables) × *Role* (what this user may do).
 4. **Two sales flows cover all four target businesses**: *Counter retail* (Local shop,
    Supershop, Cosmetic — scan, pay, done) and *Order-based / high-ticket* (Furniture —
@@ -722,7 +722,7 @@ PharmaCare keeps running during Phases 1–2; customers move tenant-by-tenant af
 1. **Market scope** — Bangladesh only at launch, or multi-country (currency, tax, language packs)?
 2. **Team & timeline** — the roadmap assumes 3–4 engineers; what's the real capacity and any
    hard launch date?
-3. **Brand** — the Flutter app already rebranded to "Nexora POS". Is Universal POS the next
+3. **Brand** — the Flutter app already rebranded to "Nexora POS". Is Orbin (formerly Universal POS) the next
    generation of that product line (shared brand and customers) or a separate product?
 4. **Pharmacy** — do existing PharmaCare/Nexora customers need to migrate? That decides whether
    Phase 2's parity gate is a requirement or a nice-to-have.

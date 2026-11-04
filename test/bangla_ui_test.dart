@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:universal_pos/core/i18n/lang.dart';
-import 'package:universal_pos/features/auth/login_screen.dart';
-import 'package:universal_pos/features/billing/billing_screen.dart';
-import 'package:universal_pos/features/customers/customers_screen.dart';
-import 'package:universal_pos/features/dashboard/dashboard_screen.dart';
-import 'package:universal_pos/features/expenses/expenses_screen.dart';
-import 'package:universal_pos/features/products/products_screen.dart';
-import 'package:universal_pos/features/purchases/purchases_screen.dart';
-import 'package:universal_pos/features/reports/reports_screen.dart';
-import 'package:universal_pos/features/sales/sales_screen.dart';
-import 'package:universal_pos/features/settings/settings_screen.dart';
-import 'package:universal_pos/features/shifts/shifts_screen.dart';
-import 'package:universal_pos/features/stock/stock_screen.dart';
-import 'package:universal_pos/features/sync/sync_screen.dart';
-import 'package:universal_pos/features/pos/pos_screen.dart';
+import 'package:orbin/core/i18n/lang.dart';
+import 'package:orbin/features/auth/login_screen.dart';
+import 'package:orbin/features/billing/billing_screen.dart';
+import 'package:orbin/features/customers/customers_screen.dart';
+import 'package:orbin/features/dashboard/dashboard_screen.dart';
+import 'package:orbin/features/expenses/expenses_screen.dart';
+import 'package:orbin/features/products/products_screen.dart';
+import 'package:orbin/features/purchases/purchases_screen.dart';
+import 'package:orbin/features/reports/reports_screen.dart';
+import 'package:orbin/features/sales/sales_screen.dart';
+import 'package:orbin/features/settings/settings_screen.dart';
+import 'package:orbin/features/shifts/shifts_screen.dart';
+import 'package:orbin/features/stock/stock_screen.dart';
+import 'package:orbin/features/sync/sync_screen.dart';
+import 'package:orbin/features/pos/pos_screen.dart';
 
 import 'support/harness.dart';
 

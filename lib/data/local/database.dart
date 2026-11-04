@@ -217,6 +217,7 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase([QueryExecutor? executor])
       : super(executor ??
             driftDatabase(
+              // Kept from before the Orbin rename: changing it would orphan a till's local data, including unsynced sales.
               name: 'universal_pos',
               web: DriftWebOptions(sqlite3Wasm: Uri.parse('sqlite3.wasm'), driftWorker: Uri.parse('drift_worker.js')),
             ));
