@@ -19,6 +19,14 @@ class ServerConfig {
     if (defaultTargetPlatform == TargetPlatform.android) return 'http://10.0.2.2:8000/api/v1';
     return 'http://localhost:8000/api/v1';
   }
+
+  /// Turns a path the server stored (`/uploads/…`) into an address a picture widget can load, on the same host as the API.
+  static String assetUrl(String apiBase, String path) {
+    if (path.isEmpty || path.startsWith('http://') || path.startsWith('https://')) return path;
+    final u = Uri.tryParse(apiBase);
+    if (u == null || u.host.isEmpty) return path;
+    return Uri(scheme: u.scheme, host: u.host, port: u.hasPort ? u.port : null, path: path).toString();
+  }
 }
 
 class SecureStore {
@@ -201,6 +209,12 @@ class ApiClient {
       _run(() => dio.get(path, queryParameters: query, options: Options(extra: {'noAuth': noAuth}, receiveTimeout: timeout, sendTimeout: timeout)), (d) => (d as Map).cast<String, dynamic>());
 
   Future<List<dynamic>> getList(String path, {Map<String, dynamic>? query}) => _run(() => dio.get(path, queryParameters: query), (d) => d as List);
+
+  /// Sends a picture to `/uploads/images`; returns `{url, bytes}`. [filename] only needs a sensible extension.
+  Future<Map<String, dynamic>> uploadImage(Uint8List bytes, String filename) => _run(
+        () => dio.post('/uploads/images', data: FormData.fromMap({'file': MultipartFile.fromBytes(bytes, filename: filename)}), options: Options(sendTimeout: const Duration(seconds: 60))),
+        (d) => (d as Map).cast<String, dynamic>(),
+      );
 
   Future<Map<String, dynamic>> post(String path, {Object? body, bool noAuth = false}) =>
       _run(() => dio.post(path, data: body, options: Options(extra: {'noAuth': noAuth})), (d) => d is Map ? d.cast<String, dynamic>() : <String, dynamic>{});

@@ -22,6 +22,7 @@ import 'payment_sheet.dart';
 import 'pos_widgets.dart';
 import 'receipt.dart';
 import '../../core/ui/panel.dart';
+import '../../core/ui/product_thumb.dart';
 
 final _categoriesProvider = StreamProvider.autoDispose<List<LCategory>>((ref) {
   ref.cacheForSession();
@@ -726,7 +727,7 @@ class _CartLineTileState extends ConsumerState<_CartLineTile> with SingleTickerP
         child: Padding(
           padding: const EdgeInsets.fromLTRB(8, 10, 8, 10),
           child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Monogram(line.shownName(bn), size: 42, seed: line.productId),
+            ProductThumb(name: line.shownName(bn), imageUrl: line.imageUrl, size: 42, seed: line.productId),
             const SizedBox(width: 12),
             Expanded(
               child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [

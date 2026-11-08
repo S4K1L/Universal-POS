@@ -53,6 +53,7 @@ class CartController extends Notifier<CartState> {
         productId: pv.product.id,
         name: pv.product.name,
         nameLocal: pv.product.nameLocal,
+        imageUrl: pv.product.imageUrl,
         variantLabel: v.label,
         sku: v.sku,
         baseUnit: pv.product.baseUnit,

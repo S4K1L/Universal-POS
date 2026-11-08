@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../core/api/api_client.dart';
 import '../../core/i18n/lang.dart';
@@ -11,6 +12,7 @@ import '../../core/ui/panel.dart';
 import '../../core/util/responsive.dart';
 import '../../data/providers.dart';
 import '../../data/session.dart';
+import 'signup_state.dart';
 
 const _demo = bool.fromEnvironment('DEMO');
 
@@ -52,6 +54,12 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     try {
       await ref.read(sessionProvider.notifier).login(phone, pass);
     } on ApiError catch (e) {
+      if (e.code == 'signup_pending' || e.code == 'signup_rejected') {
+        // Not an error: the business has asked to join and is waiting on (or was declined by) the platform owner.
+        ref.read(pendingSignupProvider.notifier).set(PendingSignup(phone: phone, password: pass));
+        if (mounted) context.go('/signup/pending');
+        return;
+      }
       if (mounted) {
         setState(
           () => _error = e.offline
@@ -91,7 +99,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       body: wide
           ? Row(
               children: [
-                const Expanded(flex: 11, child: _BrandPanel()),
+                const Expanded(flex: 11, child: AuthBrandPanel()),
                 Expanded(
                   flex: 9,
                   child: Center(
@@ -129,8 +137,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   }
 }
 
-class _BrandPanel extends StatelessWidget {
-  const _BrandPanel();
+class AuthBrandPanel extends StatelessWidget {
+  const AuthBrandPanel({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -409,7 +417,16 @@ class _Form extends ConsumerWidget {
                 : Text(context.tr('Sign in')),
           ),
         ),
-        const SizedBox(height: 14),
+        const SizedBox(height: 18),
+        Center(
+          child: Wrap(
+            crossAxisAlignment: WrapCrossAlignment.center,
+            children: [
+              Text(context.tr('New to Orbin?'), style: tt.bodyMedium!.copyWith(color: t.muted)),
+              TextButton(onPressed: busy ? null : () => context.go('/signup'), child: Text(context.tr('Create an account'))),
+            ],
+          ),
+        ),
         if (_demo) ...[
           const SizedBox(height: 18),
           Text(context.tr('TRY A DEMO SHOP'), style: tt.labelSmall),

@@ -110,6 +110,7 @@ class _Body extends StatelessWidget {
     final signups = (d['signups_by_month'] as List).cast<Map<String, dynamic>>();
     final sales = (d['sales_24h'] as Map).cast<String, dynamic>();
     final pending = d['pending_payments'] as int;
+    final pendingSignups = (d['pending_signups'] as num?)?.toInt() ?? 0;
     final tenants = d['tenants'] as int;
     final mrr = parsePaisa(d['mrr']);
     final lapsed = d['lapsed'] as int, expiring = d['expiring_in_7_days'] as int;
@@ -154,6 +155,7 @@ class _Body extends StatelessWidget {
     // ---------------------------------------------------------------------------------------------------- shortcuts
     final quick = LayoutBuilder(builder: (c, box) {
       final items = [
+        (Icons.how_to_reg_rounded, 'Approvals', '/admin/approvals', pendingSignups),
         (Icons.storefront_rounded, 'Businesses', '/admin/businesses', 0),
         (Icons.payments_rounded, 'Payments', '/admin/payments', pending),
         (Icons.sell_rounded, 'Plans', '/admin/plans', 0),
@@ -169,6 +171,19 @@ class _Body extends StatelessWidget {
     });
 
     // ---------------------------------------------------------------------------------------------------- cards
+    final waitingSignups = pendingSignups > 0
+        ? Surface(
+            color: t.tint(t.accent, 0.1),
+            border: false,
+            onTap: () => context.go('/admin/approvals'),
+            child: Row(children: [
+              IconSquare(Icons.how_to_reg_rounded, color: t.accent, size: 38),
+              const SizedBox(width: 14),
+              Expanded(child: Text(context.trf(pendingSignups == 1 ? '{n} new business is waiting for approval' : '{n} new businesses are waiting for approval', {'n': f.intN(pendingSignups)}), style: tt.titleSmall)),
+              const Icon(Icons.chevron_right_rounded),
+            ]),
+          )
+        : null;
     final waiting = pending > 0
         ? Surface(
             color: t.tint(t.warning, 0.1),
@@ -289,6 +304,7 @@ class _Body extends StatelessWidget {
         ]);
 
     return Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+      if (waitingSignups != null) ...[Reveal(child: waitingSignups), const SizedBox(height: 14)],
       if (waiting != null) ...[Reveal(child: waiting), const SizedBox(height: 14)],
       Reveal(child: hero),
       const SizedBox(height: 18),

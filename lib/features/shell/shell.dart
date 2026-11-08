@@ -14,8 +14,9 @@ import '../../data/session.dart';
 import '../../data/sync/sync_engine.dart';
 
 class NavEntry {
-  const NavEntry({required this.id, required this.label, required this.icon, required this.route, this.lockedReason, this.activeIcon});
+  const NavEntry({required this.id, required this.label, required this.icon, required this.route, this.lockedReason, this.activeIcon, this.badge = 0});
   final String id, label, route;
+  final int badge; // a count to show on the icon (e.g. requests waiting for approval); 0 = none
   final IconData icon;
   final IconData? activeIcon;
   final String? lockedReason; // plan | permission
@@ -162,6 +163,7 @@ class ShellFrame extends ConsumerWidget {
                   Stack(clipBehavior: Clip.none, children: [
                     Icon(e.activeIcon ?? e.icon, size: 26, color: e.lockedReason != null ? context.t.faint : context.t.accentDeep),
                     if (e.lockedReason != null) Positioned(right: -8, top: -6, child: Icon(Icons.lock_rounded, size: 13, color: context.t.warning)),
+                    if (e.badge > 0) Positioned(right: -10, top: -7, child: NavBadge(e.badge)),
                   ]),
                   const SizedBox(height: 8),
                   Text(context.tr(e.label), style: Theme.of(context).textTheme.labelMedium, textAlign: TextAlign.center, maxLines: 2),
@@ -218,6 +220,25 @@ class _DockItem extends StatefulWidget {
   State<_DockItem> createState() => _DockItemState();
 }
 
+/// A small count on a navigation icon.
+class NavBadge extends StatelessWidget {
+  const NavBadge(this.count, {super.key});
+  final int count;
+
+  @override
+  Widget build(BuildContext context) {
+    final t = context.t;
+    return Container(
+      constraints: const BoxConstraints(minWidth: 17),
+      height: 17,
+      padding: const EdgeInsets.symmetric(horizontal: 4),
+      decoration: BoxDecoration(color: t.danger, borderRadius: BorderRadius.circular(9), border: Border.all(color: t.surface, width: 1.5)),
+      alignment: Alignment.center,
+      child: Text(count > 99 ? '99+' : context.fmt.intN(count), style: const TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.w800, height: 1)),
+    );
+  }
+}
+
 class _DockItemState extends State<_DockItem> {
   bool _hover = false;
 
@@ -247,6 +268,7 @@ class _DockItemState extends State<_DockItem> {
             Stack(clipBehavior: Clip.none, children: [
               AnimatedScale(scale: sel ? 1.1 : (_hover ? 1.06 : 1), duration: Motion.fast, curve: Curves.easeOutBack, child: Icon(sel ? (e.activeIcon ?? e.icon) : e.icon, size: 25, color: fg)),
               if (locked) Positioned(right: -7, top: -5, child: Icon(Icons.lock_rounded, size: 12, color: t.warning)),
+              if (e.badge > 0) Positioned(right: -9, top: -7, child: NavBadge(e.badge)),
             ]),
             const SizedBox(height: 5),
             Text(context.tr(e.label), maxLines: 1, overflow: TextOverflow.ellipsis, style: TextStyle(fontSize: 10.5, fontWeight: FontWeight.w700, color: fg, height: 1.1, fontVariations: const [FontVariation('wght', 650)])),
@@ -275,7 +297,7 @@ class _BottomBar extends StatelessWidget {
         child: SizedBox(
           height: 64,
           child: Row(children: [
-            for (final e in items) Expanded(child: _BarItem(label: context.tr(e.label), icon: e.id == selected ? (e.activeIcon ?? e.icon) : e.icon, on: e.id == selected, onTap: () => onTap(e))),
+            for (final e in items) Expanded(child: _BarItem(label: context.tr(e.label), icon: e.id == selected ? (e.activeIcon ?? e.icon) : e.icon, on: e.id == selected, badge: e.badge, onTap: () => onTap(e))),
             Expanded(child: _BarItem(label: context.tr('More'), icon: Icons.grid_view_rounded, on: moreSelected, onTap: onMore)),
           ]),
         ),
@@ -285,8 +307,9 @@ class _BottomBar extends StatelessWidget {
 }
 
 class _BarItem extends StatelessWidget {
-  const _BarItem({required this.label, required this.icon, required this.on, required this.onTap});
+  const _BarItem({required this.label, required this.icon, required this.on, required this.onTap, this.badge = 0});
   final String label;
+  final int badge;
   final IconData icon;
   final bool on;
   final VoidCallback onTap;
@@ -301,7 +324,10 @@ class _BarItem extends StatelessWidget {
           duration: const Duration(milliseconds: 180),
           padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 4),
           decoration: BoxDecoration(color: on ? t.accentSoft : Colors.transparent, borderRadius: BorderRadius.circular(14)),
-          child: AnimatedScale(scale: on ? 1.12 : 1, duration: Motion.fast, curve: Curves.easeOutBack, child: Icon(icon, size: 23, color: on ? t.accentDeep : t.muted)),
+          child: Stack(clipBehavior: Clip.none, children: [
+            AnimatedScale(scale: on ? 1.12 : 1, duration: Motion.fast, curve: Curves.easeOutBack, child: Icon(icon, size: 23, color: on ? t.accentDeep : t.muted)),
+            if (badge > 0) Positioned(right: -10, top: -6, child: NavBadge(badge)),
+          ]),
         ),
         const SizedBox(height: 2),
         Text(label, style: TextStyle(fontSize: 10.5, fontWeight: FontWeight.w700, color: on ? t.accentDeep : t.muted, fontVariations: const [FontVariation('wght', 650)]), maxLines: 1),

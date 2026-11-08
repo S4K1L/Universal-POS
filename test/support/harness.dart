@@ -16,6 +16,7 @@ import 'package:orbin/data/local/database.dart';
 import 'package:orbin/data/models/context.dart';
 import 'package:orbin/data/providers.dart';
 import 'package:orbin/data/session.dart';
+import 'package:orbin/features/admin/admin_approvals_screen.dart' show PendingApprovalsController;
 import 'package:orbin/data/sync/sync_engine.dart';
 
 /// Real responses captured from the running API (see test/fixtures/api.json) served through a fake Dio adapter, so
@@ -71,6 +72,7 @@ class Rig {
 
 Future<void> loadFonts() async {
   SyncController.watchConnectivity = false;
+  PendingApprovalsController.pollEvery = null; // no repeating timers left behind when a test ends
   Future<void> load(String family, List<String> files) async {
     final loader = FontLoader(family);
     for (final f in files) {
@@ -99,6 +101,7 @@ Future<Rig> pumpScreen(
   AppLang lang = AppLang.en,
   bool dark = false,
   List<Override> extra = const [],
+  SessionController Function(SessionState)? session, // swap in a session that records sign-ins
 }) async {
   tester.view.physicalSize = size;
   tester.view.devicePixelRatio = 1;
@@ -128,7 +131,7 @@ Future<Rig> pumpScreen(
     dbProvider.overrideWithValue(db),
     bootstrapProvider.overrideWithValue(Bootstrap(serverUrl: 'http://fake/api/v1', lang: lang)),
     apiProvider.overrideWithValue(client),
-    sessionProvider.overrideWith(() => FixedSession(state)),
+    sessionProvider.overrideWith(() => session?.call(state) ?? FixedSession(state)),
     ...extra,
   ]);
   addTearDown(container.dispose);

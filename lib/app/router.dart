@@ -7,6 +7,7 @@ import '../core/ui/brand.dart';
 import '../core/ui/motion.dart';
 import '../data/platform_status.dart';
 import '../data/session.dart';
+import '../features/admin/admin_approvals_screen.dart';
 import '../features/admin/admin_audit_screen.dart';
 import '../features/admin/admin_businesses_screen.dart';
 import '../features/admin/admin_overview_screen.dart';
@@ -16,6 +17,8 @@ import '../features/admin/admin_settings_screen.dart';
 import '../features/admin/admin_shell.dart';
 import '../features/admin/admin_types_screen.dart';
 import '../features/auth/login_screen.dart';
+import '../features/auth/signup_pending_screen.dart';
+import '../features/auth/signup_screen.dart';
 import '../features/billing/billing_screen.dart';
 import '../features/customers/customers_screen.dart';
 import '../features/dashboard/dashboard_screen.dart';
@@ -54,11 +57,11 @@ final routerProvider = Provider<GoRouter>((ref) {
       case AuthStatus.booting:
         return loc == '/splash' ? null : '/splash';
       case AuthStatus.signedOut:
-        return loc == '/login' ? null : '/login';
+        return const ['/login', '/signup', '/signup/pending'].contains(loc) ? null : '/login';
       case AuthStatus.ready:
         if (s.isAdmin) return loc.startsWith('/admin') ? null : '/admin/overview';
         if (maintenance) return loc == '/maintenance' ? null : '/maintenance';
-        if (loc.startsWith('/admin') || const ['/login', '/splash', '/maintenance', '/'].contains(loc)) return '/dashboard';
+        if (loc.startsWith('/admin') || const ['/login', '/signup', '/signup/pending', '/splash', '/maintenance', '/'].contains(loc)) return '/dashboard';
         return null;
     }
   }
@@ -72,6 +75,8 @@ final routerProvider = Provider<GoRouter>((ref) {
     routes: [
       r('/splash', () => const _Splash()),
       r('/login', () => const LoginScreen()),
+      r('/signup', () => const SignupScreen()),
+      r('/signup/pending', () => const SignupPendingScreen()),
       r('/maintenance', () => const MaintenanceScreen()),
       ShellRoute(
         builder: (c, s, child) => TenantShell(child: child),
@@ -96,6 +101,7 @@ final routerProvider = Provider<GoRouter>((ref) {
         builder: (c, s, child) => AdminShell(child: child),
         routes: [
           r('/admin/overview', () => const AdminOverviewScreen()),
+          r('/admin/approvals', () => const AdminApprovalsScreen()),
           r('/admin/businesses', () => const AdminBusinessesScreen()),
           r('/admin/plans', () => const AdminPlansScreen()),
           r('/admin/types', () => const AdminTypesScreen()),

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 import '../../core/money/money.dart';
 import '../../core/money/pricing.dart';
+import '../../core/theme/tokens.dart';
 
 /// Everything the app needs to know about the signed-in business, from `GET /tenants/me/context`.
 /// Cached on the device so a till can start with no connection.
@@ -32,10 +33,9 @@ class TenantContext {
   String get typeLabel => _bt['label'] as String;
   String get family => (_bt['family'] as String?) ?? 'counter_retail';
 
-  Color get accent {
-    final hex = ((_bt['theme'] as Map?)?['accent'] as String?) ?? '#0E9F6E';
-    return Color(int.parse('FF${hex.replaceFirst('#', '')}', radix: 16));
-  }
+  /// Every business uses Orbin's own green. The business type still has a theme colour (shown on its card where
+  /// types are listed), but it no longer re-colours the app.
+  Color get accent => Tokens.defaultAccent;
 
   String get iconName => (((_bt['theme'] as Map?)?['icon']) as String?) ?? 'store';
 

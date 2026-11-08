@@ -15,6 +15,7 @@ import '../../data/repos/catalogue_repo.dart';
 import '../../data/repos/sales_repo.dart';
 import '../../data/session.dart';
 import 'cart_controller.dart';
+import '../../core/ui/product_thumb.dart';
 
 // ------------------------------------------------------------------------------------ product tile
 
@@ -43,7 +44,7 @@ class ProductTile extends StatelessWidget {
         color: selected ? t.accentSoft : t.surface,
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Row(children: [
-            Monogram(p.name, size: 40, seed: p.categoryId ?? p.id),
+            ProductThumb(name: p.name, imageUrl: p.imageUrl, size: 40, seed: p.categoryId ?? p.id),
             const Spacer(),
             if (selected) Pill('×${f.qty(inCartMilli)}', color: t.accent, filled: true, dense: true, mono: true)
             else if (pv.hasVariants) Pill('${f.intN(pv.variants.length)} ${context.tr('options')}', dense: true),
@@ -160,7 +161,7 @@ class _VariantPicker extends ConsumerWidget {
     return PanelScaffold(
       title: pv.product.name,
       subtitle: axes.isEmpty ? null : '${context.tr('Choose')} $axes',
-      leading: Monogram(pv.product.name, size: 44),
+      leading: ProductThumb(name: pv.product.name, imageUrl: pv.product.imageUrl, size: 44),
       child: Column(children: [
         for (final v in pv.variants)
           Padding(

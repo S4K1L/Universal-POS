@@ -8,6 +8,8 @@ import '../../core/money/money.dart';
 import '../../core/theme/tokens.dart';
 import '../../core/ui/barcode_scanner.dart';
 import '../../core/ui/forms.dart';
+import '../../core/ui/image_pick.dart';
+import '../../core/ui/product_thumb.dart';
 import '../../core/ui/kit.dart';
 import '../../core/ui/panel.dart';
 import '../../data/local/database.dart';
@@ -64,8 +66,9 @@ class _ProductFormState extends ConsumerState<ProductForm> {
   final List<({TextEditingController unit, TextEditingController factor})> _alt = [];
   final Map<String, dynamic> _attr = {};
   final List<_VariantDraft> _variants = [];
-  bool _busy = false;
+  bool _busy = false, _imageBusy = false;
   String? _error;
+  String _imageUrl = ''; // a path on the server (/uploads/…); empty = no picture, which is fine
 
   bool get _editing => widget.existing != null;
 
@@ -78,6 +81,7 @@ class _ProductFormState extends ConsumerState<ProductForm> {
       _name.text = p['name'] as String;
       _nameLocal.text = (p['name_local'] as String?) ?? '';
       _description.text = (p['description'] as String?) ?? '';
+      _imageUrl = (p['image_url'] as String?) ?? '';
       _categoryId = p['category_id'] as String?;
       _taxClassId = p['tax_class_id'] as String?;
       _type = p['type'] as String;
@@ -145,6 +149,7 @@ class _ProductFormState extends ConsumerState<ProductForm> {
       if (_taxClassId != null && ctx.cap('item_tax')) 'tax_class_id': _taxClassId,
       if (_editing && (_taxClassId == null || !ctx.cap('item_tax'))) 'clear_tax_class': true,
       'attributes': _attr,
+      'image_url': _imageUrl,
       'reorder_level': _reorder.text.trim().isEmpty ? '0' : _reorder.text.trim(),
       'warranty_months': ctx.cap('warranty') ? int.tryParse(_warranty.text.trim()) ?? 0 : 0,
       if (_editing) 'active': _active,
@@ -170,6 +175,53 @@ class _ProductFormState extends ConsumerState<ProductForm> {
           },
       ],
     };
+  }
+
+  Future<void> _pickImage() async {
+    final picked = await ref.read(imagePickerProvider)(context);
+    if (picked == null || !mounted) return;
+    setState(() {
+      _imageBusy = true;
+      _error = null;
+    });
+    try {
+      final out = await ref.read(apiProvider).uploadImage(picked.bytes, picked.name);
+      if (mounted) setState(() => _imageUrl = out['url'] as String);
+    } on ApiError catch (e) {
+      if (mounted) setState(() => _error = e.offline ? context.tr('Pictures can only be added while online.') : e.message);
+    } finally {
+      if (mounted) setState(() => _imageBusy = false);
+    }
+  }
+
+  Widget _pictureRow(BuildContext context, String word) {
+    final t = context.t;
+    final tt = Theme.of(context).textTheme;
+    final has = _imageUrl.isNotEmpty;
+    return Surface(
+      padding: const EdgeInsets.all(12),
+      child: Row(children: [
+        Stack(alignment: Alignment.center, children: [
+          has
+              ? ProductThumb(name: _name.text.isEmpty ? word : _name.text, imageUrl: _imageUrl, size: 76, radius: 18)
+              : Container(width: 76, height: 76, decoration: BoxDecoration(color: t.accentSoft, borderRadius: BorderRadius.circular(18)), child: Icon(Icons.add_photo_alternate_rounded, color: t.accentDeep, size: 30)),
+          if (_imageBusy) Container(width: 76, height: 76, decoration: BoxDecoration(color: Colors.black45, borderRadius: BorderRadius.circular(18)), child: const Center(child: SizedBox(width: 22, height: 22, child: CircularProgressIndicator(strokeWidth: 2.4, color: Colors.white)))),
+        ]),
+        const SizedBox(width: 14),
+        Expanded(
+          child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            Text(context.tr('Picture (optional)'), style: tt.titleSmall),
+            const SizedBox(height: 2),
+            Text(has ? context.tr('Shown on the sell screen and in lists.') : context.tr('Add one if it helps you find it quickly — it is never required.'), style: tt.bodySmall),
+            const SizedBox(height: 8),
+            Wrap(spacing: 8, runSpacing: 6, children: [
+              OutlinedButton.icon(onPressed: _imageBusy || _busy ? null : _pickImage, icon: Icon(has ? Icons.swap_horiz_rounded : Icons.upload_rounded, size: 18), label: Text(has ? context.tr('Change picture') : context.tr('Add picture'))),
+              if (has) TextButton.icon(onPressed: _imageBusy || _busy ? null : () => setState(() => _imageUrl = ''), icon: Icon(Icons.close_rounded, size: 18, color: t.danger), label: Text(context.tr('Remove picture'), style: TextStyle(color: t.danger))),
+            ]),
+          ]),
+        ),
+      ]),
+    );
   }
 
   Future<void> _save() async {
@@ -250,6 +302,8 @@ class _ProductFormState extends ConsumerState<ProductForm> {
       ]),
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         if (_error != null) Container(margin: const EdgeInsets.only(bottom: 12), padding: const EdgeInsets.all(12), decoration: BoxDecoration(color: t.tint(t.danger, 0.1), borderRadius: BorderRadius.circular(12), border: Border.all(color: t.danger.withValues(alpha: 0.3))), child: Row(children: [Icon(Icons.error_outline_rounded, size: 19, color: t.danger), const SizedBox(width: 10), Expanded(child: Text(_error!))])),
+        _pictureRow(context, word),
+        const FormGap(),
         TextField(controller: _name, autofocus: !_editing, decoration: InputDecoration(labelText: '$word ${context.tr('name')}', prefixIcon: const Icon(Icons.label_rounded, size: 19))),
         const FormGap(),
         TextField(controller: _nameLocal, decoration: InputDecoration(labelText: context.tr('Name in Bangla (optional)'), prefixIcon: const Icon(Icons.translate_rounded, size: 19))),

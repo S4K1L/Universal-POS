@@ -1,3 +1,4 @@
+import 'package:flutter/painting.dart' show Color;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:orbin/features/shell/shell.dart';
 
@@ -32,5 +33,10 @@ void main() {
     expect(has('furniture', 'document_flow'), isTrue);
     expect(has('local_shop', 'document_flow'), isFalse);
     expect(has('local_shop', 'customer_credit'), isTrue);
+  });
+
+  test('every business type uses the same Orbin green — the platform is never re-coloured per business', () {
+    final accents = {for (final t in ['supershop', 'local_shop', 'cosmetic', 'furniture', 'pharmacy']) fx.context(t).accent};
+    expect(accents, {const Color(0xFF0E9F6E)});
   });
 }

@@ -14,6 +14,7 @@ import '../../data/repos/catalogue_repo.dart';
 import '../../data/repos/sales_repo.dart';
 import '../../data/session.dart';
 import '../../data/sync/sync_engine.dart';
+import '../../core/ui/product_thumb.dart';
 
 final _stockProvider = StreamProvider.autoDispose<List<ProductView>>((ref) {
   ref.cacheForSession(revalidate: true);
@@ -170,7 +171,7 @@ class _StockTile extends StatelessWidget {
         onTap: onTap,
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 11),
         child: Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
-          Monogram(p.name, size: 40, seed: p.categoryId ?? p.id),
+          ProductThumb(name: p.name, imageUrl: p.imageUrl, size: 40, seed: p.categoryId ?? p.id),
           const SizedBox(width: 12),
           Expanded(
             child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -255,7 +256,7 @@ class _AdjustPanelState extends ConsumerState<_AdjustPanel> {
     return PanelScaffold(
       title: widget.pv.product.name,
       subtitle: '${v.label.isEmpty ? v.sku : v.label} · ${context.tr('now')} ${f.qty(have)} ${widget.pv.product.baseUnit}',
-      leading: Monogram(widget.pv.product.name, size: 44),
+      leading: ProductThumb(name: widget.pv.product.name, imageUrl: widget.pv.product.imageUrl, size: 44),
       footer: FilledButton(
         onPressed: _busy || delta == null || delta == 0
             ? null

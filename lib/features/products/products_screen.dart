@@ -14,6 +14,7 @@ import '../../data/repos/catalogue_repo.dart';
 import '../../data/session.dart';
 import '../../data/sync/sync_engine.dart';
 import 'product_form.dart';
+import '../../core/ui/product_thumb.dart';
 
 class ProductsScreen extends ConsumerStatefulWidget {
   const ProductsScreen({super.key});
@@ -223,7 +224,7 @@ class _ProductRow extends ConsumerWidget {
         },
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
         child: Row(children: [
-          Monogram(p['name'] as String, size: 46, seed: p['category_id'] as String? ?? p['id'] as String),
+          ProductThumb(name: p['name'] as String, imageUrl: (p['image_url'] as String?) ?? '', size: 46, seed: p['category_id'] as String? ?? p['id'] as String),
           const SizedBox(width: 12),
           Expanded(
             child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [

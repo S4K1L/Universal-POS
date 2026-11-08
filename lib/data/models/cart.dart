@@ -9,6 +9,7 @@ class CartLine {
     required this.productId,
     required this.name,
     this.nameLocal = '',
+    this.imageUrl = '',
     this.variantLabel = '',
     this.sku = '',
     required this.baseUnit,
@@ -27,7 +28,7 @@ class CartLine {
     this.availableBaseMilli = 0,
   });
 
-  final String key, variantId, productId, name, nameLocal, variantLabel, sku, baseUnit, unit, note;
+  final String key, variantId, productId, name, nameLocal, imageUrl, variantLabel, sku, baseUnit, unit, note;
 
   /// The name to show: the Bangla one when the app is in Bangla and the product has one.
   String shownName(bool bangla) => bangla && nameLocal.isNotEmpty ? nameLocal : name;
@@ -57,6 +58,7 @@ class CartLine {
         productId: productId,
         name: name,
         nameLocal: nameLocal,
+        imageUrl: imageUrl,
         variantLabel: variantLabel,
         sku: sku,
         baseUnit: baseUnit,
@@ -81,6 +83,7 @@ class CartLine {
         'productId': productId,
         'name': name,
         'nameLocal': nameLocal,
+        'imageUrl': imageUrl,
         'variantLabel': variantLabel,
         'sku': sku,
         'baseUnit': baseUnit,
@@ -105,6 +108,7 @@ class CartLine {
         productId: j['productId'] as String,
         name: j['name'] as String,
         nameLocal: (j['nameLocal'] as String?) ?? '',
+        imageUrl: (j['imageUrl'] as String?) ?? '',
         variantLabel: (j['variantLabel'] as String?) ?? '',
         sku: (j['sku'] as String?) ?? '',
         baseUnit: j['baseUnit'] as String,
