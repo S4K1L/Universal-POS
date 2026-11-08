@@ -16,6 +16,7 @@ import '../features/admin/admin_plans_screen.dart';
 import '../features/admin/admin_settings_screen.dart';
 import '../features/admin/admin_shell.dart';
 import '../features/admin/admin_types_screen.dart';
+import '../features/admin/admin_users_screen.dart';
 import '../features/auth/login_screen.dart';
 import '../features/auth/signup_pending_screen.dart';
 import '../features/auth/signup_screen.dart';
@@ -102,6 +103,7 @@ final routerProvider = Provider<GoRouter>((ref) {
         routes: [
           r('/admin/overview', () => const AdminOverviewScreen()),
           r('/admin/approvals', () => const AdminApprovalsScreen()),
+          r('/admin/users', () => const AdminUsersScreen()),
           r('/admin/businesses', () => const AdminBusinessesScreen()),
           r('/admin/plans', () => const AdminPlansScreen()),
           r('/admin/types', () => const AdminTypesScreen()),

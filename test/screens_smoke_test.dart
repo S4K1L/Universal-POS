@@ -69,6 +69,8 @@ void main() {
       'GET /admin/payment-channels': (_) => fx['admin_channels'],
       'GET /admin/audit': (_) => fx['admin_audit'],
       'GET /admin/settings': (_) => fx['admin_settings'],
+      'GET /admin/admins': (_) => [],
+      'GET /admin/users': (_) => {'items': [], 'total': 0, 'limit': 50, 'offset': 0, 'counts': {'all': 0, 'admin': 0, 'owner': 0, 'staff': 0}},
       'GET /admin/invoices': (_) => fx['admin_invoices'],
       'GET /public/business-types': (_) => fx['public_types'],
     };
